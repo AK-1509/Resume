@@ -78,6 +78,21 @@ User supplies only the fields to change. Touch only those fields; leave every ot
 - `responsibilities-: 2, 4` → remove bullets at those 1-indexed positions
 - `skills+:` / `skills-:` → same append/remove semantics
 
+### `/resume-profile`
+
+Edits the `profile` block — `name`, `headline`, `location`, `email`, and `links`. Only the fields given change.
+
+```
+name:      <full name>
+headline:  <one line>
+location:  <city, region>
+email:     <address>
+links:
+- <label> | <url>
+```
+
+Transcribe exactly as typed. Never correct an address, never normalise capitalisation in a name, never rewrite a headline, and never reorder `links`. If a value looks like a mistake, commit it as given and say so in one sentence afterwards.
+
 ### `/resume-languages`
 
 Edits the `languages` array. Same verbatim rule as everything else.
