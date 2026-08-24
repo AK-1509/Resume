@@ -122,9 +122,24 @@ export const ResumeSchema = z
   .object({
     profile: ProfileSchema,
     /** Canonical skill registry. Endorsement counts are NOT stored here — they
-     *  are derived at render time from `experiences[].endorsedSkills` so the
-     *  JSON cannot desync from itself. */
+     *  are derived from `experiences[].endorsedSkills` so the JSON cannot
+     *  desync from itself. Counts are not displayed in the UI; they exist only
+     *  to order the index. */
     skills: z.array(SkillSchema),
+    /**
+     * Spoken languages, as free strings, in the user's own order.
+     *
+     * Deliberately NOT `{ name, level }`. A proficiency field is something the
+     * `resume-entry` skill would have to infer, and inferring is exactly what
+     * it is forbidden to do. If a level belongs on a language, the user types
+     * it as part of the string ("German (B2)") and it is transcribed verbatim.
+     * Order is meaningful and must never be sorted.
+     */
+    languages: z.array(
+      z.string().min(1, {
+        error: "a language cannot be an empty string. Remove the entry instead.",
+      }),
+    ),
     experiences: z.array(ExperienceSchema),
   })
   .superRefine((resume, ctx) => {
@@ -141,6 +156,16 @@ export const ResumeSchema = z
         );
       }
       skillIds.add(skill.id);
+    });
+
+    // --- Languages are distinct ------------------------------------------
+    const seenLanguages = new Set<string>();
+    resume.languages.forEach((language, i) => {
+      const key = language.toLowerCase();
+      if (seenLanguages.has(key)) {
+        issue(["languages", i], `"${language}" is listed twice. Remove the duplicate.`);
+      }
+      seenLanguages.add(key);
     });
 
     // --- Unique experience ids -------------------------------------------

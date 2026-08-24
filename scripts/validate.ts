@@ -127,7 +127,7 @@ const resume: Resume = result.data;
 if (problems.length) report();
 
 console.log(
-  `\n  content/resume.json is valid — ${resume.experiences.length} experiences, ${resume.skills.length} skills.\n`,
+  `\n  content/resume.json is valid — ${resume.experiences.length} experiences, ${resume.skills.length} skills, ${resume.languages.length} languages.\n`,
 );
 
 if (notes.length) {

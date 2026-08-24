@@ -24,6 +24,7 @@
     { "id": "technical-writing", "label": "Technical Writing", "category": "soft" },
     { "id": "mentorship", "label": "Mentorship", "category": "soft" }
   ],
+  "languages": ["English", "Hindi", "Marathi", "German", "Japanese"],
   "experiences": [
     {
       "id": "university-of-southern-california-bs-computer-science",

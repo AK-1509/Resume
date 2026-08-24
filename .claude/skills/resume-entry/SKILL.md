@@ -78,6 +78,18 @@ User supplies only the fields to change. Touch only those fields; leave every ot
 - `responsibilities-: 2, 4` → remove bullets at those 1-indexed positions
 - `skills+:` / `skills-:` → same append/remove semantics
 
+### `/resume-languages`
+
+Edits the `languages` array. Same verbatim rule as everything else.
+
+```
+languages:   English, Hindi, Marathi, German, Japanese   # replaces the whole list
+languages+:  Spanish                                     # appends
+languages-:  German                                      # removes
+```
+
+Write each language exactly as typed. Never translate a language name, never add or remove a proficiency level, never expand "German (B2)" into anything else, and **never sort the list** — the order the user gives is the order that ships.
+
 ### `/resume-delete <id>`
 
 Show the entry's `title`, `organization`, and `id`. Wait for explicit confirmation. Then remove the object and delete `public/gallery/<id>/` if it exists.
