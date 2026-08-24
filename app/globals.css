@@ -1,0 +1,106 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Design tokens.
+
+   Every colour used anywhere in the app comes from here. Components must never
+   contain a hex value. See CLAUDE.md for the contrast constraints that govern
+   which of these may be placed on which background — brass and sage are NOT
+   general-purpose colours.
+   --------------------------------------------------------------------------- */
+@theme {
+  /* Surfaces and text */
+  --color-ink: #171719; /* dark surfaces; body text on light */
+  --color-paper: #f2ebdd; /* main content background */
+  --color-card: #e3d9c7; /* card surfaces */
+  --color-muted: #4b5052; /* secondary text (6.9:1 on paper, 5.9:1 on card) */
+
+  /* Accents */
+  --color-claret: #722f35; /* primary CTA; 8.1:1 on paper */
+  --color-claret-dim: #4a1f27; /* CTA hover */
+  --color-brass: #b08a4a; /* DARK-SURFACE ONLY — 2.7:1 on paper, fails */
+  --color-sage: #65756a; /* metadata scale and borders only — 4.1:1 on paper */
+
+  /* Type families. Wired to next/font variables in app/layout.tsx. */
+  --font-serif: var(--font-cormorant), ui-serif, Georgia, serif;
+  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, monospace;
+
+  /* Modular type scale, ~1.25 ratio. Names are roles, not sizes, so a change
+     to the scale propagates rather than requiring a find-and-replace. */
+  --text-hero: clamp(3rem, 8vw, 6rem);
+  --text-hero--line-height: 0.95;
+  --text-hero--letter-spacing: 0.01em;
+
+  --text-section: 2.25rem;
+  --text-section--line-height: 1.1;
+
+  --text-entry: 1.375rem;
+  --text-entry--line-height: 1.2;
+
+  --text-org: 1rem;
+  --text-org--line-height: 1.4;
+
+  --text-body: 1rem;
+  --text-body--line-height: 1.6;
+
+  --text-ui: 0.9375rem;
+  --text-ui--line-height: 1.3;
+
+  --text-meta: 0.8125rem;
+  --text-meta--line-height: 1.3;
+  --text-meta--letter-spacing: 0.05em;
+
+  --text-bubble: 0.75rem;
+  --text-bubble--line-height: 1.2;
+  --text-bubble--letter-spacing: 0.03em;
+}
+
+/* Cormorant Garamond is optically small — never set it below 1.125rem. */
+
+@layer base {
+  html {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Focus rings: claret on light surfaces (8.1:1), brass on ink (5.6:1).
+     Anything rendered inside a dark region opts in with .on-ink. */
+  :focus-visible {
+    outline: 2px solid var(--color-claret);
+    outline-offset: 2px;
+  }
+
+  .on-ink :focus-visible,
+  .on-ink:focus-visible {
+    outline-color: var(--color-brass);
+  }
+
+  /* Mono metadata is uppercase and tracked everywhere it appears. */
+  .metadata {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    letter-spacing: var(--text-meta--letter-spacing);
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Global motion opt-out. Individual components must not re-enable motion. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,243 @@
+{
+  "profile": {
+    "name": "Adheesh Kale",
+    "headline": "Computer science student building tools at the edge of data and design",
+    "location": "Los Angeles, CA",
+    "email": "adheeshk@usc.edu",
+    "links": [
+      { "label": "GitHub", "url": "https://github.com/adheeshkale" },
+      { "label": "LinkedIn", "url": "https://www.linkedin.com/in/adheeshkale" }
+    ]
+  },
+  "skills": [
+    { "id": "typescript", "label": "TypeScript", "category": "technical" },
+    { "id": "react", "label": "React", "category": "technical" },
+    { "id": "python", "label": "Python", "category": "technical" },
+    { "id": "sql", "label": "SQL", "category": "technical" },
+    { "id": "data-visualization", "label": "Data Visualization", "category": "technical" },
+    { "id": "figma", "label": "Figma", "category": "technical" },
+    { "id": "accessibility", "label": "Accessibility", "category": "domain" },
+    { "id": "machine-learning", "label": "Machine Learning", "category": "domain" },
+    { "id": "product-strategy", "label": "Product Strategy", "category": "domain" },
+    { "id": "user-research", "label": "User Research", "category": "domain" },
+    { "id": "stakeholder-management", "label": "Stakeholder Management", "category": "soft" },
+    { "id": "technical-writing", "label": "Technical Writing", "category": "soft" },
+    { "id": "mentorship", "label": "Mentorship", "category": "soft" }
+  ],
+  "experiences": [
+    {
+      "id": "university-of-southern-california-bs-computer-science",
+      "type": "education",
+      "title": "B.S. Computer Science",
+      "organization": "University of Southern California",
+      "location": "Los Angeles, CA",
+      "startDate": "2023-08",
+      "endDate": null,
+      "summary": "Coursework concentrated in systems, machine learning, and human-computer interaction, with a minor emphasis on quantitative biology.",
+      "responsibilities": [
+        "Coursework: Data Structures, Machine Learning, Database Systems, Human-Computer Interaction",
+        "Teaching assistant for the introductory programming sequence"
+      ],
+      "endorsedSkills": ["python", "sql", "machine-learning", "mentorship"],
+      "gallery": [],
+      "thumbnailId": null
+    },
+    {
+      "id": "meridian-institute-certificate-in-data-journalism",
+      "type": "education",
+      "title": "Certificate in Data Journalism",
+      "organization": "Meridian Institute",
+      "location": "Remote",
+      "startDate": "2022-06",
+      "endDate": "2022-08",
+      "summary": "",
+      "responsibilities": [
+        "Built and published three interactive data stories from public datasets",
+        "Studied statistical literacy and the ethics of visual persuasion"
+      ],
+      "endorsedSkills": ["data-visualization", "python", "technical-writing"],
+      "gallery": [],
+      "thumbnailId": null
+    },
+    {
+      "id": "northwind-analytics-software-engineering-intern",
+      "type": "work",
+      "title": "Software Engineering Intern",
+      "organization": "Northwind Analytics",
+      "location": "Seattle, WA",
+      "startDate": "2025-05",
+      "endDate": "2025-08",
+      "summary": "Worked on the customer-facing reporting product, focused on making large result sets fast to read and possible to act on.",
+      "responsibilities": [
+        "Rebuilt the report builder's filter layer, cutting median query time from 4.1s to 380ms",
+        "Added keyboard navigation and screen-reader labelling across the dashboard, closing 23 open accessibility issues",
+        "Wrote the internal guide to the charting library, now the team's onboarding reference"
+      ],
+      "endorsedSkills": [
+        "typescript",
+        "react",
+        "sql",
+        "data-visualization",
+        "accessibility",
+        "technical-writing"
+      ],
+      "gallery": [
+        {
+          "id": "report-builder",
+          "src": "/gallery/northwind-analytics-software-engineering-intern/report-builder.png",
+          "alt": "The rebuilt report builder showing a filter panel on the left and a results table on the right",
+          "caption": "The rebuilt filter layer"
+        },
+        {
+          "id": "query-latency",
+          "src": "/gallery/northwind-analytics-software-engineering-intern/query-latency.png",
+          "alt": "Line chart showing median query latency dropping from four seconds to under half a second over eight weeks",
+          "caption": "Median query latency across the internship"
+        }
+      ],
+      "thumbnailId": "report-builder"
+    },
+    {
+      "id": "usc-viterbi-undergraduate-research-assistant",
+      "type": "work",
+      "title": "Undergraduate Research Assistant",
+      "organization": "USC Viterbi School of Engineering",
+      "location": "Los Angeles, CA",
+      "startDate": "2024-09",
+      "endDate": "2025-04",
+      "summary": "Supported a lab studying how people interpret uncertainty in model output, contributing both to the experiment tooling and the analysis.",
+      "responsibilities": [
+        "Built the stimulus-generation pipeline used across four studies",
+        "Ran analysis on 1,200 participant responses and produced the figures for the resulting paper",
+        "Co-authored the methods section"
+      ],
+      "endorsedSkills": [
+        "python",
+        "machine-learning",
+        "data-visualization",
+        "user-research",
+        "technical-writing"
+      ],
+      "gallery": [
+        {
+          "id": "stimulus-pipeline",
+          "src": "/gallery/usc-viterbi-undergraduate-research-assistant/stimulus-pipeline.png",
+          "alt": "Diagram of the stimulus generation pipeline, with four stages feeding into a participant-facing survey",
+          "caption": "Pipeline architecture"
+        }
+      ],
+      "thumbnailId": "stimulus-pipeline"
+    },
+    {
+      "id": "cardinal-coffee-shift-lead",
+      "type": "work",
+      "title": "Shift Lead",
+      "organization": "Cardinal Coffee",
+      "location": "Los Angeles, CA",
+      "startDate": "2023-09",
+      "endDate": "2024-06",
+      "summary": "",
+      "responsibilities": [
+        "Trained six new baristas and wrote the opening checklist still in use",
+        "Handled scheduling for a team of eleven across two locations"
+      ],
+      "endorsedSkills": ["mentorship", "stakeholder-management"],
+      "gallery": [],
+      "thumbnailId": null
+    },
+    {
+      "id": "atlas-a-map-of-what-you-have-read",
+      "type": "project",
+      "title": "Atlas — a map of what you have read",
+      "organization": "",
+      "location": "Remote",
+      "startDate": "2025-01",
+      "endDate": null,
+      "summary": "A personal reading tracker that lays your library out as a citation graph rather than a list, so the shape of what you have read is visible at a glance.",
+      "responsibilities": [
+        "Designed and built the force-directed graph view in TypeScript and D3",
+        "Shipped a keyboard-only navigation mode after usability testing showed the graph was unusable without a mouse",
+        "Currently used by roughly 400 people"
+      ],
+      "endorsedSkills": [
+        "typescript",
+        "react",
+        "data-visualization",
+        "figma",
+        "accessibility",
+        "user-research",
+        "product-strategy"
+      ],
+      "gallery": [
+        {
+          "id": "graph-view",
+          "src": "/gallery/atlas-a-map-of-what-you-have-read/graph-view.png",
+          "alt": "The Atlas graph view, showing about two hundred book nodes clustered by subject",
+          "caption": "The main graph view"
+        },
+        {
+          "id": "keyboard-mode",
+          "src": "/gallery/atlas-a-map-of-what-you-have-read/keyboard-mode.png",
+          "alt": "Atlas in keyboard navigation mode with a focus ring on a single node and its neighbours highlighted",
+          "caption": "Keyboard navigation mode"
+        },
+        {
+          "id": "early-sketch",
+          "src": "/gallery/atlas-a-map-of-what-you-have-read/early-sketch.png",
+          "alt": "An early wireframe sketch of the Atlas layout, drawn before the graph view existed",
+          "caption": "Early wireframe, before the graph"
+        }
+      ],
+      "thumbnailId": "graph-view"
+    },
+    {
+      "id": "tidewater-a-tide-clock-for-the-terminal",
+      "type": "project",
+      "title": "Tidewater — a tide clock for the terminal",
+      "organization": "",
+      "location": "Remote",
+      "startDate": "2024-03",
+      "endDate": "2024-07",
+      "summary": "A small command-line tool that renders the next twelve hours of tide for any NOAA station as a sparkline.",
+      "responsibilities": [
+        "Wrote the NOAA client and the Unicode sparkline renderer in Python",
+        "Packaged for Homebrew and PyPI"
+      ],
+      "endorsedSkills": ["python", "data-visualization"],
+      "gallery": [
+        {
+          "id": "terminal-output",
+          "src": "/gallery/tidewater-a-tide-clock-for-the-terminal/terminal-output.png",
+          "alt": "Terminal window showing a twelve-hour tide sparkline for a NOAA station",
+          "caption": "Tidewater running in a terminal"
+        }
+      ],
+      "thumbnailId": "terminal-output"
+    },
+    {
+      "id": "quorum-consensus-tooling-for-student-orgs",
+      "type": "project",
+      "title": "Quorum — consensus tooling for student orgs",
+      "organization": "USC Undergraduate Student Government",
+      "location": "Los Angeles, CA",
+      "startDate": "2024-10",
+      "endDate": "2025-02",
+      "summary": "",
+      "responsibilities": [
+        "Interviewed eleven club officers to find where decisions actually stall",
+        "Designed the proposal-and-vote flow in Figma and shipped it as a React app",
+        "Adopted by nine student organisations in the first semester"
+      ],
+      "endorsedSkills": [
+        "react",
+        "typescript",
+        "figma",
+        "user-research",
+        "product-strategy",
+        "stakeholder-management"
+      ],
+      "gallery": [],
+      "thumbnailId": null
+    }
+  ]
+}
