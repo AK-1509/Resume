@@ -1,7 +1,5 @@
 import { Hero } from "@/components/Hero";
-import { ExperienceSection } from "@/components/ExperienceSection";
-import { SkillIndex } from "@/components/SkillIndex";
-import { Colophon } from "@/components/Colophon";
+import { ResumeBody } from "@/components/ResumeBody";
 import { resume, experiencesOfType, indexedSkills } from "@/lib/resume";
 
 /**
@@ -14,38 +12,21 @@ export default function Home() {
       <Hero profile={resume.profile} />
 
       <main className="shell flex flex-col gap-14 py-14 md:gap-16 md:py-16">
-        <ExperienceSection
-          id="education"
-          heading="Education"
-          experiences={experiencesOfType("education")}
-          columns={2}
+        <ResumeBody
+          education={experiencesOfType("education")}
+          work={experiencesOfType("work")}
+          projects={experiencesOfType("project")}
+          skills={resume.skills}
+          indexSkills={indexedSkills()}
+          languages={resume.languages}
         />
-
-        <div className="grid gap-16 md:grid-cols-2 md:gap-10">
-          <ExperienceSection
-            id="experience"
-            heading="Experience"
-            experiences={experiencesOfType("work")}
-          />
-          <ExperienceSection
-            id="projects"
-            heading="Projects"
-            experiences={experiencesOfType("project")}
-          />
-        </div>
-
-        {/* Back matter: the index, then the colophon. */}
-        <div className="flex flex-col gap-10 border-t border-sage pt-12">
-          <SkillIndex skills={indexedSkills()} />
-          <Colophon languages={resume.languages} />
-        </div>
       </main>
 
       <footer className="shell pb-14">
-        <p className="font-sans text-ui text-muted">
+        <p className="font-sans text-ui text-soft">
           <a
             href={`mailto:${resume.profile.email}`}
-            className="text-claret underline underline-offset-4"
+            className="text-accent underline underline-offset-4"
           >
             {resume.profile.email}
           </a>

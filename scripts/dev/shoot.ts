@@ -1,10 +1,10 @@
 /**
- * DEV ONLY — capture checkpoint screenshots at the two review viewports.
+ * DEV ONLY — capture checkpoint screenshots.
  *
  * Usage: npx tsx scripts/dev/shoot.ts [baseUrl]
  * Writes to .screenshots/ (git-ignored).
  */
-import { chromium, devices } from "@playwright/test";
+import { chromium, devices, type Page } from "@playwright/test";
 import { mkdirSync } from "node:fs";
 import { join, resolve } from "node:path";
 
@@ -15,6 +15,17 @@ const VIEWPORTS = [
   { name: "desktop", width: 1440, height: 900 },
   { name: "mobile", width: 390, height: 844 },
 ] as const;
+
+/**
+ * Drives the real switch rather than poking documentElement, so the knob
+ * position in the screenshot reflects what a visitor would actually see.
+ */
+async function setTheme(page: Page, theme: "light" | "dark") {
+  const toggle = page.getByRole("switch", { name: "Dark mode" });
+  const checked = (await toggle.getAttribute("aria-checked")) === "true";
+  if (checked !== (theme === "dark")) await toggle.click();
+  await page.waitForTimeout(250);
+}
 
 async function main() {
   mkdirSync(OUT, { recursive: true });
@@ -27,14 +38,26 @@ async function main() {
       deviceScaleFactor: 2,
     });
     const page = await context.newPage();
-
     await page.goto(BASE, { waitUntil: "networkidle" });
     await page.evaluate(() => document.fonts.ready);
 
-    await page.screenshot({ path: join(OUT, `${vp.name}-full.png`), fullPage: true });
-    await page.screenshot({ path: join(OUT, `${vp.name}-fold.png`) });
+    for (const theme of ["light", "dark"] as const) {
+      await setTheme(page, theme);
+      await page.screenshot({ path: join(OUT, `${vp.name}-${theme}.png`), fullPage: true });
+    }
 
-    // Horizontal overflow is the failure this layout is most likely to have.
+    // The modal and lightbox, in the theme that shows each best.
+    await setTheme(page, "light");
+    await page.getByRole("button", { name: /Software Engineering Intern/ }).click();
+    await page.waitForTimeout(300);
+    await page.screenshot({ path: join(OUT, `${vp.name}-modal.png`) });
+
+    await page.getByRole("button", { name: /rebuilt report builder/ }).click();
+    await page.waitForTimeout(400);
+    await page.screenshot({ path: join(OUT, `${vp.name}-lightbox.png`) });
+    await page.keyboard.press("Escape");
+    await page.keyboard.press("Escape");
+
     const overflow = await page.evaluate(
       () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
     );

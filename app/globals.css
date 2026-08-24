@@ -62,10 +62,67 @@
 
 /* Cormorant Garamond is optically small — never set it below 1.125rem. */
 
+/* ---------------------------------------------------------------------------
+   Semantic surfaces.
+
+   The palette above is fixed, but it only describes a light page. Dark mode
+   needs surfaces it does not contain, and it cannot simply invert: `claret` is
+   1.9:1 on ink and fails as text entirely, so the link/accent colour has to
+   change role between themes rather than flip.
+
+   Everything below derives from the eight fixed colours — the two dark
+   surfaces are `ink` lifted toward `paper` with color-mix, so no new hex enters
+   the system. Components style themselves from these semantic names, never
+   from the raw palette, except the hero, which is `ink` in both themes.
+
+   Ratios (measured, see /specimen):
+     dark  strong  #F2EBDD on #171719   15.1:1   any text
+     dark  soft    70% paper on ink      7.8:1   any text
+     dark  accent  #B08A4A on #171719    5.6:1   any text
+     dark  rule    #65756A on #171719    3.7:1   borders and non-text UI only
+   --------------------------------------------------------------------------- */
+:root {
+  --surface-page: var(--color-paper);
+  --surface-panel: var(--color-card);
+  --text-strong: var(--color-ink);
+  --text-soft: var(--color-muted);
+  --rule: var(--color-sage);
+  /* Text-bearing accent. claret on paper is 8.1:1. */
+  --accent: var(--color-claret);
+  --focus: var(--color-claret);
+}
+
+:root[data-theme="dark"] {
+  --surface-page: var(--color-ink);
+  --surface-panel: color-mix(in srgb, var(--color-paper) 8%, var(--color-ink));
+  --text-strong: var(--color-paper);
+  --text-soft: color-mix(in srgb, var(--color-paper) 70%, var(--color-ink));
+  --rule: var(--color-sage);
+  /* claret is unreadable on ink (1.9:1), so brass carries the accent here. */
+  --accent: var(--color-brass);
+  --focus: var(--color-brass);
+}
+
+/* Expose the semantic layer to Tailwind as utilities: bg-surface, bg-panel,
+   text-strong, text-soft, border-rule, text-accent. */
+@theme inline {
+  --color-surface: var(--surface-page);
+  --color-panel: var(--surface-panel);
+  --color-strong: var(--text-strong);
+  --color-soft: var(--text-soft);
+  --color-rule: var(--rule);
+  --color-accent: var(--accent);
+}
+
 @layer base {
   html {
-    background-color: var(--color-paper);
-    color: var(--color-ink);
+    background-color: var(--surface-page);
+    color: var(--text-strong);
+    color-scheme: light;
+  }
+
+  html[data-theme="dark"] {
+    color-scheme: dark;
   }
 
   body {
@@ -75,10 +132,11 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Focus rings: claret on light surfaces (8.1:1), brass on ink (5.6:1).
-     Anything rendered inside a dark region opts in with .on-ink. */
+  /* Focus rings follow the theme: claret on light surfaces (8.1:1), brass on
+     dark (5.6:1). The hero is `ink` in both themes, so it opts in with
+     .on-ink regardless of which theme is active. */
   :focus-visible {
-    outline: 2px solid var(--color-claret);
+    outline: 2px solid var(--focus);
     outline-offset: 2px;
   }
 

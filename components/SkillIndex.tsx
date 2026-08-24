@@ -13,10 +13,10 @@ export function SkillIndex({ skills }: { skills: Skill[] }) {
 
   return (
     <section aria-labelledby="skills-heading">
-      <h2 id="skills-heading" className="font-serif text-section font-medium text-ink">
+      <h2 id="skills-heading" className="font-serif text-section font-medium text-strong">
         Skills
       </h2>
-      <p className="mt-2 max-w-[60ch] font-sans text-body text-muted">
+      <p className="mt-2 max-w-[60ch] font-sans text-body text-soft">
         Select a skill to see only the experiences that prove it.
       </p>
 
@@ -26,7 +26,7 @@ export function SkillIndex({ skills }: { skills: Skill[] }) {
             <button
               type="button"
               aria-pressed={false}
-              className="rounded-[2px] border border-sage px-3 py-2 font-mono text-bubble font-medium uppercase text-ink transition-colors hover:border-ink"
+              className="rounded-[2px] border border-rule px-3 py-2 font-mono text-bubble font-medium uppercase text-strong transition-colors hover:border-strong"
             >
               {skill.label}
             </button>

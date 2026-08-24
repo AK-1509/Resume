@@ -14,11 +14,13 @@ export function ExperienceSection({
   heading,
   experiences,
   columns = 1,
+  onOpen,
 }: {
   id: string;
   heading: string;
   experiences: Experience[];
   columns?: 1 | 2;
+  onOpen: (id: string) => void;
 }) {
   if (experiences.length === 0) return null;
 
@@ -26,7 +28,7 @@ export function ExperienceSection({
 
   return (
     <section aria-labelledby={`${id}-heading`}>
-      <h2 id={`${id}-heading`} className="font-serif text-section font-medium text-ink">
+      <h2 id={`${id}-heading`} className="font-serif text-section font-medium text-strong">
         {heading}
       </h2>
 
@@ -37,7 +39,11 @@ export function ExperienceSection({
       >
         {experiences.map((experience) => (
           <li key={experience.id}>
-            <ExperienceCard experience={experience} reserveThumb={reserveThumb} />
+            <ExperienceCard
+              experience={experience}
+              reserveThumb={reserveThumb}
+              onOpen={onOpen}
+            />
           </li>
         ))}
       </ul>

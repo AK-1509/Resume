@@ -36,20 +36,20 @@ function CardBody({ experience, reserveThumb }: { experience: Experience; reserv
       {reserveThumb && <Thumbnail experience={experience} />}
 
       <div className="min-w-0 flex-1">
-        <h3 className="font-serif text-entry font-semibold text-ink">{experience.title}</h3>
+        <h3 className="font-serif text-entry font-semibold text-strong">{experience.title}</h3>
 
         {/* organization is "" for personal projects — the line is dropped, not
             rendered empty. */}
         {experience.organization && (
-          <p className="mt-1 font-sans text-org font-medium text-muted">{experience.organization}</p>
+          <p className="mt-1 font-sans text-org font-medium text-soft">{experience.organization}</p>
         )}
 
         {/* Duration and location: stacked on mobile, opposed ends on desktop. */}
         <p className="mt-3 flex flex-col gap-y-1 sm:flex-row sm:items-baseline sm:gap-x-4">
-          <span className="metadata text-muted">
+          <span className="metadata text-soft">
             {formatDuration(experience.startDate, experience.endDate)}
           </span>
-          <span className="metadata text-muted sm:ms-auto">{experience.location}</span>
+          <span className="metadata text-soft sm:ms-auto">{experience.location}</span>
         </p>
       </div>
     </div>
@@ -67,11 +67,13 @@ function CardBody({ experience, reserveThumb }: { experience: Experience; reserv
 export function ExperienceCard({
   experience,
   reserveThumb,
+  onOpen,
 }: {
   experience: Experience;
   reserveThumb: boolean;
+  onOpen: (id: string) => void;
 }) {
-  const shared = "block h-full w-full border-l-2 border-sage p-5 text-left rounded-r-[2px]";
+  const shared = "block h-full w-full border-l-2 border-rule p-5 text-left rounded-r-[2px]";
 
   // An entry with no summary, no bullets and no images has nothing behind the
   // click, so it neither behaves nor looks like a button. It drops the card
@@ -86,7 +88,11 @@ export function ExperienceCard({
   }
 
   return (
-    <button type="button" className={`${shared} bg-card transition-colors hover:border-claret`}>
+    <button
+      type="button"
+      onClick={() => onOpen(experience.id)}
+      className={`${shared} bg-panel transition-colors hover:border-accent`}
+    >
       <CardBody experience={experience} reserveThumb={reserveThumb} />
     </button>
   );

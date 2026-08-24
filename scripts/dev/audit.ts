@@ -70,28 +70,36 @@ async function focusRings(page: Page) {
       }).length,
   );
 
-  let reached = 0;
-  const ringless: string[] = [];
-  await page.evaluate(() => document.body.focus());
+  // Start from a clean document so the tab sequence begins at the top —
+  // earlier checks leave focus restored to whichever card they opened.
+  await page.reload({ waitUntil: "networkidle" });
 
-  for (let i = 0; i < count + 5; i++) {
+  const seen = new Set<string>();
+  const ringless: string[] = [];
+
+  // Tabbing off the last control parks focus on <body> before wrapping, so a
+  // body reading is skipped rather than treated as the end of the sequence.
+  for (let i = 0; i < count * 2 + 10; i++) {
     await page.keyboard.press("Tab");
     const info = await page.evaluate(() => {
       const el = document.activeElement as HTMLElement | null;
       if (!el || el === document.body) return null;
       const s = getComputedStyle(el);
-      const width = parseFloat(s.outlineWidth) || 0;
+      const alt = [...el.querySelectorAll("img")].map((im) => im.alt).join(" ");
       return {
+        key: `${el.tagName}:${(el.textContent ?? "").trim()}${alt}`.slice(0, 80),
         tag: el.tagName.toLowerCase(),
-        label: (el.textContent ?? "").trim().slice(0, 28),
-        hasRing: width >= 2 && s.outlineStyle !== "none",
+        label: (el.getAttribute("aria-label") ?? (el.textContent ?? "") + alt).trim().slice(0, 28),
+        hasRing: (parseFloat(s.outlineWidth) || 0) >= 2 && s.outlineStyle !== "none",
       };
     });
-    if (!info) break;
-    reached++;
+    if (!info) continue;
+    if (seen.has(info.key)) break; // wrapped around
+    seen.add(info.key);
     if (!info.hasRing) ringless.push(`${info.tag} "${info.label}"`);
-    if (reached >= count) break;
   }
+
+  const reached = seen.size;
 
   check("every control is keyboard reachable", reached >= count, `${reached}/${count}`);
   check(
@@ -114,32 +122,47 @@ async function main() {
   const browser = await chromium.launch();
 
   for (const vp of VIEWPORTS) {
-    console.log(`\n  ${vp.name} ${vp.width}x${vp.height}`);
-    const context = await browser.newContext({ viewport: { width: vp.width, height: vp.height } });
-    const page = await context.newPage();
-    await page.goto(BASE, { waitUntil: "networkidle" });
+    for (const theme of ["light", "dark"] as const) {
+      console.log(`\n  ${vp.name} ${vp.width}x${vp.height} — ${theme}`);
+      const context = await browser.newContext({
+        viewport: { width: vp.width, height: vp.height },
+        colorScheme: theme,
+      });
+      const page = await context.newPage();
+      await page.goto(BASE, { waitUntil: "networkidle" });
 
-    const results = await new AxeBuilder({ page })
-      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
-      .analyze();
+      const applied = await page.evaluate(() => document.documentElement.dataset.theme);
+      check(`theme follows the OS preference`, applied === theme, `applied ${applied}`);
 
-    check(
-      "axe-core clean",
-      results.violations.length === 0,
-      results.violations.map((v) => `${v.id} (${v.nodes.length})`).join(", "),
-    );
-    for (const v of results.violations) {
-      console.log(`        ${v.id}: ${v.help}`);
-      for (const node of v.nodes.slice(0, 3)) console.log(`          ${node.target.join(" ")}`);
+      // Modal content is only in the DOM while open, so audit it open too.
+      await page.getByRole("button", { name: /Software Engineering Intern/ }).first().click();
+      await page.waitForTimeout(250);
+
+      const results = await new AxeBuilder({ page })
+        .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+        .analyze();
+
+      check(
+        "axe-core clean (page + open modal)",
+        results.violations.length === 0,
+        results.violations.map((v) => `${v.id} (${v.nodes.length})`).join(", "),
+      );
+      for (const v of results.violations) {
+        console.log(`        ${v.id}: ${v.help}`);
+        for (const node of v.nodes.slice(0, 3)) console.log(`          ${node.target.join(" ")}`);
+      }
+
+      await page.keyboard.press("Escape");
+      await page.waitForTimeout(200);
+
+      if (vp.name === "desktop" && theme === "light") {
+        await landmarks(page);
+        await focusRings(page);
+        await zoom200(page);
+      }
+
+      await context.close();
     }
-
-    if (vp.name === "desktop") {
-      await landmarks(page);
-      await focusRings(page);
-      await zoom200(page);
-    }
-
-    await context.close();
   }
 
   await browser.close();

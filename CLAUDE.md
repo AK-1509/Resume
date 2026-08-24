@@ -24,6 +24,13 @@ The palette is fixed. Two accents fail on cream and must not be reintroduced the
 - **`sage` is metadata scale, not body scale.** 4.1:1 on `paper` (large text only: ≥24px, or ≥19px bold) and 3.5:1 on `card` (borders and non-text UI only). Any smaller technical text uses `muted`.
 - Never signal state with colour alone — pair it with weight, fill, border, or a mark.
 - Focus rings: 2px `claret` on light surfaces, 2px `brass` inside `.on-ink` regions.
+- **Dark mode is not an inversion.** `claret` is 1.9:1 on `ink` and fails as text outright, so `--accent` becomes `brass` there. `claret` survives only as a fill behind white text (9.7:1). Never write `text-claret` in a component.
+
+## Theming
+
+Components style themselves from the **semantic** tokens — `bg-surface`, `bg-panel`, `text-strong`, `text-soft`, `border-rule`, `text-accent` — never from the raw palette. The raw names (`bg-ink`, `text-brass`, …) are correct only inside the hero and the lightbox, which are `ink` in both themes.
+
+The applied theme lives on `<html data-theme>`, set by an inline script in `app/layout.tsx` before first paint so a dark-mode visitor never sees a light flash. That element is the source of truth; `ThemeToggle` subscribes to it with `useSyncExternalStore` rather than mirroring it into React state.
 
 `/specimen` renders the live contrast matrix. Check there before placing a new colour.
 

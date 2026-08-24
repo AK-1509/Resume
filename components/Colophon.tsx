@@ -11,19 +11,19 @@ export function Colophon({ languages }: { languages: string[] }) {
   return (
     <section
       aria-labelledby="languages-heading"
-      className="flex flex-col gap-2 border-t border-sage pt-6 sm:flex-row sm:items-baseline sm:gap-8"
+      className="flex flex-col gap-2 border-t border-rule pt-6 sm:flex-row sm:items-baseline sm:gap-8"
     >
-      <h2 id="languages-heading" className="metadata shrink-0 text-muted">
+      <h2 id="languages-heading" className="metadata shrink-0 text-soft">
         Languages
       </h2>
       {/* The separator hangs off the end of each item rather than the start of
           the next, so a wrapped line never opens with a stray rule. */}
-      <ul className="flex flex-wrap gap-x-3 gap-y-1 font-sans text-body text-ink">
+      <ul className="flex flex-wrap gap-x-3 gap-y-1 font-sans text-body text-strong">
         {languages.map((language, i) => (
           <li key={language}>
             {language}
             {i < languages.length - 1 && (
-              <span className="ms-3 text-sage" aria-hidden="true">
+              <span className="ms-3 text-rule" aria-hidden="true">
                 ·
               </span>
             )}

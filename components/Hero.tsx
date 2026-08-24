@@ -1,4 +1,5 @@
 import type { Profile } from "@/lib/schema";
+import { ThemeToggle } from "./ThemeToggle";
 
 /**
  * The title page.
@@ -13,6 +14,12 @@ export function Hero({ profile }: { profile: Profile }) {
   return (
     <header className="on-ink bg-ink text-paper">
       <div className="shell py-16 md:py-20">
+        {/* The hero is `ink` in both themes, so the switch always sits on a
+            dark surface and needs only one set of styles. */}
+        <div className="mb-10 flex justify-end">
+          <ThemeToggle />
+        </div>
+
         <h1 className="max-w-[14ch] font-serif text-hero font-semibold">{profile.name}</h1>
 
         <hr className="mt-6 border-0 border-t border-brass" aria-hidden="true" />

@@ -17,6 +17,11 @@ export const TOKENS = {
   sage: "#65756A",
   muted: "#4B5052",
   white: "#FFFFFF",
+
+  /* Dark-theme surfaces. Derived from the fixed palette with color-mix in
+     globals.css — resolved here so /specimen can measure them. */
+  "ink-panel": "#2A2A2A", // color-mix(in srgb, paper 8%, ink)
+  "soft-dark": "#ADA79E", // color-mix(in srgb, paper 70%, ink)
 } as const;
 
 export type TokenName = keyof typeof TOKENS;

@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-const SURFACES: TokenName[] = ["paper", "card", "ink", "claret"];
+const SURFACES: TokenName[] = ["paper", "card", "ink", "ink-panel", "claret"];
 const FOREGROUNDS: TokenName[] = [
   "ink",
   "muted",
@@ -16,6 +16,7 @@ const FOREGROUNDS: TokenName[] = [
   "sage",
   "paper",
   "card",
+  "soft-dark",
   "white",
 ];
 
@@ -190,6 +191,14 @@ export default function SpecimenPage() {
             <span className="text-muted">
               2px claret on light surfaces (8.1:1), 2px brass inside any region carrying{" "}
               <code className="font-mono">.on-ink</code> (5.6:1).
+            </span>
+          </li>
+          <li>
+            <strong className="font-semibold">The accent changes role in dark mode.</strong>{" "}
+            <span className="text-muted">
+              claret is 1.9:1 on ink and fails as text entirely, so dark mode cannot simply invert —
+              brass carries links and focus there instead. claret survives only as a fill behind
+              white text (9.7:1), which is why the export button looks the same in both themes.
             </span>
           </li>
         </ul>
