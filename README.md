@@ -2,7 +2,7 @@
 
 An interactive resume. Every experience is a card; every skill carries the count of experiences that endorse it; filtering by skill narrows the whole page at once.
 
-**Live:** _not yet deployed — see Deployment below._
+**Live:** <https://resume-phi-roan.vercel.app> · **Specimen:** <https://resume-phi-roan.vercel.app/specimen>
 
 ## How content works
 
@@ -41,7 +41,7 @@ The annotated content schema is in [`lib/schema.ts`](lib/schema.ts).
 
 ## Deployment
 
-Vercel, auto-deploying from `main`.
+Vercel project `resume`, linked to this repo and auto-deploying from `main`. A push to `main` is a deploy; there is no separate publish step.
 
 ## Seed content
 
