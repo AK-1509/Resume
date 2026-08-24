@@ -41,6 +41,10 @@
   --text-org: 1rem;
   --text-org--line-height: 1.4;
 
+  /* Hero subtitle — the scale's next step above body. */
+  --text-lead: 1.25rem;
+  --text-lead--line-height: 1.5;
+
   --text-body: 1rem;
   --text-body--line-height: 1.6;
 
@@ -91,6 +95,28 @@
     text-transform: uppercase;
     font-variant-numeric: tabular-nums;
   }
+}
+
+/* The measure. Every region aligns to this, including the brass rule in the
+   hero, which is what makes that rule structural rather than decorative. */
+@utility shell {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 72rem;
+  padding-inline: 1.5rem;
+
+  @media (width >= 48rem) {
+    padding-inline: 2.5rem;
+  }
+}
+
+/* Duotone plates.
+
+   Gallery images are arbitrary user screenshots. Left alone, one blue dashboard
+   destroys the paper world. Every image in the page renders warm-duotoned into
+   the palette; the lightbox is the only place true colour exists. */
+@utility plate {
+  filter: grayscale(1) sepia(0.42) saturate(1.25) hue-rotate(-8deg) contrast(1.06) brightness(0.99);
 }
 
 /* Global motion opt-out. Individual components must not re-enable motion. */

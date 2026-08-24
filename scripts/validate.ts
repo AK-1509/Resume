@@ -67,6 +67,18 @@ const resume: Resume = result.data;
 
 // --- Layer 2: filesystem ---------------------------------------------------
 {
+  // A skill nothing endorses can never filter to anything, so the index at the
+  // foot of the page drops it rather than rendering a dead control. Surface it
+  // here so it is never silently lost.
+  const endorsed = new Set(resume.experiences.flatMap((e) => e.endorsedSkills));
+  for (const skill of resume.skills) {
+    if (!endorsed.has(skill.id)) {
+      notes.push(
+        `skill "${skill.id}" (${skill.label}) is in the registry but no experience endorses it, so it is hidden from the skills index. Endorse it somewhere, or remove it from skills[].`,
+      );
+    }
+  }
+
   const referenced = new Set<string>();
 
   for (const exp of resume.experiences) {
