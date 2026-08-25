@@ -5,12 +5,22 @@ import { ExperienceSection } from "./ExperienceSection";
 import { ExperienceModal } from "./ExperienceModal";
 import { SkillIndex } from "./SkillIndex";
 import { Colophon } from "./Colophon";
+import dynamic from "next/dynamic";
 import { StickyBar } from "./StickyBar";
 import { EmptyState } from "./EmptyState";
-import { ExportDialog } from "./export/ExportDialog";
 import { onExportRequested } from "@/lib/export-event";
 import { bestRelaxation, countMatches, parseSkillsParam, skillsHref } from "@/lib/filter";
 import type { Experience, Profile, Skill } from "@/lib/schema";
+
+/**
+ * The export dialog pulls in @dnd-kit and the print layout, and from there the
+ * PDF renderer. None of it is needed to read a resume, so it loads on first
+ * use instead of being shipped to every visitor.
+ */
+const ExportDialog = dynamic(
+  () => import("./export/ExportDialog").then((m) => m.ExportDialog),
+  { ssr: false },
+);
 
 /**
  * Holds the interactive state for the page body: which entry is open, which
@@ -37,13 +47,21 @@ export function ResumeBody({
 }) {
   const [openId, setOpenId] = useState<string | null>(null);
   const [exporting, setExporting] = useState(false);
+  // Once mounted the dialog stays mounted, so closing it does not discard the
+  // selection and ordering the user has already set up.
+  const [exportMounted, setExportMounted] = useState(false);
   const [selected, setSelected] = useState<string[]>([]);
   const topRef = useRef<HTMLDivElement>(null);
 
   const all = [...education, ...work, ...projects];
   const open = all.find((e) => e.id === openId) ?? null;
 
-  useEffect(() => onExportRequested(() => setExporting(true)), []);
+  const openExport = useCallback(() => {
+    setExportMounted(true);
+    setExporting(true);
+  }, []);
+
+  useEffect(() => onExportRequested(openExport), [openExport]);
 
   /* --- URL sync -----------------------------------------------------------
    * Uses the history API rather than the Next router, so the page stays
@@ -93,7 +111,7 @@ export function ResumeBody({
         matchCount={matchCount}
         onToggle={toggle}
         onClear={clear}
-        onExport={() => setExporting(true)}
+        onExport={openExport}
       />
 
       <div ref={topRef} className="scroll-mt-24" />
@@ -169,14 +187,16 @@ export function ResumeBody({
         }}
       />
 
-      <ExportDialog
-        open={exporting}
-        onClose={() => setExporting(false)}
-        profile={profile}
-        experiences={all}
-        skills={skills}
-        languages={languages}
-      />
+      {exportMounted && (
+        <ExportDialog
+          open={exporting}
+          onClose={() => setExporting(false)}
+          profile={profile}
+          experiences={all}
+          skills={skills}
+          languages={languages}
+        />
+      )}
     </>
   );
 }

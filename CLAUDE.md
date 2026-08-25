@@ -41,4 +41,15 @@ The applied theme lives on `<html data-theme>`, set by an inline script in `app/
 - Endorsement counts are derived at render time via `endorsementCounts()`. Never store them.
 - Sort direction for every experience list lives in one constant: `SORT_DIRECTION` in `lib/resume.ts`.
 
+- The export dialog is lazily loaded (`next/dynamic`) because it pulls in `@dnd-kit` and, through it, `@react-pdf/renderer` — about 1.2 MB that a reader never needs. Keep heavy imports behind that boundary; a static import of `./export/ExportDialog` anywhere would undo it.
+
 The annotated content schema lives in `lib/schema.ts`, next to the code that enforces it.
+
+## Verifying a change
+
+`scripts/dev/` holds the checks used at each checkpoint — `audit.ts` (axe + landmarks + focus rings + 200% zoom, both themes), `keyboard.ts`, `keyboard-export.ts`, `filter.ts`, `export-cases.ts`, `cross-browser.ts`, `usability.ts`. Run the relevant ones rather than describing the behaviour.
+
+Two environment notes that will otherwise cost time:
+
+- Next 16 caches optimised images at `.next/dev/cache/images`, not `.next/cache/images`. Swapping an image without changing its filename needs that cleared.
+- `tsx` compiles with esbuild's `keepNames`, which injects a `__name` helper. Any named function inside a `page.evaluate()` body will throw `__name is not defined` in the browser — inline the logic instead.

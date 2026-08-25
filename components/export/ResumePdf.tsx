@@ -164,10 +164,5 @@ export function ResumePdf({ model, density }: { model: PrintModel; density: Dens
   );
 }
 
-/** `<Name>-Resume-<YYYY-MM>.pdf` */
-export function pdfFilename(name: string): string {
-  const now = new Date();
-  const month = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
-  const slug = name.trim().replace(/\s+/g, "-").replace(/[^A-Za-z0-9-]/g, "");
-  return `${slug}-Resume-${month}.pdf`;
-}
+// pdfFilename lives in lib/export.ts so the dialog can name the download
+// without importing this module and its renderer.

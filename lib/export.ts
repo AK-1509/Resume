@@ -108,6 +108,19 @@ export function buildPrintModel(
   };
 }
 
+/**
+ * `<Name>-Resume-<YYYY-MM>.pdf`
+ *
+ * Lives here rather than beside the PDF document so the dialog can name the
+ * file without pulling @react-pdf/renderer into the bundle.
+ */
+export function pdfFilename(name: string): string {
+  const now = new Date();
+  const month = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+  const slug = name.trim().replace(/\s+/g, "-").replace(/[^A-Za-z0-9-]/g, "");
+  return `${slug}-Resume-${month}.pdf`;
+}
+
 export type FitResult =
   | { fits: true; density: Density; heightPx: number }
   | { fits: false; density: Density; heightPx: number; overflowPx: number; advice: string };

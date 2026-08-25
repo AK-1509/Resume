@@ -5,6 +5,7 @@ import {
   DENSITY_LADDER,
   PAGE,
   buildPrintModel,
+  pdfFilename,
   type ExportSelection,
 } from "@/lib/export";
 import type { Experience, Profile, Skill } from "@/lib/schema";
@@ -12,7 +13,6 @@ import { PrintLayout } from "./PrintLayout";
 import { SelectPane } from "./SelectPane";
 import { OrderPane } from "./OrderPane";
 import { useAutoFit } from "./useAutoFit";
-import { pdfFilename, registerPdfFonts, ResumePdf } from "./ResumePdf";
 
 type Pane = "select" | "order" | "preview";
 
@@ -98,8 +98,14 @@ export function ExportDialog({
     setBusy(true);
     setStatus("Building the PDF…");
     try {
+      // The renderer and the PDF document are ~1.2 MB and are only ever needed
+      // by someone who actually downloads, so they load here rather than being
+      // shipped to every visitor.
+      const [{ pdf }, { ResumePdf, registerPdfFonts }] = await Promise.all([
+        import("@react-pdf/renderer"),
+        import("./ResumePdf"),
+      ]);
       registerPdfFonts();
-      const { pdf } = await import("@react-pdf/renderer");
       const blob = await pdf(<ResumePdf model={model} density={result.density} />).toBlob();
 
       // The preview is measured in the DOM; the PDF is laid out by a different

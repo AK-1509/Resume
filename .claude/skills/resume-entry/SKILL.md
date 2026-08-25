@@ -31,7 +31,10 @@ If content looks wrong, you may say so in one sentence after committing it as gi
 - Trim leading/trailing whitespace
 - Normalize dates to `YYYY-MM` (`March 2021` → `2021-03`, `3/2021` → `2021-03`, `present` → `null`)
 - Generate `id` deterministically: `slug(organization) + "-" + slug(title)`, where `slug()` = lowercase, non-alphanumerics → `-`, collapse repeats, strip leading/trailing `-`. For entries with no organization, use `slug(title)` alone. On collision, append `-2`.
+- Generate each `GalleryItem.id` as `slug(filename without its extension)` — `ingestion-pipeline.png` → `ingestion-pipeline`. On collision within one entry, append `-2`.
 - JSON-escape characters as required
+
+New entries are appended to the end of `experiences[]`. Display order is derived from the dates at render time, so position in the array carries no meaning and reordering it only creates diff noise.
 
 ## Token discipline
 
@@ -144,6 +147,8 @@ git add content/resume.json public/gallery
 git commit -m "content: add <organization> — <title>"
 git push
 ```
+
+`git add public/gallery` stages deletions as well as additions, so a `/resume-delete` that removed a gallery folder is committed by the same two commands.
 
 Use `content: add`, `content: edit`, or `content: remove`. The subject is the entry, not the file.
 
