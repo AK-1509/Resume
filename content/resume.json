@@ -239,6 +239,37 @@
       ],
       "gallery": [],
       "thumbnailId": null
+    },
+    {
+      "id": "halcyon-systems-data-engineering-intern",
+      "type": "work",
+      "title": "Data Engineering Intern",
+      "organization": "Halcyon Systems",
+      "location": "Portland, OR",
+      "startDate": "2024-06",
+      "endDate": null,
+      "summary": "Built the ingestion layer for a telemetry product.",
+      "responsibilities": [
+        "Wrote the Kafka consumer that backfills historical partitions",
+        "Cut the nightly batch window from six hours to ninety minutes"
+      ],
+      "endorsedSkills": [
+        "python",
+        "sql"
+      ],
+      "gallery": [
+        {
+          "id": "ingestion-pipeline",
+          "src": "/gallery/halcyon-systems-data-engineering-intern/ingestion-pipeline.png",
+          "alt": "Diagram of the ingestion pipeline showing three stages"
+        },
+        {
+          "id": "batch-window",
+          "src": "/gallery/halcyon-systems-data-engineering-intern/batch-window.png",
+          "alt": "Line chart showing the nightly batch window dropping from six hours to ninety minutes"
+        }
+      ],
+      "thumbnailId": "ingestion-pipeline"
     }
   ]
 }
