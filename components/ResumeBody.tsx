@@ -1,18 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { onExportRequested } from "@/lib/export-event";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ExperienceSection } from "./ExperienceSection";
 import { ExperienceModal } from "./ExperienceModal";
 import { SkillIndex } from "./SkillIndex";
 import { Colophon } from "./Colophon";
 import { StickyBar } from "./StickyBar";
+import { EmptyState } from "./EmptyState";
 import { ExportDialog } from "./export/ExportDialog";
+import { onExportRequested } from "@/lib/export-event";
+import { bestRelaxation, countMatches, parseSkillsParam, skillsHref } from "@/lib/filter";
 import type { Experience, Profile, Skill } from "@/lib/schema";
 
 /**
- * Holds the interactive state for the page body: which entry is open, whether
- * the export dialog is showing, and (from Phase 5) which skills are selected.
+ * Holds the interactive state for the page body: which entry is open, which
+ * skills are selected, and whether the export dialog is showing.
  */
 export function ResumeBody({
   profile,
@@ -35,32 +37,122 @@ export function ResumeBody({
 }) {
   const [openId, setOpenId] = useState<string | null>(null);
   const [exporting, setExporting] = useState(false);
-
-  useEffect(() => onExportRequested(() => setExporting(true)), []);
+  const [selected, setSelected] = useState<string[]>([]);
+  const topRef = useRef<HTMLDivElement>(null);
 
   const all = [...education, ...work, ...projects];
   const open = all.find((e) => e.id === openId) ?? null;
 
+  useEffect(() => onExportRequested(() => setExporting(true)), []);
+
+  /* --- URL sync -----------------------------------------------------------
+   * Uses the history API rather than the Next router, so the page stays
+   * statically prerendered and `?skills=react,figma` is still a shareable URL.
+   * pushState (not replace) is what makes Back step through filter changes. */
+
+  useEffect(() => {
+    const read = () => setSelected(parseSkillsParam(window.location.search, skills));
+    read();
+    window.addEventListener("popstate", read);
+    return () => window.removeEventListener("popstate", read);
+  }, [skills]);
+
+  const apply = useCallback((next: string[]) => {
+    setSelected(next);
+    window.history.pushState(null, "", skillsHref(next));
+  }, []);
+
+  const toggle = useCallback(
+    (id: string) => {
+      apply(selected.includes(id) ? selected.filter((s) => s !== id) : [...selected, id]);
+    },
+    [apply, selected],
+  );
+
+  const clear = useCallback(() => apply([]), [apply]);
+
+  const viewResults = useCallback(() => {
+    topRef.current?.scrollIntoView({
+      // The global reduced-motion rule forces `scroll-behavior: auto`, but
+      // scrollIntoView takes its own argument, so it is honoured explicitly.
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+      block: "start",
+    });
+  }, []);
+
+  const filtering = selected.length > 0;
+  const matchCount = countMatches(all, selected);
+  const relaxation = bestRelaxation(all, selected, skills);
+
   return (
     <>
-      <StickyBar name={profile.name} onExport={() => setExporting(true)} />
-
-      <ExperienceSection
-        id="education"
-        heading="Education"
-        experiences={education}
-        columns={2}
-        onOpen={setOpenId}
+      <StickyBar
+        name={profile.name}
+        selected={selected}
+        skills={skills}
+        matchCount={matchCount}
+        onToggle={toggle}
+        onClear={clear}
+        onExport={() => setExporting(true)}
       />
 
-      <div className="grid gap-14 md:grid-cols-2 md:gap-10">
-        <ExperienceSection id="experience" heading="Experience" experiences={work} onOpen={setOpenId} />
-        <ExperienceSection id="projects" heading="Projects" experiences={projects} onOpen={setOpenId} />
-      </div>
+      <div ref={topRef} className="scroll-mt-24" />
+
+      {/* One announcement for the whole page rather than one per section. */}
+      <p aria-live="polite" className="sr-only">
+        {filtering
+          ? `${matchCount} experience${matchCount === 1 ? "" : "s"} match ${selected.length} selected skill${
+              selected.length === 1 ? "" : "s"
+            }.`
+          : ""}
+      </p>
+
+      {filtering && matchCount === 0 ? (
+        <EmptyState
+          relaxation={relaxation}
+          onRelax={(id) => apply(selected.filter((s) => s !== id))}
+          onClear={clear}
+        />
+      ) : (
+        <>
+          <ExperienceSection
+            id="education"
+            heading="Education"
+            experiences={education}
+            columns={2}
+            onOpen={setOpenId}
+            selectedSkills={selected}
+          />
+
+          <div className="grid gap-14 md:grid-cols-2 md:gap-10">
+            <ExperienceSection
+              id="experience"
+              heading="Experience"
+              experiences={work}
+              onOpen={setOpenId}
+              selectedSkills={selected}
+            />
+            <ExperienceSection
+              id="projects"
+              heading="Projects"
+              experiences={projects}
+              onOpen={setOpenId}
+              selectedSkills={selected}
+            />
+          </div>
+        </>
+      )}
 
       {/* Back matter: the index, then the colophon. */}
       <div className="flex flex-col gap-10 border-t border-rule pt-12">
-        <SkillIndex skills={indexSkills} />
+        <SkillIndex
+          skills={indexSkills}
+          selected={selected}
+          matchCount={matchCount}
+          onToggle={toggle}
+          onClear={clear}
+          onViewResults={viewResults}
+        />
         <Colophon languages={languages} />
       </div>
 
@@ -68,10 +160,12 @@ export function ResumeBody({
         experience={open}
         skills={skills}
         onClose={() => setOpenId(null)}
-        onSelectSkill={() => {
-          // Selecting a skill closes the modal and applies it as a filter.
-          // The filter itself lands in Phase 5; closing is already correct.
+        onSelectSkill={(id) => {
+          // Selecting a skill in the modal closes it and applies that skill as
+          // a filter, then brings the reader to the results it just changed.
           setOpenId(null);
+          apply(selected.includes(id) ? selected : [...selected, id]);
+          requestAnimationFrame(viewResults);
         }}
       />
 

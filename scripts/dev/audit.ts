@@ -56,10 +56,20 @@ async function landmarks(page: Page) {
 }
 
 async function focusRings(page: Page) {
+  // Reload first, then count. Earlier checks scroll the page (Playwright
+  // scrolls an element into view before clicking it), which reveals the sticky
+  // bar — counting in one scroll state and tabbing in another would report
+  // controls as unreachable when they are simply not present.
+  // Chromium restores the previous scroll offset across a reload, so reset it
+  // explicitly — otherwise the sticky bar is still on screen and gets counted.
+  await page.reload({ waitUntil: "networkidle" });
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.waitForTimeout(400);
+
   // Count only real, visible controls inside the page's own landmarks —
   // axe-core and the dev overlay both inject transient focusable nodes, and
   // counting those makes this check flaky.
-  const count = await page.evaluate(
+  const expected: string[] = await page.evaluate(
     () =>
       [...document.querySelectorAll("a, button, [tabindex]:not([tabindex='-1'])")].filter((el) => {
         const r = el.getBoundingClientRect();
@@ -73,12 +83,12 @@ async function focusRings(page: Page) {
           !el.closest("[inert]") &&
           el.closest("main,header,footer")
         );
-      }).length,
+      }).map((el) => {
+        const alt = [...el.querySelectorAll("img")].map((im) => im.alt).join(" ");
+        return `${el.tagName}:${(el.textContent ?? "").trim()}${alt}`.slice(0, 80);
+      }),
   );
-
-  // Start from a clean document so the tab sequence begins at the top —
-  // earlier checks leave focus restored to whichever card they opened.
-  await page.reload({ waitUntil: "networkidle" });
+  const count = expected.length;
 
   const seen = new Set<string>();
   const ringless: string[] = [];
@@ -100,14 +110,24 @@ async function focusRings(page: Page) {
       };
     });
     if (!info) continue;
-    if (seen.has(info.key)) break; // wrapped around
+    // Deliberately no early break on a repeat: two controls can share a key
+    // (the theme switch is icon-only, so its text content is empty in both
+    // places it appears). The loop is bounded instead.
     seen.add(info.key);
     if (!info.hasRing) ringless.push(`${info.tag} "${info.label}"`);
   }
 
-  const reached = seen.size;
+  // Tabbing scrolls the page, which can reveal the sticky bar part-way through
+  // the sequence — so more controls may be reached than were present at the
+  // top. What matters is that none of the ones counted were missed.
+  const missed = expected.filter((k) => !seen.has(k));
+  if (missed.length) console.log(`        never reached: ${missed.join(" | ")}`);
 
-  check("every control is keyboard reachable", reached >= count, `${reached}/${count}`);
+  check(
+    "every control is keyboard reachable",
+    missed.length === 0,
+    `${count - missed.length}/${count} reached`,
+  );
   check(
     "every focused control shows a ≥2px ring",
     ringless.length === 0,

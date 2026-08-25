@@ -68,12 +68,20 @@ export function ExperienceCard({
   experience,
   reserveThumb,
   onOpen,
+  /** True when a filter is active and this entry satisfies it. */
+  lit = false,
 }: {
   experience: Experience;
   reserveThumb: boolean;
   onOpen: (id: string) => void;
+  lit?: boolean;
 }) {
-  const shared = "block h-full w-full border-l-2 border-rule p-5 text-left rounded-r-[2px]";
+  // The left border is this card's segment of the rail. Sage at rest; claret
+  // when a filter is active and this entry is one of the proofs — so a
+  // filtered column shows, as a single vertical gesture, the stretch of a
+  // career where that skill was in play.
+  const rail = lit ? "border-claret" : "border-rule";
+  const shared = `block h-full w-full border-l-2 ${rail} p-5 text-left rounded-r-[2px] transition-colors`;
 
   // An entry with no summary, no bullets and no images has nothing behind the
   // click, so it neither behaves nor looks like a button. It drops the card
@@ -91,7 +99,7 @@ export function ExperienceCard({
     <button
       type="button"
       onClick={() => onOpen(experience.id)}
-      className={`${shared} bg-panel transition-colors hover:border-accent`}
+      className={`${shared} bg-panel hover:border-accent`}
     >
       <CardBody experience={experience} reserveThumb={reserveThumb} />
     </button>

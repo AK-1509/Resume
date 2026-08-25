@@ -58,6 +58,12 @@ async function main() {
     await page.keyboard.press("Escape");
     await page.keyboard.press("Escape");
 
+    // The filtered state — the rail lit along the entries that prove a skill.
+    await page.goto(`${BASE}/?skills=data-visualization`, { waitUntil: "networkidle" });
+    await page.evaluate(() => document.fonts.ready);
+    await page.waitForTimeout(400);
+    await page.screenshot({ path: join(OUT, `${vp.name}-filtered.png`), fullPage: true });
+
     const overflow = await page.evaluate(
       () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
     );
