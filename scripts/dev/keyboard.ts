@@ -188,7 +188,7 @@ async function main() {
 
   // --- Theme toggle --------------------------------------------------------
   console.log("\n  Theme\n");
-  const toggle = page.getByRole("switch", { name: "Dark mode" });
+  const toggle = page.getByRole("banner").getByRole("switch", { name: "Dark mode" });
   check("toggle exposes role=switch", (await toggle.count()) === 1);
   check("starts unchecked in light", (await toggle.getAttribute("aria-checked")) === "false");
 

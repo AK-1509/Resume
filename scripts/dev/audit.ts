@@ -65,7 +65,13 @@ async function focusRings(page: Page) {
         const r = el.getBoundingClientRect();
         const s = getComputedStyle(el);
         return (
-          r.width > 0 && r.height > 0 && s.visibility !== "hidden" && el.closest("main,header,footer")
+          r.width > 0 &&
+          r.height > 0 &&
+          s.visibility !== "hidden" &&
+          // The sticky bar is inert while scrolled out of view; its controls
+          // are correctly not tabbable and must not be counted as missing.
+          !el.closest("[inert]") &&
+          el.closest("main,header,footer")
         );
       }).length,
   );

@@ -21,7 +21,7 @@ const VIEWPORTS = [
  * position in the screenshot reflects what a visitor would actually see.
  */
 async function setTheme(page: Page, theme: "light" | "dark") {
-  const toggle = page.getByRole("switch", { name: "Dark mode" });
+  const toggle = page.getByRole("banner").getByRole("switch", { name: "Dark mode" });
   const checked = (await toggle.getAttribute("aria-checked")) === "true";
   if (checked !== (theme === "dark")) await toggle.click();
   await page.waitForTimeout(250);

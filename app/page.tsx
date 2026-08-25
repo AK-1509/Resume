@@ -13,6 +13,7 @@ export default function Home() {
 
       <main className="shell flex flex-col gap-14 py-14 md:gap-16 md:py-16">
         <ResumeBody
+          profile={resume.profile}
           education={experiencesOfType("education")}
           work={experiencesOfType("work")}
           projects={experiencesOfType("project")}

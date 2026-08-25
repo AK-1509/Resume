@@ -1,5 +1,6 @@
 import type { Profile } from "@/lib/schema";
 import { ThemeToggle } from "./ThemeToggle";
+import { ExportButton } from "./ExportButton";
 
 /**
  * The title page.
@@ -43,13 +44,7 @@ export function Hero({ profile }: { profile: Profile }) {
             ))}
           </ul>
 
-          {/* Behaviour lands in Phase 6; the CTA is here so the layout is real. */}
-          <button
-            type="button"
-            className="shrink-0 self-start rounded-[2px] bg-claret px-6 py-3 font-sans text-ui font-medium text-white transition-colors hover:bg-claret-dim sm:self-auto"
-          >
-            Export resume
-          </button>
+          <ExportButton className="shrink-0 self-start rounded-[2px] bg-claret px-6 py-3 font-sans text-ui font-medium text-white transition-colors hover:bg-claret-dim sm:self-auto" />
         </div>
       </div>
     </header>

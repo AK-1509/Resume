@@ -1,17 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { onExportRequested } from "@/lib/export-event";
 import { ExperienceSection } from "./ExperienceSection";
 import { ExperienceModal } from "./ExperienceModal";
 import { SkillIndex } from "./SkillIndex";
 import { Colophon } from "./Colophon";
-import type { Experience, Skill } from "@/lib/schema";
+import { StickyBar } from "./StickyBar";
+import { ExportDialog } from "./export/ExportDialog";
+import type { Experience, Profile, Skill } from "@/lib/schema";
 
 /**
- * Holds the interactive state for the page body: which entry is open, and
- * (from Phase 5) which skills are selected.
+ * Holds the interactive state for the page body: which entry is open, whether
+ * the export dialog is showing, and (from Phase 5) which skills are selected.
  */
 export function ResumeBody({
+  profile,
   education,
   work,
   projects,
@@ -19,6 +23,7 @@ export function ResumeBody({
   indexSkills,
   languages,
 }: {
+  profile: Profile;
   education: Experience[];
   work: Experience[];
   projects: Experience[];
@@ -29,12 +34,17 @@ export function ResumeBody({
   languages: string[];
 }) {
   const [openId, setOpenId] = useState<string | null>(null);
+  const [exporting, setExporting] = useState(false);
+
+  useEffect(() => onExportRequested(() => setExporting(true)), []);
 
   const all = [...education, ...work, ...projects];
   const open = all.find((e) => e.id === openId) ?? null;
 
   return (
     <>
+      <StickyBar name={profile.name} onExport={() => setExporting(true)} />
+
       <ExperienceSection
         id="education"
         heading="Education"
@@ -63,6 +73,15 @@ export function ResumeBody({
           // The filter itself lands in Phase 5; closing is already correct.
           setOpenId(null);
         }}
+      />
+
+      <ExportDialog
+        open={exporting}
+        onClose={() => setExporting(false)}
+        profile={profile}
+        experiences={all}
+        skills={skills}
+        languages={languages}
       />
     </>
   );
