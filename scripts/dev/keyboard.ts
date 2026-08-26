@@ -30,7 +30,11 @@ const active = (page: Page) =>
       `${(el.textContent ?? "").replace(/\s+/g, " ").trim()} ${alt}`.trim();
     return {
       tag: el.tagName.toLowerCase(),
-      text: name.slice(0, 48),
+      // Full text for matching — a title longer than a display-length slice
+      // could never be found by tabTo below. `label` is the truncated form,
+      // used only in log output.
+      text: name,
+      label: name.slice(0, 48),
       isBody: el === document.body,
       inDialog: Boolean(el.closest("dialog")),
     };
