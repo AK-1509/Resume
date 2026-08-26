@@ -104,17 +104,20 @@ export const PrintLayout = forwardRef<
                     <span style={{ fontWeight: 400 }}>{`, ${entry.organization}`}</span>
                   )}
                 </p>
-                <p
+                {/* Two right-aligned lines, mirroring the PDF: on one line the
+                    combined string is wide enough that a long title squeezes
+                    the column and clips its tail. */}
+                <div
                   style={{
-                    margin: 0,
                     flexShrink: 0,
+                    textAlign: "right",
                     fontFamily: "var(--font-plex-mono), monospace",
                     fontSize: px(body * SCALE.meta),
                   }}
                 >
-                  {formatDuration(entry.startDate, entry.endDate)}
-                  {entry.location ? `  ·  ${entry.location}` : ""}
-                </p>
+                  <p style={{ margin: 0 }}>{formatDuration(entry.startDate, entry.endDate)}</p>
+                  {entry.location && <p style={{ margin: 0 }}>{entry.location}</p>}
+                </div>
               </div>
 
               {entry.responsibilities.length > 0 && (

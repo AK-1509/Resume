@@ -10,6 +10,10 @@
  */
 import { chromium, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { openableEntry } from "./fixtures";
+
+/** Entry titles come from user content and may contain regex metacharacters. */
+const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 const BASE = process.argv[2] ?? "http://localhost:3000";
 
@@ -161,7 +165,10 @@ async function main() {
       check(`theme follows the OS preference`, applied === theme, `applied ${applied}`);
 
       // Modal content is only in the DOM while open, so audit it open too.
-      await page.getByRole("button", { name: /Software Engineering Intern/ }).first().click();
+      await page
+        .getByRole("button", { name: new RegExp(escapeRe(openableEntry().title)) })
+        .first()
+        .click();
       await page.waitForTimeout(250);
 
       const results = await new AxeBuilder({ page })

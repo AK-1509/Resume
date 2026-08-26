@@ -57,6 +57,7 @@ type:             work | education | project
 title:            <position | degree | project name>
 organization:     <company | institution | client>   (omit if none)
 location:         <city, region | Remote>
+link:             <https://… , or omit>
 start:            <YYYY-MM or "March 2021">
 end:              <YYYY-MM or "present">
 summary:          <one paragraph, or omit>

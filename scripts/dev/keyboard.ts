@@ -7,6 +7,7 @@
  * Every step drives the page with the keyboard alone — no clicks anywhere.
  */
 import { chromium, type Page } from "@playwright/test";
+import { entryWithGallery, openableEntry } from "./fixtures";
 
 const BASE = process.argv[2] ?? "http://localhost:3000";
 
@@ -62,7 +63,8 @@ async function main() {
   console.log("\n  Detail modal — keyboard only\n");
 
   // --- Open a card that has a gallery -------------------------------------
-  const reached = await tabTo(page, "Software Engineering Intern");
+  const target = openableEntry();
+  const reached = await tabTo(page, target.title);
   check("card reachable by Tab", reached);
 
   const opener = await active(page);
@@ -86,7 +88,7 @@ async function main() {
   check("dialog is modal", Boolean(modalAria?.modal));
   check(
     "aria-labelledby points at the title",
-    modalAria?.labelText.includes("Software Engineering Intern") ?? false,
+    modalAria?.labelText.includes(target.title) ?? false,
     modalAria?.labelText ?? "",
   );
 
@@ -112,8 +114,26 @@ async function main() {
   // --- Open the lightbox from the gallery, keyboard only -------------------
   console.log("\n  Gallery lightbox — keyboard only\n");
 
-  // Gallery buttons are labelled by their image alt text.
-  const foundImage = await tabTo(page, "rebuilt report builder", 30);
+  // The lightbox can only be exercised when the content has an image. Reported
+  // as skipped rather than passed, so an empty gallery never looks like a green
+  // run of checks that never executed.
+  const galleryEntry = entryWithGallery();
+  if (!galleryEntry) {
+    console.log("  SKIP  no entry in content/resume.json has a gallery image");
+    console.log("        (add one and re-run to cover the lightbox and ESC ordering)");
+    await browser.close();
+    console.log(failures === 0 ? "\n  keyboard walkthrough: clean\n" : `\n  ${failures} failure(s)\n`);
+    process.exit(failures === 0 ? 0 : 1);
+  }
+
+  // Gallery buttons are labelled by their image alt text. Open the entry that
+  // actually has one, in case it is not the entry opened above.
+  await page.keyboard.press("Escape");
+  await page.waitForTimeout(250);
+  await page.getByRole("button", { name: galleryEntry.title, exact: false }).first().click();
+  await page.waitForTimeout(300);
+
+  const foundImage = await tabTo(page, galleryEntry.gallery[0].alt, 40);
   check("gallery image reachable by Tab", foundImage);
   await page.keyboard.press("Enter");
   await page.waitForTimeout(250);
@@ -175,7 +195,7 @@ async function main() {
 
   // --- Click-outside -------------------------------------------------------
   console.log("\n  Pointer behaviour\n");
-  await page.getByRole("button", { name: /Undergraduate Research Assistant/ }).click();
+  await page.getByRole("button", { name: openableEntry().title, exact: false }).first().click();
   await page.waitForTimeout(250);
   const box = await page.evaluate(() => {
     const d = [...document.querySelectorAll("dialog")].find((x) => x.open);

@@ -7,6 +7,9 @@
 import { chromium, devices, type Page } from "@playwright/test";
 import { mkdirSync } from "node:fs";
 import { join, resolve } from "node:path";
+import { busiestSkill, entryWithGallery, openableEntry } from "./fixtures";
+
+const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 const BASE = process.argv[2] ?? "http://localhost:3000";
 const OUT = resolve(import.meta.dirname, "..", "..", ".screenshots");
@@ -48,18 +51,24 @@ async function main() {
 
     // The modal and lightbox, in the theme that shows each best.
     await setTheme(page, "light");
-    await page.getByRole("button", { name: /Software Engineering Intern/ }).click();
+    await page.getByRole("button", { name: new RegExp(escapeRe(openableEntry().title)) }).click();
     await page.waitForTimeout(300);
     await page.screenshot({ path: join(OUT, `${vp.name}-modal.png`) });
 
-    await page.getByRole("button", { name: /rebuilt report builder/ }).click();
-    await page.waitForTimeout(400);
-    await page.screenshot({ path: join(OUT, `${vp.name}-lightbox.png`) });
-    await page.keyboard.press("Escape");
+    // Only when the content actually has an image to open.
+    const withGallery = entryWithGallery();
+    if (withGallery) {
+      await page
+        .getByRole("button", { name: new RegExp(escapeRe(withGallery.gallery[0].alt)) })
+        .click();
+      await page.waitForTimeout(400);
+      await page.screenshot({ path: join(OUT, `${vp.name}-lightbox.png`) });
+      await page.keyboard.press("Escape");
+    }
     await page.keyboard.press("Escape");
 
     // The filtered state — the rail lit along the entries that prove a skill.
-    await page.goto(`${BASE}/?skills=data-visualization`, { waitUntil: "networkidle" });
+    await page.goto(`${BASE}/?skills=${busiestSkill().id}`, { waitUntil: "networkidle" });
     await page.evaluate(() => document.fonts.ready);
     await page.waitForTimeout(400);
     await page.screenshot({ path: join(OUT, `${vp.name}-filtered.png`), fullPage: true });

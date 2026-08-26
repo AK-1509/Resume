@@ -11,6 +11,7 @@
 import { chromium, firefox, webkit, type Browser, type Page } from "@playwright/test";
 import { mkdirSync } from "node:fs";
 import { join, resolve } from "node:path";
+import { busiestSkill, entryWithGallery, matchCount, openableEntry } from "./fixtures";
 
 const BASE = process.argv[2] ?? "http://localhost:3000";
 const OUT = resolve(import.meta.dirname, "..", "..", ".screenshots");
@@ -46,33 +47,43 @@ async function run(name: string, browser: Browser) {
   check(name, "no horizontal overflow", layout.overflow <= 0, `${layout.overflow}px`);
 
   // --- Duotone filter -----------------------------------------------------
-  const plate = await page.evaluate(() => {
-    const img = document.querySelector("main img");
-    return img ? getComputedStyle(img).filter : "none";
-  });
-  check(name, "duotone filter applies", plate !== "none" && plate !== "", plate.slice(0, 40));
+  // Only meaningful when the content has an image to duotone.
+  if (entryWithGallery()) {
+    const plate = await page.evaluate(() => {
+      const img = document.querySelector("main img");
+      return img ? getComputedStyle(img).filter : "none";
+    });
+    check(name, "duotone filter applies", plate !== "none" && plate !== "", plate.slice(0, 40));
+  } else {
+    console.log("    SKIP  duotone — no gallery images in content/resume.json");
+  }
 
   // --- Native dialog + nested ESC ordering --------------------------------
-  await page.getByRole("button", { name: /Software Engineering Intern/ }).click();
+  const target = entryWithGallery() ?? openableEntry();
+  await page.getByRole("button", { name: target.title, exact: false }).first().click();
   await page.waitForTimeout(400);
   const modalOpen = await page.evaluate(() =>
     [...document.querySelectorAll("dialog")].some((d) => d.open && d.matches(":modal")),
   );
   check(name, "native modal dialog opens", modalOpen);
 
-  await page.getByRole("button", { name: /rebuilt report builder/ }).click();
-  await page.waitForTimeout(400);
-  const both = await page.evaluate(
-    () => [...document.querySelectorAll("dialog")].filter((d) => d.open).length,
-  );
-  check(name, "lightbox stacks", both === 2, `${both} open`);
+  if (target.gallery.length > 0) {
+    await page.getByRole("button", { name: target.gallery[0].alt, exact: false }).click();
+    await page.waitForTimeout(400);
+    const both = await page.evaluate(
+      () => [...document.querySelectorAll("dialog")].filter((d) => d.open).length,
+    );
+    check(name, "lightbox stacks", both === 2, `${both} open`);
 
-  await page.keyboard.press("Escape");
-  await page.waitForTimeout(350);
-  const afterOne = await page.evaluate(
-    () => [...document.querySelectorAll("dialog")].filter((d) => d.open).length,
-  );
-  check(name, "first Escape closes lightbox only", afterOne === 1, `${afterOne} open`);
+    await page.keyboard.press("Escape");
+    await page.waitForTimeout(350);
+    const afterOne = await page.evaluate(
+      () => [...document.querySelectorAll("dialog")].filter((d) => d.open).length,
+    );
+    check(name, "first Escape closes lightbox only", afterOne === 1, `${afterOne} open`);
+  } else {
+    console.log("    SKIP  lightbox — no entry in content/resume.json has a gallery image");
+  }
 
   await page.keyboard.press("Escape");
   await page.waitForTimeout(350);
@@ -103,7 +114,8 @@ async function run(name: string, browser: Browser) {
   await page.waitForTimeout(300);
 
   // --- Filter + history API ----------------------------------------------
-  await page.goto(`${BASE}/?skills=python`, { waitUntil: "networkidle" });
+  const skill = busiestSkill();
+  await page.goto(`${BASE}/?skills=${skill.id}`, { waitUntil: "networkidle" });
   await page.waitForTimeout(400);
   const lit = await page.evaluate(
     () =>
@@ -111,9 +123,9 @@ async function run(name: string, browser: Browser) {
         (el) => getComputedStyle(el).borderLeftColor === "rgb(114, 47, 53)",
       ).length,
   );
-  check(name, "deep-linked filter lights the rail", lit === 4, `${lit} lit`);
+  check(name, "deep-linked filter lights the rail", lit === matchCount([skill.id]), `${lit} lit, expected ${matchCount([skill.id])}`);
 
-  await page.getByRole("button", { name: /Remove Python filter/ }).click();
+  await page.getByRole("button", { name: `Remove ${skill.label} filter` }).click();
   await page.waitForTimeout(400);
   check(name, "history API clears the filter", !page.url().includes("skills="), page.url());
 

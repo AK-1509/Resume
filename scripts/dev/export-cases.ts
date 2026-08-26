@@ -17,7 +17,21 @@ import { chromium, type Page } from "@playwright/test";
 import { mkdirSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 
-type Case = "sparse" | "typical" | "overloaded";
+type Case = "sparse" | "typical" | "full" | "overloaded";
+
+/**
+ * How many entries each case keeps selected.
+ *
+ * `full` selects everything. With a real resume of thirteen entries that no
+ * longer fits on one page, which is the correct outcome, not a regression —
+ * the case asserts the refusal rather than a download.
+ */
+const KEEP: Record<Case, number | null> = {
+  sparse: 2,
+  typical: 6,
+  full: null,
+  overloaded: null,
+};
 
 const CASE = (process.argv[2] ?? "typical") as Case;
 const BASE = process.argv[3] ?? "http://localhost:3000";
@@ -56,12 +70,13 @@ async function main() {
   await page.getByRole("button", { name: "Export resume" }).first().click();
   await page.waitForTimeout(400);
 
-  if (CASE === "sparse") {
+  const keep = KEEP[CASE];
+  if (keep !== null) {
     const boxes = page.locator(
       "dialog[aria-labelledby='export-title'] fieldset input[type=checkbox]",
     );
     const n = await boxes.count();
-    for (let i = 2; i < n; i++) {
+    for (let i = keep; i < n; i++) {
       const box = boxes.nth(i);
       if (await box.isChecked()) await box.uncheck();
     }
@@ -76,7 +91,7 @@ async function main() {
 
   await page.screenshot({ path: join(OUT, `export-${CASE}.png`) });
 
-  if (CASE === "overloaded") {
+  if (CASE === "overloaded" || CASE === "full") {
     check("refuses to fit", /does not fit on one page/i.test(panel), status);
     check("never goes below the 9pt floor", /9pt/.test(panel), "floor not reported");
     check("says what to cut", /Deselect an experience|shorten/i.test(panel));

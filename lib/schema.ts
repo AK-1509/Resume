@@ -83,6 +83,16 @@ export const ExperienceSchema = z.object({
   location: z.string().min(1, {
     error: `location is required. Use "Remote" if there is no physical location — do not leave it empty.`,
   }),
+  /**
+   * Optional live link — a project's site, a shipped product, a paper.
+   * Omitted entirely rather than stored as "" when there isn't one, so the
+   * detail view can test for its presence.
+   */
+  url: z
+    .url({
+      error: `url must be an absolute URL including the scheme (e.g. https://example.com). Omit the field entirely if there is no link.`,
+    })
+    .optional(),
   startDate: monthString("startDate"),
   /** null means "present". */
   endDate: monthString("endDate").nullable(),

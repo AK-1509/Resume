@@ -64,7 +64,9 @@ export function ExperienceSection({
         {visible.map((experience) => {
           const hit = !filtering || matches(experience, selectedSkills);
           return (
-            <li key={experience.id} className="transition-opacity duration-200">
+            // `min-w-0`: a grid item also defaults to min-width:auto, so
+            // without it the stub's truncation has nothing to shrink into.
+            <li key={experience.id} className="min-w-0 transition-opacity duration-200">
               {hit ? (
                 <ExperienceCard
                   experience={experience}

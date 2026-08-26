@@ -4,12 +4,11 @@
  * Usage: npx tsx scripts/dev/filter.ts [baseUrl]
  */
 import { chromium, type Page } from "@playwright/test";
-import { readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
+import { busiestSkill, conflictingSkills, content, matchCount } from "./fixtures";
 
 const BASE = process.argv[2] ?? "http://localhost:3000";
 const OUT = resolve(import.meta.dirname, "..", "..", ".screenshots");
-const ROOT = resolve(import.meta.dirname, "..", "..");
 
 let failures = 0;
 function check(label: string, ok: boolean, detail = "") {
@@ -17,17 +16,20 @@ function check(label: string, ok: boolean, detail = "") {
   console.log(`  ${ok ? "PASS" : "FAIL"}  ${label}${detail ? ` — ${detail}` : ""}`);
 }
 
-type Resume = {
-  skills: { id: string; label: string }[];
-  experiences: { id: string; endorsedSkills: string[] }[];
-};
-
-const resume: Resume = JSON.parse(readFileSync(join(ROOT, "content", "resume.json"), "utf8"));
+const resume = content;
 
 /** Independent expectation, computed from the JSON rather than from the page. */
-function expectedMatches(ids: string[]): number {
-  return resume.experiences.filter((e) => ids.every((id) => e.endorsedSkills.includes(id))).length;
-}
+const expectedMatches = matchCount;
+
+// Targets are derived from the content, so replacing the resume does not break
+// the checks: the busiest skill, a second one that overlaps it, and a pair that
+// nothing endorses together.
+const primary = busiestSkill();
+const secondary =
+  content.skills.find(
+    (s) => s.id !== primary.id && matchCount([primary.id, s.id]) > 0,
+  ) ?? content.skills.find((s) => s.id !== primary.id)!;
+const conflict = conflictingSkills();
 
 const bubble = (page: Page, label: string) =>
   page.locator("#skills-heading").locator("..").getByRole("button", { name: label, exact: false });
@@ -56,10 +58,10 @@ async function main() {
   check("nothing is lit at rest", atRest.lit === 0, `${atRest.lit} lit`);
   check("no stubs at rest", atRest.stubs === 0, `${atRest.stubs} stubs`);
 
-  await bubble(page, "PYTHON").click();
+  await bubble(page, primary.label.toUpperCase()).click();
   await page.waitForTimeout(400);
 
-  const expectedPython = expectedMatches(["python"]);
+  const expectedPython = expectedMatches([primary.id]);
   const afterPython = await counts(page);
   check(
     "matching cards are lit",
@@ -79,18 +81,18 @@ async function main() {
 
   // ------------------------------------------------------------- URL sync
   console.log("\n  URL and history\n");
-  check("URL carries the filter", page.url().includes("skills=python"), page.url());
+  check("URL carries the filter", page.url().includes(`skills=${primary.id}`), page.url());
 
-  await bubble(page, "DATA VISUALIZATION").click();
+  await bubble(page, secondary.label.toUpperCase()).click();
   await page.waitForTimeout(400);
-  const expectedBoth = expectedMatches(["python", "data-visualization"]);
+  const expectedBoth = expectedMatches([primary.id, secondary.id]);
   const afterBoth = await counts(page);
   check(
     "AND logic — both skills required",
     afterBoth.lit === expectedBoth,
     `${afterBoth.lit} lit, expected ${expectedBoth}`,
   );
-  check("URL carries both", /skills=python%2Cdata-visualization|skills=python,data-visualization/.test(page.url()), page.url());
+  check("URL carries both", page.url().includes(primary.id) && page.url().includes(secondary.id), page.url());
 
   await page.goBack();
   await page.waitForTimeout(400);
@@ -98,13 +100,13 @@ async function main() {
   check("Back restores the previous filter", afterBack.lit === expectedPython, `${afterBack.lit} lit`);
 
   // --------------------------------------------------- shareable deep link
-  await page.goto(`${BASE}/?skills=react,typescript`, { waitUntil: "networkidle" });
+  await page.goto(`${BASE}/?skills=${primary.id},${secondary.id}`, { waitUntil: "networkidle" });
   await page.waitForTimeout(300);
   const deep = await counts(page);
   check(
     "a shared URL loads filtered",
-    deep.lit === expectedMatches(["react", "typescript"]),
-    `${deep.lit} lit, expected ${expectedMatches(["react", "typescript"])}`,
+    deep.lit === expectedMatches([primary.id, secondary.id]),
+    `${deep.lit} lit, expected ${expectedMatches([primary.id, secondary.id])}`,
   );
 
   const pressed = await page.evaluate(
@@ -120,7 +122,7 @@ async function main() {
 
   // ------------------------------------------------------------ empty state
   console.log("\n  Empty state\n");
-  await page.goto(`${BASE}/?skills=figma,mentorship`, { waitUntil: "networkidle" });
+  await page.goto(`${BASE}/?skills=${conflict![0]},${conflict![1]}`, { waitUntil: "networkidle" });
   await page.waitForTimeout(400);
   const emptyVisible = await page.getByText("No experiences match all selected skills.").isVisible();
   check("empty state shows", emptyVisible);
@@ -131,7 +133,7 @@ async function main() {
   if (relaxMatch) {
     console.log(`          "${relaxMatch[0]}"`);
     const skill = resume.skills.find((s) => s.label === relaxMatch[1]);
-    const remaining = ["figma", "mentorship"].filter((id) => id !== skill?.id);
+    const remaining = [conflict![0], conflict![1]].filter((id) => id !== skill?.id);
     check(
       "the promised count is correct",
       Number(relaxMatch[2]) === expectedMatches(remaining),
@@ -156,7 +158,7 @@ async function main() {
 
   // ---------------------------------------------------------- announcement
   console.log("\n  Announcement and sticky bar\n");
-  await page.goto(`${BASE}/?skills=python`, { waitUntil: "networkidle" });
+  await page.goto(`${BASE}/?skills=${primary.id}`, { waitUntil: "networkidle" });
   await page.waitForTimeout(400);
   const live = await page.locator("[aria-live=polite]").first().innerText();
   check("filter change is announced", /\d+ experiences? match/.test(live), live.trim());
@@ -171,7 +173,7 @@ async function main() {
   await page.screenshot({ path: join(OUT, "filter-active.png") });
 
   // Removing via the sticky bar chip.
-  await page.getByRole("button", { name: /Remove Python filter/ }).click();
+  await page.getByRole("button", { name: `Remove ${primary.label} filter` }).click();
   await page.waitForTimeout(400);
   const cleared = await counts(page);
   check("chip × clears the filter", cleared.lit === 0 && cleared.stubs === 0, JSON.stringify(cleared));

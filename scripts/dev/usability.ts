@@ -9,7 +9,8 @@
  */
 import { chromium, devices, type Browser, type Page } from "@playwright/test";
 import { mkdirSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { resolve } from "node:path";
+import { busiestSkill, entryWithGallery, openableEntry } from "./fixtures";
 
 const BASE = process.argv[2] ?? "http://localhost:3000";
 const OUT = resolve(import.meta.dirname, "..", "..", ".screenshots");
@@ -50,7 +51,7 @@ async function task2(page: Page) {
   const started = Date.now();
   await page.goto(BASE, { waitUntil: "networkidle" });
 
-  const bubble = page.locator("#skills-heading").locator("..").getByRole("button", { name: "Python" });
+  const bubble = page.locator("#skills-heading").locator("..").getByRole("button", { name: busiestSkill().label, exact: false }).first();
   await bubble.scrollIntoViewIfNeeded();
   await bubble.click();
   await page.waitForTimeout(300);
@@ -96,10 +97,15 @@ async function task3(page: Page) {
   const started = Date.now();
   await page.goto(BASE, { waitUntil: "networkidle" });
 
-  await page.getByRole("button", { name: /Software Engineering Intern/ }).click();
+  const target = entryWithGallery() ?? openableEntry();
+  await page.getByRole("button", { name: target.title, exact: false }).first().click();
   await page.waitForTimeout(300);
-  await page.getByRole("button", { name: /rebuilt report builder/ }).click();
-  await page.waitForTimeout(400);
+  if (target.gallery.length > 0) {
+    await page.getByRole("button", { name: target.gallery[0].alt, exact: false }).click();
+    await page.waitForTimeout(400);
+    await page.keyboard.press("Escape");
+    await page.waitForTimeout(250);
+  }
   await page.keyboard.press("Escape");
   await page.waitForTimeout(250);
   await page.keyboard.press("Escape");
@@ -108,8 +114,10 @@ async function task3(page: Page) {
   const closed = await page.evaluate(
     () => [...document.querySelectorAll("dialog")].every((d) => !d.open),
   );
-  const focusRestored = await page.evaluate(() =>
-    (document.activeElement?.textContent ?? "").includes("Software Engineering Intern"),
+  // Passed in: evaluate runs in the page, where `target` does not exist.
+  const focusRestored = await page.evaluate(
+    (title) => (document.activeElement?.textContent ?? "").includes(title),
+    target.title,
   );
 
   record(

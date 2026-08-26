@@ -121,6 +121,32 @@ export function ExperienceModal({
                 {experience.organization ? (
                   <p className="font-sans text-org font-medium text-soft">
                     {experience.organization}
+                    {/* The live link rides with the organization line so an
+                        entry without one loses nothing but the link itself. */}
+                    {experience.url && (
+                      <>
+                        {" · "}
+                        <a
+                          href={experience.url}
+                          target="_blank"
+                          rel="noreferrer noopener"
+                          className="text-accent underline underline-offset-4"
+                        >
+                          {experience.url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "")}
+                        </a>
+                      </>
+                    )}
+                  </p>
+                ) : experience.url ? (
+                  <p className="font-sans text-org font-medium">
+                    <a
+                      href={experience.url}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="text-accent underline underline-offset-4"
+                    >
+                      {experience.url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "")}
+                    </a>
                   </p>
                 ) : (
                   <span />

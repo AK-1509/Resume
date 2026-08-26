@@ -64,12 +64,15 @@ export function ResumePdf({ model, density }: { model: PrintModel; density: Dens
       marginBottom: gap * 0.4,
     },
     entryRow: { flexDirection: "row", justifyContent: "space-between" },
-    entryTitle: { fontSize: body * SCALE.entryTitle, fontWeight: 600, flexShrink: 1 },
+    entryTitle: { fontSize: body * SCALE.entryTitle, fontWeight: 600, flexShrink: 1, flexGrow: 1 },
+    // Duration and location stack on two right-aligned lines rather than
+    // sharing one. On a single line the combined string is wide enough that a
+    // long title squeezes the column and the tail — "…, CA" — gets clipped.
+    entryMetaBlock: { flexShrink: 0, flexGrow: 0, marginLeft: 12, alignItems: "flex-end" },
     entryMeta: {
       fontFamily: "PlexMono",
       fontSize: body * SCALE.meta,
-      flexShrink: 0,
-      marginLeft: 12,
+      textAlign: "right",
     },
     bullets: { marginTop: gap * 0.25 },
     bulletRow: { flexDirection: "row", marginBottom: 1 },
@@ -121,10 +124,12 @@ export function ResumePdf({ model, density }: { model: PrintModel; density: Dens
                       <Text style={{ fontWeight: 400 }}>{`, ${entry.organization}`}</Text>
                     ) : null}
                   </Text>
-                  <Text style={styles.entryMeta}>
-                    {formatDuration(entry.startDate, entry.endDate)}
-                    {entry.location ? SEP + entry.location : ""}
-                  </Text>
+                  <View style={styles.entryMetaBlock}>
+                    <Text style={styles.entryMeta}>
+                      {formatDuration(entry.startDate, entry.endDate)}
+                    </Text>
+                    {entry.location && <Text style={styles.entryMeta}>{entry.location}</Text>}
+                  </View>
                 </View>
 
                 {entry.responsibilities.length > 0 && (

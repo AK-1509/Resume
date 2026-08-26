@@ -10,233 +10,294 @@
     ]
   },
   "skills": [
-    { "id": "typescript", "label": "TypeScript", "category": "technical" },
-    { "id": "react", "label": "React", "category": "technical" },
     { "id": "python", "label": "Python", "category": "technical" },
-    { "id": "sql", "label": "SQL", "category": "technical" },
-    { "id": "data-visualization", "label": "Data Visualization", "category": "technical" },
+    { "id": "machine-learning", "label": "Machine Learning", "category": "technical" },
+    { "id": "microsoft-azure", "label": "Microsoft Azure", "category": "technical" },
+    { "id": "statistical-analysis", "label": "Statistical Analysis", "category": "technical" },
     { "id": "figma", "label": "Figma", "category": "technical" },
-    { "id": "accessibility", "label": "Accessibility", "category": "domain" },
-    { "id": "machine-learning", "label": "Machine Learning", "category": "domain" },
+    { "id": "adobe-creative-suite", "label": "Adobe Creative Suite", "category": "technical" },
+    { "id": "gmp", "label": "GMP", "category": "domain" },
+    { "id": "quality-assurance", "label": "Quality Assurance", "category": "domain" },
+    { "id": "process-improvement", "label": "Process Improvement", "category": "domain" },
+    { "id": "market-research", "label": "Market Research", "category": "domain" },
+    { "id": "business-development", "label": "Business Development", "category": "domain" },
+    { "id": "financial-modeling", "label": "Financial Modeling", "category": "domain" },
     { "id": "product-strategy", "label": "Product Strategy", "category": "domain" },
+    { "id": "go-to-market", "label": "Go-to-Market Strategy", "category": "domain" },
+    { "id": "ui-ux-research", "label": "UI/UX Research", "category": "domain" },
     { "id": "user-research", "label": "User Research", "category": "domain" },
     { "id": "stakeholder-management", "label": "Stakeholder Management", "category": "soft" },
+    { "id": "cross-functional-collaboration", "label": "Cross-functional Collaboration", "category": "soft" },
     { "id": "technical-writing", "label": "Technical Writing", "category": "soft" },
     { "id": "mentorship", "label": "Mentorship", "category": "soft" }
   ],
   "languages": ["English", "Hindi", "Marathi", "German", "Japanese"],
   "experiences": [
     {
-      "id": "university-of-southern-california-bs-computer-science",
+      "id": "usc-iovine-and-young-academy-master-of-science-in-integrated-design-business-and-technology",
       "type": "education",
-      "title": "B.S. Computer Science",
-      "organization": "University of Southern California",
+      "title": "Master of Science in Integrated Design, Business and Technology",
+      "organization": "USC Iovine and Young Academy",
       "location": "Los Angeles, CA",
-      "startDate": "2023-08",
-      "endDate": null,
-      "summary": "Coursework concentrated in systems, machine learning, and human-computer interaction, with a minor emphasis on quantitative biology.",
-      "responsibilities": [
-        "Coursework: Data Structures, Machine Learning, Database Systems, Human-Computer Interaction",
-        "Teaching assistant for the introductory programming sequence"
-      ],
-      "endorsedSkills": ["python", "sql", "machine-learning", "mentorship"],
-      "gallery": [],
-      "thumbnailId": null
-    },
-    {
-      "id": "meridian-institute-certificate-in-data-journalism",
-      "type": "education",
-      "title": "Certificate in Data Journalism",
-      "organization": "Meridian Institute",
-      "location": "Remote",
-      "startDate": "2022-06",
-      "endDate": "2022-08",
+      "startDate": "2025-08",
+      "endDate": "2027-05",
       "summary": "",
-      "responsibilities": [
-        "Built and published three interactive data stories from public datasets",
-        "Studied statistical literacy and the ethics of visual persuasion"
-      ],
-      "endorsedSkills": ["data-visualization", "python", "technical-writing"],
+      "responsibilities": [],
+      "endorsedSkills": [],
       "gallery": [],
       "thumbnailId": null
     },
     {
-      "id": "northwind-analytics-software-engineering-intern",
+      "id": "usc-mann-bachelor-of-science-in-biopharmaceutical-sciences",
+      "type": "education",
+      "title": "Bachelor of Science in Biopharmaceutical Sciences",
+      "organization": "USC Mann",
+      "location": "Los Angeles, CA",
+      "startDate": "2022-08",
+      "endDate": "2026-05",
+      "summary": "",
+      "responsibilities": [],
+      "endorsedSkills": [],
+      "gallery": [],
+      "thumbnailId": null
+    },
+    {
+      "id": "usc-mann-school-of-pharmacy-and-pharmaceutical-sciences-communications-associate",
       "type": "work",
-      "title": "Software Engineering Intern",
-      "organization": "Northwind Analytics",
-      "location": "Seattle, WA",
-      "startDate": "2025-05",
-      "endDate": "2025-08",
-      "summary": "Worked on the customer-facing reporting product, focused on making large result sets fast to read and possible to act on.",
+      "title": "Communications Associate",
+      "organization": "USC Mann School of Pharmacy and Pharmaceutical Sciences",
+      "location": "Los Angeles, CA",
+      "startDate": "2026-01",
+      "endDate": null,
+      "summary": "Developed strategic communications and digital media supporting institutional, operational, student, and donor initiatives.",
       "responsibilities": [
-        "Rebuilt the report builder's filter layer, cutting median query time from 4.1s to 380ms",
-        "Added keyboard navigation and screen-reader labelling across the dashboard, closing 23 open accessibility issues",
-        "Wrote the internal guide to the charting library, now the team's onboarding reference"
+        "Designed official internal and external communications, including 20+ flyers, webpages, and videos.",
+        "Translated business and operational objectives into accurate, brand-aligned materials.",
+        "Coordinated with operations, research, and leadership to manage fast-paced delivery timelines.",
+        "Led UI/UX research for the USC Mann website, synthesizing 19 institutional and corporate benchmark reports.",
+        "Directed and recorded B-roll at photoshoots and events for the student magazine, website, and social channels.",
+        "Standardized communication templates and processes to improve efficiency."
       ],
       "endorsedSkills": [
-        "typescript",
-        "react",
-        "sql",
-        "data-visualization",
-        "accessibility",
-        "technical-writing"
+        "ui-ux-research",
+        "adobe-creative-suite",
+        "technical-writing",
+        "stakeholder-management",
+        "cross-functional-collaboration",
+        "process-improvement"
       ],
-      "gallery": [
-        {
-          "id": "report-builder",
-          "src": "/gallery/northwind-analytics-software-engineering-intern/report-builder.png",
-          "alt": "The rebuilt report builder showing a filter panel on the left and a results table on the right",
-          "caption": "The rebuilt filter layer"
-        },
-        {
-          "id": "query-latency",
-          "src": "/gallery/northwind-analytics-software-engineering-intern/query-latency.png",
-          "alt": "Line chart showing median query latency dropping from four seconds to under half a second over eight weeks",
-          "caption": "Median query latency across the internship"
-        }
-      ],
-      "thumbnailId": "report-builder"
+      "gallery": [],
+      "thumbnailId": null
     },
     {
-      "id": "usc-viterbi-undergraduate-research-assistant",
+      "id": "serum-institute-of-india-operations-intern",
       "type": "work",
-      "title": "Undergraduate Research Assistant",
-      "organization": "USC Viterbi School of Engineering",
-      "location": "Los Angeles, CA",
-      "startDate": "2024-09",
-      "endDate": "2025-04",
-      "summary": "Supported a lab studying how people interpret uncertainty in model output, contributing both to the experiment tooling and the analysis.",
+      "title": "Operations Intern",
+      "organization": "Serum Institute of India",
+      "location": "Pune, India",
+      "startDate": "2024-05",
+      "endDate": "2024-07",
+      "summary": "Supported vaccine-manufacturing operations and GMP-compliant quality-assurance activities.",
       "responsibilities": [
-        "Built the stimulus-generation pipeline used across four studies",
-        "Ran analysis on 1,200 participant responses and produced the figures for the resulting paper",
-        "Co-authored the methods section"
+        "Researched and reported on upstream and downstream vaccine-production processes.",
+        "Conducted protein-quantification tests with 99.4% accuracy under GMP protocols.",
+        "Collaborated across three functional teams: Quality Assurance, Downstream Processing, and Upstream Processing."
+      ],
+      "endorsedSkills": ["gmp", "quality-assurance", "cross-functional-collaboration"],
+      "gallery": [],
+      "thumbnailId": null
+    },
+    {
+      "id": "eisen-pharmaceutical-co-pvt-ltd-quality-assurance-and-production-intern",
+      "type": "work",
+      "title": "Quality Assurance and Production Intern",
+      "organization": "Eisen Pharmaceutical Co. Pvt. Ltd.",
+      "location": "Pune, India",
+      "startDate": "2023-07",
+      "endDate": "2023-08",
+      "summary": "Supported pharmaceutical manufacturing, quality assurance, and process-improvement activities under GMP standards.",
+      "responsibilities": [
+        "Performed QA/QC testing on 8–10 batches of compounded oral-formulation drugs.",
+        "Prepared and evaluated batch-manufacturing records and dispensary slips.",
+        "Streamlined dispensing, compounding, and packaging processes.",
+        "Directed packaging-suitability quality checks.",
+        "Led QA testing for an in-house water-sterilization project intended to reduce operating costs."
+      ],
+      "endorsedSkills": ["gmp", "quality-assurance", "process-improvement"],
+      "gallery": [],
+      "thumbnailId": null
+    },
+    {
+      "id": "hewlett-packard-enterprise-corporate-gurukul-data-science-and-ai-ml-implementation-intern",
+      "type": "work",
+      "title": "Data Science and AI/ML Implementation Intern",
+      "organization": "Hewlett-Packard Enterprise / Corporate Gurukul",
+      "location": "Remote",
+      "startDate": "2021-06",
+      "endDate": "2021-09",
+      "summary": "Contributed to the development, validation, and presentation of a machine-learning capstone project.",
+      "responsibilities": [
+        "Served as implementation lead and presented a custom machine-learning model.",
+        "Cleaned, preprocessed, and analyzed data for Python- and Microsoft Azure-based algorithms.",
+        "Developed statistical tests to evaluate predictive accuracy, including regression, Bernoulli-trial, and p-value analyses.",
+        "Designed presentation media using Microsoft Office 365 and Adobe Creative Suite."
       ],
       "endorsedSkills": [
         "python",
         "machine-learning",
-        "data-visualization",
-        "user-research",
-        "technical-writing"
+        "microsoft-azure",
+        "statistical-analysis",
+        "adobe-creative-suite"
       ],
-      "gallery": [
-        {
-          "id": "stimulus-pipeline",
-          "src": "/gallery/usc-viterbi-undergraduate-research-assistant/stimulus-pipeline.png",
-          "alt": "Diagram of the stimulus generation pipeline, with four stages feeding into a participant-facing survey",
-          "caption": "Pipeline architecture"
-        }
-      ],
-      "thumbnailId": "stimulus-pipeline"
-    },
-    {
-      "id": "cardinal-coffee-shift-lead",
-      "type": "work",
-      "title": "Shift Lead",
-      "organization": "Cardinal Coffee",
-      "location": "Los Angeles, CA",
-      "startDate": "2023-09",
-      "endDate": "2024-06",
-      "summary": "",
-      "responsibilities": [
-        "Trained six new baristas and wrote the opening checklist still in use",
-        "Handled scheduling for a team of eleven across two locations"
-      ],
-      "endorsedSkills": ["mentorship", "stakeholder-management"],
       "gallery": [],
       "thumbnailId": null
     },
     {
-      "id": "atlas-a-map-of-what-you-have-read",
-      "type": "project",
-      "title": "Atlas — a map of what you have read",
-      "organization": "",
+      "id": "sneh-foundation-teaching-assistant",
+      "type": "work",
+      "title": "Teaching Assistant",
+      "organization": "Sneh Foundation",
       "location": "Remote",
-      "startDate": "2025-01",
+      "startDate": "2021-02",
+      "endDate": "2021-04",
+      "summary": "Delivered bilingual virtual instruction and academic support in secondary-level science subjects.",
+      "responsibilities": [
+        "Helped students understand complex concepts in physics, chemistry, and biology.",
+        "Used bilingual communication to overcome educational language barriers.",
+        "Conducted weekly virtual classes using varied student-engagement tools.",
+        "Created digital learning content bridging classroom and remote instruction."
+      ],
+      "endorsedSkills": ["mentorship"],
+      "gallery": [],
+      "thumbnailId": null
+    },
+    {
+      "id": "stealth-startup-agentic-product-development-business-development-lead",
+      "type": "project",
+      "title": "Business Development Lead",
+      "organization": "Stealth Startup — Agentic Product Development",
+      "location": "Remote",
+      "startDate": "2025-12",
       "endDate": null,
-      "summary": "A personal reading tracker that lays your library out as a citation graph rather than a list, so the shape of what you have read is visible at a glance.",
+      "summary": "Led business development and investor-readiness efforts for an India-based AI startup.",
       "responsibilities": [
-        "Designed and built the force-directed graph view in TypeScript and D3",
-        "Shipped a keyboard-only navigation mode after usability testing showed the graph was unusable without a mouse",
-        "Currently used by roughly 400 people"
+        "Advanced the startup from prototype stage to investor readiness while managing the full BD pipeline.",
+        "Produced five brand-aligned pitch decks and investor documents using Figma, Canva, and Descript.",
+        "Built progress trackers and delivery timelines coordinating a four-person team across material-development milestones."
       ],
       "endorsedSkills": [
-        "typescript",
-        "react",
-        "data-visualization",
+        "business-development",
         "figma",
-        "accessibility",
-        "user-research",
-        "product-strategy"
-      ],
-      "gallery": [
-        {
-          "id": "graph-view",
-          "src": "/gallery/atlas-a-map-of-what-you-have-read/graph-view.png",
-          "alt": "The Atlas graph view, showing about two hundred book nodes clustered by subject",
-          "caption": "The main graph view"
-        },
-        {
-          "id": "keyboard-mode",
-          "src": "/gallery/atlas-a-map-of-what-you-have-read/keyboard-mode.png",
-          "alt": "Atlas in keyboard navigation mode with a focus ring on a single node and its neighbours highlighted",
-          "caption": "Keyboard navigation mode"
-        },
-        {
-          "id": "early-sketch",
-          "src": "/gallery/atlas-a-map-of-what-you-have-read/early-sketch.png",
-          "alt": "An early wireframe sketch of the Atlas layout, drawn before the graph view existed",
-          "caption": "Early wireframe, before the graph"
-        }
-      ],
-      "thumbnailId": "graph-view"
-    },
-    {
-      "id": "tidewater-a-tide-clock-for-the-terminal",
-      "type": "project",
-      "title": "Tidewater — a tide clock for the terminal",
-      "organization": "",
-      "location": "Remote",
-      "startDate": "2024-03",
-      "endDate": "2024-07",
-      "summary": "A small command-line tool that renders the next twelve hours of tide for any NOAA station as a sparkline.",
-      "responsibilities": [
-        "Wrote the NOAA client and the Unicode sparkline renderer in Python",
-        "Packaged for Homebrew and PyPI"
-      ],
-      "endorsedSkills": ["python", "data-visualization"],
-      "gallery": [
-        {
-          "id": "terminal-output",
-          "src": "/gallery/tidewater-a-tide-clock-for-the-terminal/terminal-output.png",
-          "alt": "Terminal window showing a twelve-hour tide sparkline for a NOAA station",
-          "caption": "Tidewater running in a terminal"
-        }
-      ],
-      "thumbnailId": "terminal-output"
-    },
-    {
-      "id": "quorum-consensus-tooling-for-student-orgs",
-      "type": "project",
-      "title": "Quorum — consensus tooling for student orgs",
-      "organization": "USC Undergraduate Student Government",
-      "location": "Los Angeles, CA",
-      "startDate": "2024-10",
-      "endDate": "2025-02",
-      "summary": "",
-      "responsibilities": [
-        "Interviewed eleven club officers to find where decisions actually stall",
-        "Designed the proposal-and-vote flow in Figma and shipped it as a React app",
-        "Adopted by nine student organisations in the first semester"
-      ],
-      "endorsedSkills": [
-        "react",
-        "typescript",
-        "figma",
-        "user-research",
         "product-strategy",
         "stakeholder-management"
       ],
+      "gallery": [],
+      "thumbnailId": null
+    },
+    {
+      "id": "validex-health-labs-solopreneur",
+      "type": "project",
+      "title": "Solopreneur",
+      "organization": "Validex Health Labs",
+      "location": "Los Angeles, CA",
+      "url": "https://validex-health-labs.base44.app",
+      "startDate": "2026-01",
+      "endDate": "2026-05",
+      "summary": "Conceived, developed, and validated an N=1 self-care experimentation platform for optimizing supplement use.",
+      "responsibilities": [
+        "Designed a functional web-app prototype enabling individuals to plan and optimize their supplement stacks.",
+        "Generated an experimentation framework for introducing supplements using outcomes-based dosage planning.",
+        "Conducted market research, producing market-sizing estimates, competitive-landscape analysis, and marketable user personas.",
+        "Conducted qualitative and quantitative product-validation tests through social media and digital interviews.",
+        "Achieved a 3.4% traffic-conversion rate from more than 2,000 impressions."
+      ],
+      "endorsedSkills": [
+        "product-strategy",
+        "market-research",
+        "user-research",
+        "ui-ux-research"
+      ],
+      "gallery": [],
+      "thumbnailId": null
+    },
+    {
+      "id": "everplate-financial-analyst",
+      "type": "project",
+      "title": "Financial Analyst",
+      "organization": "Everplate",
+      "location": "Los Angeles, CA",
+      "url": "https://everplate.me",
+      "startDate": "2025-08",
+      "endDate": "2025-12",
+      "summary": "Developed financial models and a funding strategy for an AI-driven personalized-nutrition startup.",
+      "responsibilities": [
+        "Modeled predictive, data-driven cash-flow and valuation documents.",
+        "Built and validated a funding strategy projected to enable the company to break even within eight quarters.",
+        "Conducted market-sizing and positioning studies to inform and validate three-year financial models and projections."
+      ],
+      "endorsedSkills": ["financial-modeling", "market-research"],
+      "gallery": [],
+      "thumbnailId": null
+    },
+    {
+      "id": "game-night-studios-marketing-team-member",
+      "type": "project",
+      "title": "Marketing Team Member",
+      "organization": "Game Night Studios",
+      "location": "Los Angeles, CA",
+      "startDate": "2025-08",
+      "endDate": "2025-12",
+      "summary": "Supported the development and go-to-market planning of an early-stage gaming startup.",
+      "responsibilities": [
+        "Developed administrative documents guiding the startup from ideation through go-to-market strategy.",
+        "Executed cross-functional projects spanning product development, business, and marketing.",
+        "Supported social-media and growth initiatives.",
+        "Conducted playtests with six participants and synthesized feedback to refine development and marketing plans."
+      ],
+      "endorsedSkills": ["go-to-market", "user-research", "cross-functional-collaboration"],
+      "gallery": [],
+      "thumbnailId": null
+    },
+    {
+      "id": "chimed-founder",
+      "type": "project",
+      "title": "Founder",
+      "organization": "ChiMED",
+      "location": "Los Angeles, CA",
+      "startDate": "2025-01",
+      "endDate": "2025-05",
+      "summary": "Created and validated the business concept for a wearable health-technology startup based on Traditional Chinese Medicine.",
+      "responsibilities": [
+        "Created the startup’s business model and investor pitch deck.",
+        "Conducted four interviews with wearable-health-technology industry leaders to validate the concept.",
+        "Produced research reports assessing the feasibility of incorporating TCM into AI models.",
+        "Evaluated the startup’s market positioning within the Traditional Chinese Medicine industry.",
+        "Designed a guerrilla pro forma valuation model and financial plan to determine the funding ask."
+      ],
+      "endorsedSkills": [
+        "business-development",
+        "market-research",
+        "financial-modeling",
+        "user-research"
+      ],
+      "gallery": [],
+      "thumbnailId": null
+    },
+    {
+      "id": "nexus-group-usc-board-member",
+      "type": "project",
+      "title": "Board Member",
+      "organization": "Nexus Group USC",
+      "location": "Los Angeles, CA",
+      "startDate": "2023-06",
+      "endDate": "2024-11",
+      "summary": "Helped establish and grow a student organization connecting biotechnology, healthcare, and business interests.",
+      "responsibilities": [
+        "Developed the organization from concept to a membership of more than 40 students.",
+        "Led upskilling workshops, fundraising efforts, and professional-development initiatives.",
+        "Supported soft-skills development for students interested in the biobusiness sector."
+      ],
+      "endorsedSkills": ["mentorship", "stakeholder-management"],
       "gallery": [],
       "thumbnailId": null
     }
