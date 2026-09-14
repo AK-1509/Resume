@@ -264,31 +264,6 @@
       "thumbnailId": null
     },
     {
-      "id": "chimed-founder",
-      "type": "project",
-      "title": "Founder",
-      "organization": "ChiMED",
-      "location": "Los Angeles, CA",
-      "startDate": "2025-01",
-      "endDate": "2025-05",
-      "summary": "Created and validated the business concept for a wearable health-technology startup based on Traditional Chinese Medicine.",
-      "responsibilities": [
-        "Created the startup’s business model and investor pitch deck.",
-        "Conducted four interviews with wearable-health-technology industry leaders to validate the concept.",
-        "Produced research reports assessing the feasibility of incorporating TCM into AI models.",
-        "Evaluated the startup’s market positioning within the Traditional Chinese Medicine industry.",
-        "Designed a guerrilla pro forma valuation model and financial plan to determine the funding ask."
-      ],
-      "endorsedSkills": [
-        "business-development",
-        "market-research",
-        "financial-modeling",
-        "user-research"
-      ],
-      "gallery": [],
-      "thumbnailId": null
-    },
-    {
       "id": "nexus-group-usc-board-member",
       "type": "project",
       "title": "Board Member",
