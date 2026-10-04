@@ -153,6 +153,10 @@ export function ExperienceModal({
                 )}
                 <span className="metadata shrink-0 text-soft">{experience.location}</span>
               </div>
+
+              {experience.tagline && (
+                <p className="mt-2 font-sans text-ui text-soft">{experience.tagline}</p>
+              )}
             </div>
           </div>
 

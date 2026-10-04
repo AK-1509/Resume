@@ -44,6 +44,10 @@ function CardBody({ experience, reserveThumb }: { experience: Experience; reserv
           <p className="mt-1 font-sans text-org font-medium text-soft">{experience.organization}</p>
         )}
 
+        {experience.tagline && (
+          <p className="mt-1 font-sans text-ui text-soft">{experience.tagline}</p>
+        )}
+
         {/* Duration and location: stacked on mobile, opposed ends on desktop. */}
         <p className="mt-3 flex flex-col gap-y-1 sm:flex-row sm:items-baseline sm:gap-x-4">
           <span className="metadata text-soft">

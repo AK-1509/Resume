@@ -99,6 +99,9 @@ export const ExperienceSchema = z.object({
   /** 1–3 sentences shown in the detail modal. May be "" — the modal drops the
    *  paragraph and its spacing rather than rendering an empty block. */
   summary: z.string(),
+  /** For projects: a jargon-heavy slug describing the project to people in the
+   *  field. Shown on the card. Omitted for education and work entries. */
+  tagline: z.string().optional(),
   responsibilities: z.array(z.string().min(1, { error: "a responsibility bullet cannot be an empty string. Remove it instead." })),
   /** Skill ids. Referential integrity against `skills` is checked below. */
   endorsedSkills: z.array(slug("endorsedSkills entry")),
