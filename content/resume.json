@@ -5,33 +5,125 @@
     "location": "Los Angeles, CA",
     "email": "kaleadheesh@gmail.com",
     "links": [
-      { "label": "GitHub", "url": "https://github.com/AK-1509" },
-      { "label": "LinkedIn", "url": "https://www.linkedin.com/in/adheesh-kale-94566a250/" }
+      {
+        "label": "GitHub",
+        "url": "https://github.com/AK-1509"
+      },
+      {
+        "label": "LinkedIn",
+        "url": "https://www.linkedin.com/in/adheesh-kale-94566a250/"
+      }
     ]
   },
   "skills": [
-    { "id": "python", "label": "Python", "category": "technical" },
-    { "id": "machine-learning", "label": "Machine Learning", "category": "technical" },
-    { "id": "microsoft-azure", "label": "Microsoft Azure", "category": "technical" },
-    { "id": "statistical-analysis", "label": "Statistical Analysis", "category": "technical" },
-    { "id": "figma", "label": "Figma", "category": "technical" },
-    { "id": "adobe-creative-suite", "label": "Adobe Creative Suite", "category": "technical" },
-    { "id": "gmp", "label": "GMP", "category": "domain" },
-    { "id": "quality-assurance", "label": "Quality Assurance", "category": "domain" },
-    { "id": "process-improvement", "label": "Process Improvement", "category": "domain" },
-    { "id": "market-research", "label": "Market Research", "category": "domain" },
-    { "id": "business-development", "label": "Business Development", "category": "domain" },
-    { "id": "financial-modeling", "label": "Financial Modeling", "category": "domain" },
-    { "id": "product-strategy", "label": "Product Strategy", "category": "domain" },
-    { "id": "go-to-market", "label": "Go-to-Market Strategy", "category": "domain" },
-    { "id": "ui-ux-research", "label": "UI/UX Research", "category": "domain" },
-    { "id": "user-research", "label": "User Research", "category": "domain" },
-    { "id": "stakeholder-management", "label": "Stakeholder Management", "category": "soft" },
-    { "id": "cross-functional-collaboration", "label": "Cross-functional Collaboration", "category": "soft" },
-    { "id": "technical-writing", "label": "Technical Writing", "category": "soft" },
-    { "id": "mentorship", "label": "Mentorship", "category": "soft" }
+    {
+      "id": "python",
+      "label": "Python",
+      "category": "technical"
+    },
+    {
+      "id": "machine-learning",
+      "label": "Machine Learning",
+      "category": "technical"
+    },
+    {
+      "id": "microsoft-azure",
+      "label": "Microsoft Azure",
+      "category": "technical"
+    },
+    {
+      "id": "statistical-analysis",
+      "label": "Statistical Analysis",
+      "category": "technical"
+    },
+    {
+      "id": "figma",
+      "label": "Figma",
+      "category": "technical"
+    },
+    {
+      "id": "adobe-creative-suite",
+      "label": "Adobe Creative Suite",
+      "category": "technical"
+    },
+    {
+      "id": "gmp",
+      "label": "GMP",
+      "category": "domain"
+    },
+    {
+      "id": "quality-assurance",
+      "label": "Quality Assurance",
+      "category": "domain"
+    },
+    {
+      "id": "process-improvement",
+      "label": "Process Improvement",
+      "category": "domain"
+    },
+    {
+      "id": "market-research",
+      "label": "Market Research",
+      "category": "domain"
+    },
+    {
+      "id": "business-development",
+      "label": "Business Development",
+      "category": "domain"
+    },
+    {
+      "id": "financial-modeling",
+      "label": "Financial Modeling",
+      "category": "domain"
+    },
+    {
+      "id": "product-strategy",
+      "label": "Product Strategy",
+      "category": "domain"
+    },
+    {
+      "id": "go-to-market",
+      "label": "Go-to-Market Strategy",
+      "category": "domain"
+    },
+    {
+      "id": "ui-ux-research",
+      "label": "UI/UX Research",
+      "category": "domain"
+    },
+    {
+      "id": "user-research",
+      "label": "User Research",
+      "category": "domain"
+    },
+    {
+      "id": "stakeholder-management",
+      "label": "Stakeholder Management",
+      "category": "soft"
+    },
+    {
+      "id": "cross-functional-collaboration",
+      "label": "Cross-functional Collaboration",
+      "category": "soft"
+    },
+    {
+      "id": "technical-writing",
+      "label": "Technical Writing",
+      "category": "soft"
+    },
+    {
+      "id": "mentorship",
+      "label": "Mentorship",
+      "category": "soft"
+    }
   ],
-  "languages": ["English", "Hindi", "Marathi", "German", "Japanese"],
+  "languages": [
+    "English",
+    "Hindi",
+    "Marathi",
+    "German",
+    "Japanese"
+  ],
   "experiences": [
     {
       "id": "usc-iovine-and-young-academy-master-of-science-in-integrated-design-business-and-technology",
@@ -97,7 +189,7 @@
     {
       "id": "serum-institute-of-india-operations-intern",
       "type": "work",
-      "title": "Operations Intern",
+      "title": "Manufacturing & Operations Intern",
       "organization": "Serum Institute of India",
       "location": "Pune, India",
       "startDate": "2024-05",
@@ -108,14 +200,18 @@
         "Conducted protein-quantification tests with 99.4% accuracy under GMP protocols.",
         "Collaborated across three functional teams: Quality Assurance, Downstream Processing, and Upstream Processing."
       ],
-      "endorsedSkills": ["gmp", "quality-assurance", "cross-functional-collaboration"],
+      "endorsedSkills": [
+        "gmp",
+        "quality-assurance",
+        "cross-functional-collaboration"
+      ],
       "gallery": [],
       "thumbnailId": null
     },
     {
       "id": "eisen-pharmaceutical-co-pvt-ltd-quality-assurance-and-production-intern",
       "type": "work",
-      "title": "Quality Assurance and Production Intern",
+      "title": "Manufacturing & Operations Intern",
       "organization": "Eisen Pharmaceutical Co. Pvt. Ltd.",
       "location": "Pune, India",
       "startDate": "2023-07",
@@ -128,7 +224,11 @@
         "Directed packaging-suitability quality checks.",
         "Led QA testing for an in-house water-sterilization project intended to reduce operating costs."
       ],
-      "endorsedSkills": ["gmp", "quality-assurance", "process-improvement"],
+      "endorsedSkills": [
+        "gmp",
+        "quality-assurance",
+        "process-improvement"
+      ],
       "gallery": [],
       "thumbnailId": null
     },
@@ -172,14 +272,16 @@
         "Conducted weekly virtual classes using varied student-engagement tools.",
         "Created digital learning content bridging classroom and remote instruction."
       ],
-      "endorsedSkills": ["mentorship"],
+      "endorsedSkills": [
+        "mentorship"
+      ],
       "gallery": [],
       "thumbnailId": null
     },
     {
       "id": "stealth-startup-agentic-product-development-business-development-lead",
-      "type": "project",
-      "title": "Business Development Lead",
+      "type": "work",
+      "title": "Product Leader",
       "organization": "Stealth Startup — Agentic Product Development",
       "location": "Remote",
       "startDate": "2025-12",
@@ -202,13 +304,14 @@
     {
       "id": "validex-health-labs-solopreneur",
       "type": "project",
-      "title": "Solopreneur",
-      "organization": "Validex Health Labs",
+      "title": "Validex Health Labs",
+      "organization": "",
       "location": "Los Angeles, CA",
       "url": "https://validex-health-labs.base44.app",
       "startDate": "2026-01",
       "endDate": "2026-05",
-      "summary": "Conceived, developed, and validated an N=1 self-care experimentation platform for optimizing supplement use.",
+      "summary": "Validex is a small web app I built to help people figure out which supplements actually work for them. Instead of taking a handful of pills and hoping, you add one at a time, track how you feel, and let the results tell you what to keep. I ran it solo as the product manager: shaping the idea, building the prototype, sizing the market, and testing whether real people wanted it.",
+      "tagline": "N=1 precision-supplementation platform: outcomes-based dosing, closed-loop self-experimentation, D2C health-tech",
       "responsibilities": [
         "Designed a functional web-app prototype enabling individuals to plan and optimize their supplement stacks.",
         "Generated an experimentation framework for introducing supplements using outcomes-based dosage planning.",
@@ -228,58 +331,72 @@
     {
       "id": "everplate-financial-analyst",
       "type": "project",
-      "title": "Financial Analyst",
-      "organization": "Everplate",
+      "title": "Everplate",
+      "organization": "",
       "location": "Los Angeles, CA",
       "url": "https://everplate.me",
       "startDate": "2025-08",
       "endDate": "2025-12",
-      "summary": "Developed financial models and a funding strategy for an AI-driven personalized-nutrition startup.",
+      "summary": "Everplate is a startup that uses AI to build meal plans tailored to each person. I was their financial analyst. I built the spreadsheets that predict how money comes in and goes out, worked out what the company is worth, and put together a fundraising plan that gets it to break-even in about two years.",
+      "tagline": "AI-driven personalized nutrition: predictive cash-flow modeling, valuation, and capital strategy for a pre-seed consumer health startup",
       "responsibilities": [
         "Modeled predictive, data-driven cash-flow and valuation documents.",
         "Built and validated a funding strategy projected to enable the company to break even within eight quarters.",
         "Conducted market-sizing and positioning studies to inform and validate three-year financial models and projections."
       ],
-      "endorsedSkills": ["financial-modeling", "market-research"],
+      "endorsedSkills": [
+        "financial-modeling",
+        "market-research"
+      ],
       "gallery": [],
       "thumbnailId": null
     },
     {
       "id": "game-night-studios-marketing-team-member",
       "type": "project",
-      "title": "Marketing Team Member",
-      "organization": "Game Night Studios",
+      "title": "Game Night Studios",
+      "organization": "",
       "location": "Los Angeles, CA",
       "startDate": "2025-08",
       "endDate": "2025-12",
-      "summary": "Supported the development and go-to-market planning of an early-stage gaming startup.",
+      "summary": "Game Night Studios is a small team making its first video game. I was on the marketing team, helping plan how the game would reach players, running playtests to see what people actually enjoyed, and turning that feedback into changes to both the game and the launch plan.",
+      "tagline": "Early-stage indie game studio: GTM strategy, playtest-driven product iteration, and community growth",
       "responsibilities": [
         "Developed administrative documents guiding the startup from ideation through go-to-market strategy.",
         "Executed cross-functional projects spanning product development, business, and marketing.",
         "Supported social-media and growth initiatives.",
         "Conducted playtests with six participants and synthesized feedback to refine development and marketing plans."
       ],
-      "endorsedSkills": ["go-to-market", "user-research", "cross-functional-collaboration"],
+      "endorsedSkills": [
+        "go-to-market",
+        "user-research",
+        "cross-functional-collaboration"
+      ],
       "gallery": [],
       "thumbnailId": null
     },
     {
       "id": "nexus-group-usc-board-member",
       "type": "project",
-      "title": "Board Member",
-      "organization": "Nexus Group USC",
+      "title": "Nexus Group USC",
+      "organization": "",
       "location": "Los Angeles, CA",
       "startDate": "2023-06",
       "endDate": "2024-11",
-      "summary": "Helped establish and grow a student organization connecting biotechnology, healthcare, and business interests.",
+      "summary": "Nexus is a USC student group for people interested in where biotech, healthcare, and business meet. As a founding board member I helped grow it from an idea to more than 40 members, running workshops and fundraisers and helping students build the skills to work in the industry.",
+      "tagline": "Student-led biobusiness collective: biotech, healthcare, and venture-adjacent professional development",
       "responsibilities": [
         "Developed the organization from concept to a membership of more than 40 students.",
         "Led upskilling workshops, fundraising efforts, and professional-development initiatives.",
         "Supported soft-skills development for students interested in the biobusiness sector."
       ],
-      "endorsedSkills": ["mentorship", "stakeholder-management"],
+      "endorsedSkills": [
+        "mentorship",
+        "stakeholder-management"
+      ],
       "gallery": [],
-      "thumbnailId": null
+      "thumbnailId": null,
+      "url": "https://www.nexususc.org"
     }
   ]
 }
