@@ -445,6 +445,7 @@
       "title": "Market Distance Matrix",
       "organization": "",
       "location": "Los Angeles, CA",
+      "url": "https://github.com/AK-1509/Market-Distance-Matrix",
       "startDate": "2026-10",
       "endDate": null,
       "summary": "A tool for seeing how close each competitor is to the product you’re evaluating. You enter the total market, each product’s addressable market, and which customer segments it serves. The app works out how much each pair of products overlaps and draws a map with your product in the middle and each competitor at its measured distance. I designed the overlap model and built the app myself; it runs entirely in the browser with no account or server.",
