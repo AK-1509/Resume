@@ -115,6 +115,21 @@
       "id": "mentorship",
       "label": "Mentorship",
       "category": "soft"
+    },
+    {
+      "id": "typescript",
+      "label": "TypeScript",
+      "category": "technical"
+    },
+    {
+      "id": "react",
+      "label": "React",
+      "category": "technical"
+    },
+    {
+      "id": "data-visualization",
+      "label": "Data Visualization",
+      "category": "technical"
     }
   ],
   "languages": [
@@ -397,6 +412,58 @@
       "gallery": [],
       "thumbnailId": null,
       "url": "https://www.nexususc.org"
+    },
+    {
+      "id": "symptom-visualizer",
+      "type": "project",
+      "title": "Symptom Visualizer",
+      "organization": "",
+      "location": "Los Angeles, CA",
+      "url": "https://github.com/AK-1509/Symptom-Visualizer",
+      "startDate": "2026-10",
+      "endDate": null,
+      "summary": "A prototype that shows where a drug’s effects land on the human body, using the drug’s official FDA label. You add a drug, the body regions its label talks about light up, and you click a region to read the exact label text behind it. I designed and built it on my own, including the pipeline that pulls and organizes the label data.",
+      "tagline": "FDA label intelligence: openFDA SPL ingestion, deterministic anatomical effect mapping, and provenance-first drug-safety visualization",
+      "responsibilities": [
+        "Built an interactive SVG body map that separates therapeutic uses, adverse reactions, and warnings across 20 anatomical regions.",
+        "Wrote an openFDA ingestion pipeline that selects one label per drug, extracts indications, boxed warnings, contraindications, and adverse reactions, and maps each statement to anatomy with a deterministic keyword table.",
+        "Shipped a 94-drug dataset in which every effect quotes verbatim label text and cites its section and DailyMed source.",
+        "Added age- and sex-aware statement filtering and in-browser full-text search across label text with typo tolerance.",
+        "Covered the app with Vitest unit tests and Playwright end-to-end tests, with the full flow operable by keyboard."
+      ],
+      "endorsedSkills": [
+        "typescript",
+        "react",
+        "data-visualization"
+      ],
+      "gallery": [],
+      "thumbnailId": null
+    },
+    {
+      "id": "market-distance-matrix",
+      "type": "project",
+      "title": "Market Distance Matrix",
+      "organization": "",
+      "location": "Los Angeles, CA",
+      "startDate": "2026-10",
+      "endDate": null,
+      "summary": "A tool for seeing how close each competitor is to the product you’re evaluating. You enter the total market, each product’s addressable market, and which customer segments it serves. The app works out how much each pair of products overlaps and draws a map with your product in the middle and each competitor at its measured distance. I designed the overlap model and built the app myself; it runs entirely in the browser with no account or server.",
+      "tagline": "Competitive landscape modeling: TAM/SAM segment-overlap distance metric, radial positioning map, and deterministic strategy narrative",
+      "responsibilities": [
+        "Designed a market-overlap model that turns SAM and customer-segment splits into a distance score between 0 and 1 for every pair of products.",
+        "Built a radial landscape map that places each competitor at its exact distance from the focal product and discloses the map’s distortion error.",
+        "Generated written summaries from the metrics, with citations back to the entered inputs and sources.",
+        "Shipped PNG and SVG chart exports, a printable HTML report, and validated JSON backup and import.",
+        "Tested the model, storage, and exports with Vitest unit tests and a Playwright browser journey."
+      ],
+      "endorsedSkills": [
+        "typescript",
+        "react",
+        "data-visualization",
+        "market-research"
+      ],
+      "gallery": [],
+      "thumbnailId": null
     }
   ]
 }
