@@ -117,7 +117,7 @@ export function movableRole(): Role {
   return found;
 }
 
-/** A role with no side projects, which opens on its experience page with no switch. */
+/** A role with no projects, which opens on its experience page with no switch. */
 export function experienceOnlyRole(): Role | null {
   return roles.find((r) => r.projects.length === 0) ?? null;
 }

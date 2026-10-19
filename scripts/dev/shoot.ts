@@ -65,7 +65,7 @@ async function main() {
       );
       await page.waitForTimeout(250);
       await page.screenshot({ path: join(OUT, `${vp.name}-${theme}-experience.png`) });
-      await role.getByRole("button", { name: /Side projects/ }).click();
+      await role.getByRole("button", { name: "Projects", exact: true }).click();
       // Opened from the keyboard: a pointer opens it on hover, which slides
       // the card over the tab, so a click would land on the card.
       await page.getByRole("button", { name: "Index", exact: true }).focus();

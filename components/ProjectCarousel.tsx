@@ -92,7 +92,7 @@ function Slide({ project, line }: { project: Experience; line: string | null }) 
 }
 
 /**
- * The side-projects carousel: a depth stack of image slides, then the front
+ * The projects carousel: a depth stack of image slides, then the front
  * project's details — start month, summary, live demo, link and skills.
  *
  * Only the front slide is in the reading and tab order. Wheel, swipe, the
@@ -170,7 +170,7 @@ export function ProjectCarousel({
     <div
       role="region"
       aria-roledescription="carousel"
-      aria-label={`${label} side projects`}
+      aria-label={`${label} projects`}
       onKeyDown={(ev) => {
         if (ev.key === "ArrowRight") {
           ev.preventDefault();

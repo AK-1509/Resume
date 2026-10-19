@@ -18,7 +18,7 @@ npm run lint
 
 ## Design system: Druid
 
-The page implements the Druid design system: a green-led light theme and a brown-led dark theme on a glassy gradient canvas built from the palette, with frosted glass containers floating on it. Each role section is a two-page pager laid side by side in a horizontal, snapping track: side projects on a green page (a 3D stack of image slides) and experience and education on a brown page (a disclosure list). The page in view fills the track and a dimmed sliver of the other shows at the edge. A gold switch above it (`PageSwitch`, a two-tab tablist) moves between them; its handle can be dragged, and the pages follow it live. The Index is a mauve card docked behind a tab on the right edge; Languages is a mauve card at the bottom right. The palette is fixed. All of it lives in `app/globals.css`.
+The page implements the Druid design system: a green-led light theme and a brown-led dark theme on a glassy gradient canvas built from the palette, with frosted glass containers floating on it. Each role section is a two-page pager laid side by side in a horizontal, snapping track: projects on a green page (a 3D stack of image slides) and experience and education on a brown page (a disclosure list). The page in view fills the track and a dimmed sliver of the other shows at the edge. A gold switch above it (`PageSwitch`, a two-tab tablist) moves between them; its handle can be dragged, and the pages follow it live. The Index is a mauve card docked behind a tab on the right edge; Languages is a mauve card at the bottom right. The palette is fixed. All of it lives in `app/globals.css`.
 
 ## Contrast constraints
 
@@ -51,9 +51,9 @@ The applied theme lives on `<html data-theme>`, set by an inline script in `app/
 ## Rules for components
 
 - No hex values in components. Style from the tokens in `app/globals.css`; the only mirror is `lib/tokens.ts`, which exists solely for `/specimen`.
-- **No component may assume an optional field is populated.** `summary` is often `""`, `gallery` is often `[]`, `thumbnailId` is often `null`, `organization` is `""` for personal projects. The skill is forbidden from filling these in, so a component that looks broken when one is empty is a component bug. A slide with no thumbnail shows the labelled VVP placeholder; a project with no demo link shows the empty demo slot. A role with no side projects opens on its experience page and offers no switch.
-- Pictures and demo links belong to side projects only. The experience list never shows them.
-- Side projects show their start month only (`formatStartMonth`); experience rows show the full range.
+- **No component may assume an optional field is populated.** `summary` is often `""`, `gallery` is often `[]`, `thumbnailId` is often `null`, `organization` is `""` for personal projects. The skill is forbidden from filling these in, so a component that looks broken when one is empty is a component bug. A slide with no thumbnail shows the labelled VVP placeholder; a project with no demo link shows the empty demo slot. A role with no projects opens on its experience page and offers no switch.
+- Pictures and demo links belong to projects only. The experience list never shows them.
+- Projects show their start month only (`formatStartMonth`); experience rows show the full range.
 - Only what is on screen is in the reading and tab order. The page not showing, slides behind the front, closed experience rows, and headlines not on the drum are all `inert`.
 - Endorsement counts are derived at render time via `endorsementCounts()`. Never store them.
 - Sort direction for every experience list lives in one constant: `SORT_DIRECTION` in `lib/resume.ts`.

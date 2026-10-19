@@ -90,7 +90,7 @@ function Row({
  * The experience page: jobs, then degrees, as a plain disclosure list. Each
  * row shows title, employer and dates; opening it shows the location,
  * summary, bullets and skills. No pictures and no demo links — those belong
- * to the side projects.
+ * to the projects.
  *
  * A row with nothing behind it renders as a disabled button rather than a
  * toggle that opens onto nothing.

@@ -304,7 +304,7 @@ async function run(name: string, browser: Browser) {
   await page.waitForTimeout(600);
   check("and closes again", (await toggleRow.getAttribute("aria-expanded")) === "false" && (await bodyHeight()) < 1);
 
-  await section.getByRole("button", { name: "Side projects" }).click();
+  await section.getByRole("button", { name: "Projects", exact: true }).click();
   await page.waitForTimeout(100);
   await transitionsDone(page, role);
   check("the switch turns back to the projects page", (await roleState(page, role)).projects === "here");

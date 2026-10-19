@@ -90,7 +90,7 @@ function PageShell({
 
 /**
  * One role section: its title, then the role's two pages side by side in a
- * horizontal track — side projects on a green page, experience and education
+ * horizontal track — projects on a green page, experience and education
  * on a brown one — with the gold switch above them.
  *
  * One page fills the track; a sliver of the other shows at the edge, dimmed,
@@ -99,7 +99,7 @@ function PageShell({
  * whichever page is nearer. Its height follows the page in view, blended
  * while moving, so a short page never sits above a tall empty gap.
  *
- * A role with no side projects shows only its experience page, with no
+ * A role with no projects shows only its experience page, with no
  * switch; the same holds the other way round.
  */
 export function RoleSection({
@@ -245,7 +245,7 @@ export function RoleSection({
           <PageSwitch
             id={role.id}
             options={[
-              { page: "projects", label: "Side projects", count: role.projects.length, panelId: panelId("projects") },
+              { page: "projects", label: "Projects", count: role.projects.length, panelId: panelId("projects") },
               {
                 page: "experience",
                 label: "Experience",
@@ -284,7 +284,7 @@ export function RoleSection({
               roleId={role.id}
               page="projects"
               ground="on-green"
-              title="Side projects"
+              title="Projects"
               titleRef={(el) => {
                 titleRefs.current.projects = el;
               }}
@@ -342,7 +342,7 @@ export function RoleSection({
                   }}
                 >
                   <Arrow flip />
-                  Side projects
+                  Projects
                 </button>
               }
             >

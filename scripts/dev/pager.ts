@@ -46,7 +46,7 @@ const view = (page: Page, roleId: string) =>
 
 async function main() {
   const role = roles.find((r) => r.hasSwitch);
-  if (!role) throw new Error("no role in content/portfolio.json has both side projects and experience");
+  if (!role) throw new Error("no role in content/portfolio.json has both projects and experience");
 
   const browser = await chromium.launch();
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
@@ -59,7 +59,7 @@ async function main() {
   console.log(`\n  ${role.label}\n`);
 
   let v = await view(page, role.id);
-  check("starts on side projects", v.selected === "projects" && v.here === "projects" && v.at === 0, JSON.stringify(v));
+  check("starts on projects", v.selected === "projects" && v.here === "projects" && v.at === 0, JSON.stringify(v));
   check("the experience page waits beside it, inert", v.inertAway);
   check("the track is as tall as the page in view", v.heightMatches);
 

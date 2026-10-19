@@ -451,30 +451,30 @@ async function pager(page: Page, role: Role) {
     el = await active(page);
     if (!el || el.section !== role.id) break;
     if (el.inClosedRow || el.inAwayPage || el.inInert) strays.push(el.name.slice(0, 30));
-    if (el.name.startsWith("Side projects")) {
+    if (el.name.startsWith("Projects")) {
       reachedSwitch = true;
       break;
     }
     toggles++;
   }
   check("Tab never enters a closed row or the away page", strays.length === 0, strays.slice(0, 3).join(", "));
-  check('Tab walks the rows to "Side projects"', reachedSwitch, `${toggles} stop(s) on the way`);
+  check('Tab walks the rows to "Projects"', reachedSwitch, `${toggles} stop(s) on the way`);
 
   await page.keyboard.press("Enter");
   await arrive(page, role, "projects");
   s = await roleState(page, role);
   el = await active(page);
   check("Enter turns back to the projects page", s.projects?.state === "here" && s.experience?.state === "away");
-  check('focus moves to its "Side projects" heading', el?.tag === "h3" && el.name === "Side projects", `${el?.tag} "${el?.name}"`);
+  check('focus moves to its "Projects" heading', el?.tag === "h3" && el.name === "Projects", `${el?.tag} "${el?.name}"`);
 }
 
 async function experienceOnly(page: Page) {
   const role = experienceOnlyRole();
   if (!role) {
-    console.log("\n  SKIP  every role has side projects; the experience-only layout is not exercised");
+    console.log("\n  SKIP  every role has projects; the experience-only layout is not exercised");
     return;
   }
-  console.log(`\n  ${role.label}: no side projects\n`);
+  console.log(`\n  ${role.label}: no projects\n`);
   await fresh(page);
   check("reached through the Index", await viaIndex(page, role));
   const s = await roleState(page, role);

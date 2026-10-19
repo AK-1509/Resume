@@ -46,7 +46,7 @@ export function formatDurationLong(startDate: string, endDate: string | null): s
 }
 
 /**
- * Side projects show only when they began, e.g. "Started October 2026" —
+ * Projects show only when they began, e.g. "Started October 2026" —
  * many are ongoing, and an end date says little about a project.
  */
 export function formatStartMonth(startDate: string): string {

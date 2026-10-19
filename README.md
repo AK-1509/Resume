@@ -1,6 +1,6 @@
 # Resume
 
-An interactive portfolio built on the Druid design system, set on a glassy gradient canvas. The hero rotates one headline per entry, each backed by a bullet quoted from the resume. Four role sections follow: Product management, Design thinking, Operations and Business development. Each holds two pages side by side: side projects as a 3D stack of image slides on a green page, and experience and education as an expandable list on a brown one. A gold switch slides between them; drag its handle and the pages follow. A mauve index is docked on the right edge, and a mauve Languages card sits at the bottom right. The whole resume still exports as a one-page PDF.
+An interactive portfolio built on the Druid design system, set on a glassy gradient canvas. The hero rotates one headline per entry, each backed by a bullet quoted from the resume. Four role sections follow: Product management, Design thinking, Operations and Business development. Each holds two pages side by side: projects as a 3D stack of image slides on a green page, and experience and education as an expandable list on a brown one. A gold switch slides between them; drag its handle and the pages follow. A mauve index is docked on the right edge, and a mauve Languages card sits at the bottom right. The whole resume still exports as a one-page PDF.
 
 **Live:** <https://resume-phi-roan.vercel.app> · **Specimen:** <https://resume-phi-roan.vercel.app/specimen>
 
