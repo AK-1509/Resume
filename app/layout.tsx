@@ -40,7 +40,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
       </head>
-      <body className="min-h-full bg-surface text-strong">{children}</body>
+      {/* No body background: <html> carries the fallback colour, and the page's
+          fixed gradient canvas paints between the two. */}
+      <body className="min-h-full text-strong">{children}</body>
     </html>
   );
 }

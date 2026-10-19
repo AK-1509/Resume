@@ -47,7 +47,7 @@ async function main() {
 
       // One viewport-sized frame per section, so the depth stacks can be read
       // at their real size rather than shrunk inside a full-page image.
-      for (const id of ["top", "product-management", "design-thinking", "education", "contact"]) {
+      for (const id of ["top", "product-management", "operations-and-process-improvement", "contact"]) {
         await page.locator(`#${id}`).scrollIntoViewIfNeeded();
         await page.evaluate((target) => {
           document.getElementById(target)?.scrollIntoView({ block: "start", behavior: "instant" });
@@ -55,6 +55,25 @@ async function main() {
         await page.waitForTimeout(250);
         await page.screenshot({ path: join(OUT, `${vp.name}-${theme}-${id}.png`) });
       }
+      // The other page of a role, and the index dock opened.
+      const role = page.locator("#product-management");
+      await role.getByRole("button", { name: /Experience and education/ }).click();
+      await role.getByRole("button", { name: /Product Leader/ }).click();
+      await page.waitForTimeout(700);
+      await page.evaluate(() =>
+        document.getElementById("product-management")?.scrollIntoView({ block: "start", behavior: "instant" }),
+      );
+      await page.waitForTimeout(250);
+      await page.screenshot({ path: join(OUT, `${vp.name}-${theme}-experience.png`) });
+      await role.getByRole("button", { name: /Side projects/ }).click();
+      // Opened from the keyboard: a pointer opens it on hover, which slides
+      // the card over the tab, so a click would land on the card.
+      await page.getByRole("button", { name: "Index", exact: true }).focus();
+      await page.keyboard.press("Enter");
+      await page.waitForTimeout(500);
+      await page.screenshot({ path: join(OUT, `${vp.name}-${theme}-index.png`) });
+      await page.keyboard.press("Escape");
+
       await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
     }
 

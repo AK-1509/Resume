@@ -1,6 +1,6 @@
 # Resume
 
-An interactive portfolio built on the Druid design system. A brown hero rotates one headline per entry, each backed by a bullet quoted from the resume. The role index leads to four sections: Product management, Design thinking, Operations and Business development. Each one stacks its entries as Content Cards in a shallow 3D deck. The whole resume still exports as a one-page PDF.
+An interactive portfolio built on the Druid design system, set on a glassy gradient canvas. The hero rotates one headline per entry, each backed by a bullet quoted from the resume. Four role sections follow: Product management, Design thinking, Operations and Business development. Each is a two-page pager: side projects as a 3D stack of image slides on a green page, and experience and education as an expandable list on a brown one. A mauve index is docked on the right edge, and a mauve Languages card sits at the bottom right. The whole resume still exports as a one-page PDF.
 
 **Live:** <https://resume-phi-roan.vercel.app> · **Specimen:** <https://resume-phi-roan.vercel.app/specimen>
 
@@ -47,7 +47,7 @@ Design tokens are CSS custom properties in the `@theme` block of [`app/globals.c
 
 Two things worth knowing before changing any colour:
 
-- **The Content Card and the Index are fixed materials.** They look the same in both themes. Cards have a cream face, walnut text and a hatched brown shadow; the Index is a mauve card with metallic gold labels.
+- **The slides and the mauve cards are fixed materials.** They look the same in both themes. Slides have a gradient frame and a hatched brown shadow, with the headline on a dark scrim; the Index and Languages cards are mauve with metallic gold labels. Tags are gold, and mauve only on brown pages.
 - **Dark mode is not an inversion.** Light is green-led and dark is brown-led. Links move from `green-deep` to `green-sage`, and actions flip from a brown fill to a sage fill. Components use the semantic tokens (`bg-surface`, `text-strong`, `bg-action`, ...), never the raw palette.
 
 Frutiger, Druid's heading face, is not committed because its licence doesn't cover a public repo. Headings use Schibsted Grotesk; captions and dates use Dekko.

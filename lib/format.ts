@@ -44,3 +44,12 @@ export function formatDurationLong(startDate: string, endDate: string | null): s
   };
   return `${long(startDate)} – ${endDate === null ? "Present" : long(endDate)}`;
 }
+
+/**
+ * Side projects show only when they began, e.g. "Started October 2026" —
+ * many are ongoing, and an end date says little about a project.
+ */
+export function formatStartMonth(startDate: string): string {
+  const [year, mm] = startDate.split("-");
+  return `Started ${LONG_MONTHS[Number(mm) - 1]} ${year}`;
+}

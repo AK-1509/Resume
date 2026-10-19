@@ -3,12 +3,11 @@
 import { useEffect, useRef } from "react";
 
 /**
- * Three soft colour masses drifting behind a section. They move only by
- * transform, and pause whenever the section is off screen so a long page never
- * runs six animations nobody can see. Reduced motion stops them entirely (see
- * globals.css).
+ * Three soft colour masses drifting across the canvas, behind every glass
+ * surface. They move only by transform and pause whenever they are off
+ * screen; reduced motion stops them entirely (see globals.css).
  */
-export function LiquidBackground({ tone }: { tone: "brown" | "green" | "page" }) {
+export function LiquidBackground() {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -23,7 +22,7 @@ export function LiquidBackground({ tone }: { tone: "brown" | "green" | "page" })
   }, []);
 
   return (
-    <div ref={ref} className={`pf-liquid pf-liquid--${tone}`} aria-hidden="true">
+    <div ref={ref} className="pf-liquid" aria-hidden="true">
       <i />
       <i />
       <i />

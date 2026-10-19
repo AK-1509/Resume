@@ -9,7 +9,7 @@ export function SiteHeader({ name }: { name: string }) {
   return (
     <>
       <a className="druid-skip druid-button" href="#roles">
-        Skip to the role index
+        Skip to the roles
       </a>
       <div className="pf-header-wrap">
         <header className="pf-header">
@@ -20,7 +20,6 @@ export function SiteHeader({ name }: { name: string }) {
               </a>
               <nav className="pf-nav" aria-label="Site">
                 <a href="#roles">Roles</a>
-                <a href="#education">Education</a>
                 <a href="#contact">Contact</a>
               </nav>
               <div className="pf-actions">
