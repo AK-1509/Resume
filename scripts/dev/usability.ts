@@ -9,11 +9,19 @@
 import { chromium, devices, type Browser, type Page } from "@playwright/test";
 import { mkdirSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { headlineBehindTheFront, movableRole, roles } from "./fixtures";
+import {
+  experienceHeadline,
+  movableRole,
+  projectHeadline,
+  roles,
+  type Headline,
+} from "./fixtures";
 
 const BASE = process.argv[2] ?? "http://localhost:3000";
 const OUT = resolve(import.meta.dirname, "..", "..", ".screenshots");
 
+/** "Started March 2024", as formatStartMonth() writes a project's date. */
+const STARTED = /Started [A-Z][a-z]+ \d{4}/;
 
 /** "March 2024 – Present", as formatDurationLong() writes it. */
 const DURATION = /[A-Z][a-z]+ \d{4} – ([A-Z][a-z]+ \d{4}|Present)/;
@@ -71,48 +79,92 @@ async function task1(page: Page, mobile: boolean) {
   );
 }
 
+/** Where an element's top sits in the viewport, as a fraction of its height (0 = top edge). */
+const topIn = (page: Page, selector: string) =>
+  page.evaluate((sel) => {
+    const r = document.querySelector(sel)?.getBoundingClientRect();
+    return r ? { top: r.top, inView: r.top >= 0 && r.top < window.innerHeight } : { top: NaN, inView: false };
+  }, selector);
+
+/** The drum rolls on its own; pick a headline through its segment, then follow its call to action. */
+async function followHeadline(page: Page, h: Headline) {
+  await page.getByRole("button", { name: `Headline ${h.position}:` }).click();
+  await page.getByRole("link", { name: h.cta }).click();
+  await settle(page);
+  // Pages and rows open on short transitions; let them finish before measuring.
+  await page.waitForTimeout(700);
+}
+
 /**
- * 2 — Find the evidence behind a headline, and how long it ran. Target: the
- * card lands in view with no hunting. On a phone its media sits above the
- * title, so the title itself may be one scroll further; that is reported.
+ * 2 — See the project behind a headline, and when it started. Target: the
+ * slide lands in view with no hunting. Below the slide sit its title and
+ * dates; if those need a scroll, that is reported as friction.
  */
 async function task2(page: Page) {
   const started = Date.now();
   await fresh(page);
-  const target = headlineBehindTheFront();
+  const h = projectHeadline();
+  await followHeadline(page, h);
 
-  // The drum rolls on its own; pick the headline through its segment, which a
-  // reader can see and click, then follow the call to action.
-  await page.getByRole("button", { name: `Headline ${target.position}:` }).click();
-  await page.getByRole("link", { name: `Open the ${target.shortName} card` }).click();
-  await settle(page);
-
-  const card = `#${target.role.id} .pf-slot.is-active`;
-  const front = await page.locator(`${card} h3`).innerText();
-  const cardTop = await page.evaluate((sel) => document.querySelector(sel)!.getBoundingClientRect().top, card);
-  const cardInView = cardTop >= 0 && cardTop < page.viewportSize()!.height;
-  const titleInView = await visible(page, `${card} h3`);
-  const meta = await page.locator(`${card} .pf-meta`).innerText();
+  const scope = `#${h.role.id}`;
+  const front = await page.locator(`${scope} .pf-detail__title`).innerText();
+  const slide = await topIn(page, `${scope} .pf-slot.is-active`);
+  const titleInView = await visible(page, `${scope} .pf-detail__title`);
+  const meta = await page.locator(`${scope} .pf-detail .pf-meta`).innerText();
 
   record(
-    "2. Evidence behind a headline, and its dates",
-    front === target.title && cardInView && DURATION.test(meta),
+    "2. The project behind a headline, and its start",
+    front === h.title && slide.inView && STARTED.test(meta),
     started,
-    `2 clicks (segment, then the call to action); "${front}" at the front of ${target.role.label}, card ${
-      cardInView ? "in view" : "NOT in view"
-    }${titleInView === 1 ? " with its title" : ", title one scroll down"}; ${DURATION.test(meta) ? `dates on the card: ${meta.match(DURATION)![0]}` : "no dates on the card"}`,
+    `2 clicks (segment, then "${h.cta}"); "${front}" at the front of ${h.role.label}, slide ${
+      slide.inView ? "in view" : "NOT in view"
+    }${titleInView === 1 ? " with its title" : ", title and dates one scroll down"}; ${
+      STARTED.test(meta) ? meta.match(STARTED)![0] : "no start month shown"
+    }`,
   );
 }
 
-/** 3 — Browse one role from the index and come back. Target: no dead ends. */
+/** 3 — See the job behind a headline, and how long it ran. Target: the open row lands in view. */
 async function task3(page: Page) {
   const started = Date.now();
   await fresh(page);
-  // Not the first role: that one is already current at the top of the page,
-  // so landing on it would not show the index responding.
-  const role = roles.slice(1).find((r) => r.titles.length > 1) ?? movableRole();
+  const h = experienceHeadline();
+  await followHeadline(page, h);
 
-  await page.locator(".druid-index").getByRole("link", { name: role.label }).click();
+  const row = h.href;
+  const expanded = await page.locator(`${row} .pf-xp__toggle`).getAttribute("aria-expanded");
+  const at = await topIn(page, row);
+  const when = await page.locator(`${row} .pf-xp__when`).innerText();
+  const pageShown = await page
+    .locator(`#${h.role.id} .pf-page--experience`)
+    .getAttribute("data-state");
+
+  record(
+    "3. The job behind a headline, and how long it ran",
+    pageShown === "here" && expanded === "true" && at.inView && DURATION.test(when),
+    started,
+    `2 clicks (segment, then "${h.cta}"); experience page ${pageShown === "here" ? "showing" : "NOT showing"}, row ${
+      expanded === "true" ? "open" : "closed"
+    } and ${at.inView ? "in view" : `NOT in view (${Math.round(at.top)}px)`}; ${
+      DURATION.test(when) ? when : "no dates on the row"
+    }`,
+  );
+}
+
+/**
+ * 4 — Browse one role from the Index: a second project, then its experience
+ * page, then back to the top. Target: no dead ends.
+ */
+async function task4(page: Page) {
+  const started = Date.now();
+  await fresh(page);
+  // Not the first role: arriving there would not show the Index responding
+  // to anything but the first scroll.
+  const role = roles.slice(1).find((r) => r.hasSwitch && r.projects.length > 1) ?? movableRole();
+
+  // A tap or click on the tab opens the dock on any device; hover is a bonus.
+  await page.locator(".pf-dock__tab").click();
+  await page.locator(".pf-dock__panel").getByRole("link", { name: role.label }).click();
   await settle(page);
   const current = await page.evaluate(
     () => document.querySelector(".druid-index a[aria-current='location']")?.getAttribute("href") ?? "",
@@ -122,25 +174,37 @@ async function task3(page: Page) {
   const section = page.locator(`section#${role.id}`);
   await section.getByRole("button", { name: /^Next:/ }).click();
   await page.waitForTimeout(400);
-  const second = await section.locator(".pf-slot.is-active h3").innerText();
+  const second = await section.locator(".pf-detail__title").innerText();
 
-  await section.getByRole("link", { name: "Back to the role index" }).click();
+  await section.getByRole("button", { name: "Experience and education" }).click();
+  await page.waitForTimeout(700);
+  const firstRow = section.locator(".pf-xp > li").first();
+  await firstRow.locator(".pf-xp__toggle").click();
+  await page.waitForTimeout(500);
+  const opened = (await firstRow.locator(".pf-xp__toggle").getAttribute("aria-expanded")) === "true";
+
+  await section.getByRole("link", { name: "Back to the top" }).click();
   await settle(page);
-  const indexInView = await visible(page, ".druid-index");
+  const heroInView = await visible(page, "h1");
 
-  const ok = current === `#${role.id}` && headingInView === 1 && second === role.titles[1] && indexInView > 0.5;
+  const ok =
+    current === `#${role.id}` &&
+    headingInView === 1 &&
+    second === role.projects[1].title &&
+    opened &&
+    heroInView === 1;
   record(
-    "3. Browse a role from the index and return",
+    "4. Browse a role from the Index and return",
     ok,
     started,
-    `3 clicks; ${headingInView === 1 ? "heading in view" : "heading NOT in view"}, index marks ${current || "nothing"}; Next showed "${second}"; ${
-      indexInView > 0.5 ? "back at the index" : "index NOT in view after Back"
-    }`,
+    `6 clicks; Index marks ${current || "nothing"}, heading ${headingInView === 1 ? "in view" : "NOT in view"}; Next showed "${second}"; experience row ${
+      opened ? "opened" : "did NOT open"
+    }; ${heroInView === 1 ? "back at the top" : "hero NOT in view after Back to the top"}`,
   );
 }
 
-/** 4 — Export a two-experience resume as a PDF. Target: <60s. */
-async function task4(page: Page) {
+/** 5 — Export a two-experience resume as a PDF. Target: <60s. */
+async function task5(page: Page) {
   const started = Date.now();
   await fresh(page);
 
@@ -164,7 +228,7 @@ async function task4(page: Page) {
 
   const took = (Date.now() - started) / 1000;
   record(
-    "4. Export a two-experience PDF",
+    "5. Export a two-experience PDF",
     download !== null && took < 60,
     started,
     download
@@ -186,6 +250,7 @@ async function run(browser: Browser, name: string, mobile: boolean) {
   await task2(page);
   await task3(page);
   await task4(page);
+  await task5(page);
   await fresh(page);
   await page.screenshot({ path: join(OUT, `usability-${mobile ? "mobile" : "desktop"}.png`) });
 

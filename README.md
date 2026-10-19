@@ -58,7 +58,7 @@ The checks in `scripts/dev/` are the ones that were actually run at each checkpo
 
 ```bash
 npx tsx scripts/dev/audit.ts          # axe-core, landmarks, focus rings, 200% zoom, both themes
-npx tsx scripts/dev/keyboard.ts       # theme switch, headline drum, role carousels, Index, export dialog, keyboard only
+npx tsx scripts/dev/keyboard.ts       # theme switch, headline drum, project carousels, experience pager, Index dock, export dialog, keyboard only
 npx tsx scripts/dev/keyboard-export.ts# export incl. drag-reorder, keyboard only
 npx tsx scripts/dev/cross-browser.ts  # the engine-sensitive paths in Chromium, Firefox and WebKit
 npx tsx scripts/dev/usability.ts      # timed reader tasks, desktop and mobile
