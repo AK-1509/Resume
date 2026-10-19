@@ -1,31 +1,25 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
+import { Dekko, Schibsted_Grotesk } from "next/font/google";
 import "./globals.css";
 import resume from "@/content/resume.json";
 
-const cormorant = Cormorant_Garamond({
-  variable: "--font-cormorant",
+/** Body and headings. Variable, so the 400 roman and 700 display cuts are one file. */
+const schibsted = Schibsted_Grotesk({
+  variable: "--font-schibsted",
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
   display: "swap",
 });
 
-const plexSans = IBM_Plex_Sans({
-  variable: "--font-plex-sans",
+/** The note hand: captions, dates, tabs and counters. */
+const dekko = Dekko({
+  variable: "--font-dekko",
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  display: "swap",
-});
-
-const plexMono = IBM_Plex_Mono({
-  variable: "--font-plex-mono",
-  subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: "400",
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: `${resume.profile.name} — Resume`,
+  title: `${resume.profile.name} — Portfolio`,
   description: resume.profile.headline,
 };
 
@@ -40,13 +34,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${cormorant.variable} ${plexSans.variable} ${plexMono.variable} h-full`}
+      className={`${schibsted.variable} ${dekko.variable} h-full`}
       suppressHydrationWarning
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
       </head>
-      <body className="min-h-full flex flex-col bg-surface text-strong">{children}</body>
+      <body className="min-h-full bg-surface text-strong">{children}</body>
     </html>
   );
 }

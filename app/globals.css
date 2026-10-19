@@ -1,110 +1,157 @@
 @import "tailwindcss";
 
 /* ---------------------------------------------------------------------------
-   Design tokens.
+   Design tokens — the Druid system.
 
    Every colour used anywhere in the app comes from here. Components must never
-   contain a hex value. See CLAUDE.md for the contrast constraints that govern
-   which of these may be placed on which background — brass and sage are NOT
-   general-purpose colours.
+   contain a hex value. See CLAUDE.md for which of these may sit on which
+   surface: the gold mid-tones, mauve-accent and the wire greens are decorative
+   and never carry text.
+
+   The default Tailwind palette is cleared so an off-system colour cannot be
+   written by accident.
    --------------------------------------------------------------------------- */
 @theme {
-  /* Surfaces and text */
-  --color-ink: #171719; /* dark surfaces; body text on light */
-  --color-paper: #f2ebdd; /* main content background */
-  --color-card: #e3d9c7; /* card surfaces */
-  --color-muted: #4b5052; /* secondary text (6.9:1 on paper, 5.9:1 on card) */
+  --color-*: initial;
+  --color-white: #ffffff;
 
-  /* Accents */
-  --color-claret: #722f35; /* primary CTA; 8.1:1 on paper */
-  --color-claret-dim: #4a1f27; /* CTA hover */
-  --color-brass: #b08a4a; /* DARK-SURFACE ONLY — 2.7:1 on paper, fails */
-  --color-sage: #65756a; /* metadata scale and borders only — 4.1:1 on paper */
+  /* Greens: the light-mode ground and its sections. */
+  --color-green-pale: #f1f5ef; /* light page */
+  --color-green-soft: #dfe9dc; /* light green sections */
+  --color-green-sage: #b8ceb2; /* dark-mode actions and links */
+  --color-green-deep: #375c48; /* light-mode links, muted text, focus (6.8:1 on pale) */
+  --color-green-dark: #1e352b; /* dark green sections */
+  --color-green-wire-light: #bdcdb8; /* DECORATIVE ONLY — 1.5:1 */
+  --color-green-wire-dark: #14271e; /* DECORATIVE ONLY */
 
-  /* Type families. Wired to next/font variables in app/layout.tsx. */
-  --font-serif: var(--font-cormorant), ui-serif, Georgia, serif;
-  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, monospace;
+  /* Browns: the dark-mode ground and brown sections. */
+  --color-espresso: #211a16; /* dark page */
+  --color-walnut: #30251e; /* dark raised surfaces; card text */
+  --color-brown-rich: #49372a; /* light actions, brown sections, card hatch */
 
-  /* Modular type scale, ~1.25 ratio. Names are roles, not sizes, so a change
-     to the scale propagates rather than requiring a find-and-replace. */
-  --text-hero: clamp(3rem, 8vw, 6rem);
-  --text-hero--line-height: 0.95;
-  --text-hero--letter-spacing: 0.01em;
+  /* Metallic gold. Only gold-shadow (on pale) and gold-light/glint (on dark)
+     carry text. gold-base is a gradient stop. */
+  --color-gold-shadow: #765728;
+  --color-gold-base: #b7924b;
+  --color-gold-light: #d8b96e;
+  --color-gold-glint: #f4e4ba;
 
-  --text-section: 2.25rem;
-  --text-section--line-height: 1.1;
+  --color-ink: #141613; /* main text on pale and white */
 
+  /* The Content Card material — fixed in both themes. */
+  --color-cream: #f5efdf;
+  --color-mauve-soft: #c7a7b7; /* tags, behind walnut text */
+  --color-mauve-accent: #8d6e82; /* DECORATIVE ONLY — 3.9:1 on cream */
+  --color-mauve-ink: #624557; /* mauve text on cream (7.3:1); card focus */
+  --color-mauve-index: #5e4054; /* the Index card */
+  --color-frame-brown: #5d342b;
+  --color-frame-red: #88483e;
+  --color-frame-highlight: #d3a18b;
+  --color-frame-shadow: #3a241d;
+
+  --color-error: #8a3638;
+  --color-error-light: #f0bbb7;
+
+  /* Type families, wired to next/font variables in app/layout.tsx. Frutiger is
+     the system's heading face, but its licence does not cover a public repo,
+     so headings run on the system's own fallback, Schibsted Grotesk. */
+  --font-heading: var(--font-schibsted), system-ui, sans-serif;
+  --font-sans: var(--font-schibsted), system-ui, sans-serif;
+  --font-note: var(--font-dekko), "Comic Sans MS", cursive;
+
+  /* Type scale for the dialog and specimen. Page headings use the clamps in
+     the component layer below. */
+  --text-section: 2rem;
+  --text-section--line-height: 1.22;
   --text-entry: 1.375rem;
-  --text-entry--line-height: 1.2;
-
-  --text-org: 1rem;
-  --text-org--line-height: 1.4;
-
-  /* Hero subtitle — the scale's next step above body. */
-  --text-lead: 1.25rem;
-  --text-lead--line-height: 1.5;
-
+  --text-entry--line-height: 1.25;
   --text-body: 1rem;
   --text-body--line-height: 1.6;
-
   --text-ui: 0.9375rem;
   --text-ui--line-height: 1.3;
+  --text-caption: 1rem;
+  --text-caption--line-height: 1.4;
 
-  --text-meta: 0.8125rem;
-  --text-meta--line-height: 1.3;
-  --text-meta--letter-spacing: 0.05em;
-
-  --text-bubble: 0.75rem;
-  --text-bubble--line-height: 1.2;
-  --text-bubble--letter-spacing: 0.03em;
+  --ease-druid: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
-/* Cormorant Garamond is optically small — never set it below 1.125rem. */
-
 /* ---------------------------------------------------------------------------
-   Semantic surfaces.
+   Semantic layer.
 
-   The palette above is fixed, but it only describes a light page. Dark mode
-   needs surfaces it does not contain, and it cannot simply invert: `claret` is
-   1.9:1 on ink and fails as text entirely, so the link/accent colour has to
-   change role between themes rather than flip.
-
-   Everything below derives from the eight fixed colours — the two dark
-   surfaces are `ink` lifted toward `paper` with color-mix, so no new hex enters
-   the system. Components style themselves from these semantic names, never
-   from the raw palette, except the hero, which is `ink` in both themes.
+   Light is green-led, dark is brown-led. Dark mode is not an inversion: the
+   accent moves from green-deep to sage, and actions flip from a brown fill
+   with white text to a sage fill with ink text.
 
    Ratios (measured, see /specimen):
-     dark  strong  #F2EBDD on #171719   15.1:1   any text
-     dark  soft    70% paper on ink      7.8:1   any text
-     dark  accent  #B08A4A on #171719    5.6:1   any text
-     dark  rule    #65756A on #171719    3.7:1   borders and non-text UI only
+     light strong  #141613 on #F1F5EF   16.5:1
+     light soft    #375C48 on #F1F5EF    6.8:1
+     dark  strong  #FFFFFF on #211A16   17.2:1
+     dark  soft    #B8CEB2 on #211A16   10.2:1
+     action light  #FFFFFF on #49372A   11.3:1
+     action dark   #141613 on #B8CEB2   10.8:1
    --------------------------------------------------------------------------- */
 :root {
-  --surface-page: var(--color-paper);
-  --surface-panel: var(--color-card);
+  --surface-page: var(--color-green-pale);
+  --surface-panel: var(--color-white);
   --text-strong: var(--color-ink);
-  --text-soft: var(--color-muted);
-  --rule: var(--color-sage);
-  /* Text-bearing accent. claret on paper is 8.1:1. */
-  --accent: var(--color-claret);
-  --focus: var(--color-claret);
+  --text-soft: var(--color-green-deep);
+  --rule: var(--color-green-deep);
+  --accent: var(--color-green-deep);
+  --focus: var(--color-green-deep);
+  --action: var(--color-brown-rich);
+  --on-action: var(--color-white);
+  --section-green: var(--color-green-soft);
+  --section-green-text: var(--color-ink);
+  --section-brown: var(--color-brown-rich);
+
+  /* Header glass and the liquid colour masses. Translucent mixes of palette
+     colours, so no new hue enters the system. */
+  --glass-bg: color-mix(in srgb, var(--color-green-pale) 80%, transparent);
+  --glass-line: color-mix(in srgb, var(--color-white) 60%, transparent);
+  --glass-hi: color-mix(in srgb, var(--color-white) 65%, transparent);
+  --glass-shadow: color-mix(in srgb, var(--color-espresso) 14%, transparent);
+  --liquid-brown-1: color-mix(in srgb, var(--color-frame-red) 55%, transparent);
+  --liquid-brown-2: color-mix(in srgb, var(--color-mauve-index) 60%, transparent);
+  --liquid-brown-3: color-mix(in srgb, var(--color-gold-shadow) 42%, transparent);
+  --liquid-green-1: color-mix(in srgb, var(--color-green-pale) 90%, transparent);
+  --liquid-green-2: color-mix(in srgb, var(--color-green-sage) 50%, transparent);
+  --liquid-green-3: color-mix(in srgb, var(--color-cream) 75%, transparent);
+  --liquid-page-1: color-mix(in srgb, var(--color-green-soft) 95%, transparent);
+  --liquid-page-2: color-mix(in srgb, var(--color-cream) 85%, transparent);
+  --liquid-page-3: color-mix(in srgb, var(--color-mauve-soft) 24%, transparent);
 }
 
 :root[data-theme="dark"] {
-  --surface-page: var(--color-ink);
-  --surface-panel: color-mix(in srgb, var(--color-paper) 8%, var(--color-ink));
-  --text-strong: var(--color-paper);
-  --text-soft: color-mix(in srgb, var(--color-paper) 70%, var(--color-ink));
-  --rule: var(--color-sage);
-  /* claret is unreadable on ink (1.9:1), so brass carries the accent here. */
-  --accent: var(--color-brass);
-  --focus: var(--color-brass);
+  --surface-page: var(--color-espresso);
+  --surface-panel: var(--color-walnut);
+  --text-strong: var(--color-white);
+  --text-soft: var(--color-green-sage);
+  --rule: var(--color-green-sage);
+  --accent: var(--color-green-sage);
+  --focus: var(--color-gold-light);
+  --action: var(--color-green-sage);
+  --on-action: var(--color-ink);
+  --section-green: var(--color-green-dark);
+  --section-green-text: var(--color-white);
+  --section-brown: var(--color-walnut);
+
+  --glass-bg: color-mix(in srgb, var(--color-espresso) 66%, transparent);
+  --glass-line: color-mix(in srgb, var(--color-white) 12%, transparent);
+  --glass-hi: color-mix(in srgb, var(--color-white) 8%, transparent);
+  --glass-shadow: color-mix(in srgb, black 30%, transparent);
+  --liquid-brown-1: color-mix(in srgb, var(--color-brown-rich) 85%, transparent);
+  --liquid-brown-2: color-mix(in srgb, var(--color-mauve-index) 42%, transparent);
+  --liquid-brown-3: color-mix(in srgb, var(--color-espresso) 75%, transparent);
+  --liquid-green-1: color-mix(in srgb, var(--color-green-deep) 55%, transparent);
+  --liquid-green-2: color-mix(in srgb, var(--color-green-wire-dark) 85%, transparent);
+  --liquid-green-3: color-mix(in srgb, var(--color-walnut) 35%, transparent);
+  --liquid-page-1: color-mix(in srgb, var(--color-walnut) 95%, transparent);
+  --liquid-page-2: color-mix(in srgb, var(--color-green-dark) 60%, transparent);
+  --liquid-page-3: color-mix(in srgb, var(--color-mauve-index) 28%, transparent);
 }
 
-/* Expose the semantic layer to Tailwind as utilities: bg-surface, bg-panel,
-   text-strong, text-soft, border-rule, text-accent. */
+/* Utilities for components: bg-surface, bg-panel, text-strong, text-soft,
+   border-rule, text-accent, bg-action, text-on-action. */
 @theme inline {
   --color-surface: var(--surface-page);
   --color-panel: var(--surface-panel);
@@ -112,6 +159,8 @@
   --color-soft: var(--text-soft);
   --color-rule: var(--rule);
   --color-accent: var(--accent);
+  --color-action: var(--action);
+  --color-on-action: var(--on-action);
 }
 
 @layer base {
@@ -119,6 +168,7 @@
     background-color: var(--surface-page);
     color: var(--text-strong);
     color-scheme: light;
+    scroll-behavior: smooth;
   }
 
   html[data-theme="dark"] {
@@ -129,52 +179,1172 @@
     font-family: var(--font-sans);
     font-size: var(--text-body);
     line-height: 1.6;
+    font-synthesis: none;
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Focus rings follow the theme: claret on light surfaces (8.1:1), brass on
-     dark (5.6:1). The hero is `ink` in both themes, so it opts in with
-     .on-ink regardless of which theme is active. */
   :focus-visible {
-    outline: 2px solid var(--focus);
-    outline-offset: 2px;
+    outline: 3px solid var(--focus);
+    outline-offset: 5px;
   }
 
-  .on-ink :focus-visible,
-  .on-ink:focus-visible {
-    outline-color: var(--color-brass);
-  }
-
-  /* Mono metadata is uppercase and tracked everywhere it appears. */
+  /* Captions and dates are Dekko, the system's note hand. */
   .metadata {
-    font-family: var(--font-mono);
-    font-size: var(--text-meta);
-    letter-spacing: var(--text-meta--letter-spacing);
-    text-transform: uppercase;
-    font-variant-numeric: tabular-nums;
+    font-family: var(--font-note);
+    font-size: var(--text-caption);
+    line-height: var(--text-caption--line-height);
   }
 }
 
-/* The measure. Every region aligns to this, including the brass rule in the
-   hero, which is what makes that rule structural rather than decorative. */
-@utility shell {
-  margin-inline: auto;
-  width: 100%;
-  max-width: 72rem;
-  padding-inline: 1.5rem;
+/* ===========================================================================
+   Druid component material.
 
-  @media (width >= 48rem) {
-    padding-inline: 2.5rem;
+   Scoped to `.druid-root` (the page wrapper) so element rules such as heading
+   margins never reach the export dialog, which renders outside it. Everything
+   here sits in the components layer, so a Tailwind utility always wins.
+   =========================================================================== */
+@layer components {
+  .druid-root {
+    --frame-gradient: linear-gradient(
+      135deg,
+      var(--color-frame-highlight) 0%,
+      var(--color-frame-red) 35%,
+      var(--color-frame-brown) 72%,
+      var(--color-frame-shadow) 100%
+    );
+    --gold-text-gradient: linear-gradient(
+      115deg,
+      var(--color-gold-light) 0%,
+      var(--color-gold-glint) 48%,
+      var(--color-gold-light) 100%
+    );
+    --perspective: 1200px;
+    --link: var(--accent);
+    --button-bg: var(--action);
+    --button-text: var(--on-action);
+
+    background: var(--surface-page);
+    color: var(--text-strong);
+    font: 400 18px/1.6 var(--font-sans);
+    overflow-wrap: anywhere;
+  }
+
+  .druid-root h1,
+  .druid-root h2,
+  .druid-root h3 {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    line-height: 1.22;
+    letter-spacing: -0.02em;
+    margin: 0 0 24px;
+    text-wrap: balance;
+  }
+  .druid-root h2 {
+    font-size: clamp(26px, 3vw, 36px);
+  }
+  .druid-root h3 {
+    font-size: clamp(22px, 2.2vw, 28px);
+  }
+  .druid-root p {
+    max-width: 68ch;
+    margin: 0 0 20px;
+  }
+  .druid-root a {
+    color: var(--link);
+    text-underline-offset: 0.2em;
+  }
+  .druid-root :focus-visible {
+    outline-color: var(--focus);
+  }
+
+  /* Layout ---------------------------------------------------------------- */
+  .druid-container {
+    width: min(100% - 96px, 1280px);
+    margin-inline: auto;
+  }
+  .druid-section {
+    position: relative;
+    padding-block: 96px;
+    scroll-margin-top: 100px;
+    overflow-x: clip;
+  }
+  .druid-section > .druid-container {
+    position: relative;
+    z-index: 1;
+  }
+  .druid-section--green {
+    background: var(--section-green);
+    color: var(--section-green-text);
+  }
+  :root[data-theme="dark"] .druid-section--green {
+    --link: var(--color-green-sage);
+  }
+  .druid-section--brown {
+    background: var(--section-brown);
+    color: var(--color-white);
+    --link: var(--color-green-sage);
+    --button-bg: var(--color-green-sage);
+    --button-text: var(--color-ink);
+    --focus: var(--color-gold-light);
+  }
+
+  /* Type roles ------------------------------------------------------------ */
+  .druid-caption,
+  .druid-tab {
+    font-family: var(--font-note);
+    font-weight: 400;
+    letter-spacing: normal;
+  }
+  .druid-caption {
+    font-size: 16px;
+    line-height: 1.4;
+  }
+  .druid-tab {
+    font-size: 18px;
+    line-height: 1.2;
+  }
+
+  /* Actions --------------------------------------------------------------- */
+  .druid-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    padding: 10px 18px;
+    background: var(--button-bg);
+    color: var(--button-text) !important;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      filter 180ms ease,
+      transform 180ms var(--ease-druid);
+  }
+  .druid-button:hover {
+    filter: brightness(1.08);
+  }
+  .druid-button[disabled] {
+    cursor: default;
+    opacity: 0.7;
+  }
+  .druid-button--quiet {
+    background: transparent;
+    border-color: currentColor;
+    color: inherit !important;
+  }
+
+  /* Content Card: hatched cast shadow, gradient frame, cream face ---------- */
+  .druid-card {
+    position: relative;
+    margin: 0;
+    transform-style: preserve-3d;
+    --link: var(--color-green-deep);
+    --focus: var(--color-mauve-ink);
+    --button-bg: var(--color-brown-rich);
+    --button-text: var(--color-white);
+  }
+  .druid-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    background: repeating-linear-gradient(
+      135deg,
+      transparent 0 3px,
+      var(--color-brown-rich) 3px 4px,
+      transparent 4px 5px
+    );
+    transform: translate(8px, 10px);
+    box-shadow: 0 3px 8px color-mix(in srgb, var(--color-espresso) 7%, transparent);
+    pointer-events: none;
+  }
+  .druid-card__face {
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    border: 3px solid transparent;
+    border-radius: 20px;
+    background:
+      linear-gradient(var(--color-cream), var(--color-cream)) padding-box,
+      var(--frame-gradient) border-box;
+    color: var(--color-walnut);
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, var(--color-white) 53%, transparent),
+      inset -1px -2px 0 color-mix(in srgb, var(--color-frame-shadow) 33%, transparent);
+  }
+  .druid-card__content {
+    position: relative;
+    z-index: 1;
+    padding: 28px;
+  }
+  .druid-card__content > :last-child {
+    margin-bottom: 0;
+  }
+  .druid-tag {
+    display: inline-block;
+    margin-bottom: 18px;
+    padding: 4px 10px;
+    border-radius: 7px;
+    background: var(--color-mauve-soft);
+    color: var(--color-walnut);
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  .druid-card__meta {
+    color: var(--color-mauve-ink);
+  }
+
+  /* Index: fixed mauve face, metallic gold labels, right-aligned ----------- */
+  .druid-index {
+    background: var(--color-mauve-index);
+    color: var(--color-gold-light);
+    border-radius: 18px;
+    padding: 24px;
+    margin-inline-start: auto;
+    max-width: 304px;
+    text-align: right;
+    --focus: var(--color-gold-glint);
+    box-shadow:
+      inset 0 1px color-mix(in srgb, var(--color-mauve-soft) 30%, transparent),
+      0 8px 24px color-mix(in srgb, var(--color-espresso) 9%, transparent);
+    transform-style: preserve-3d;
+    transform: translateZ(var(--hover-z, 0px)) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+    transition: transform 300ms var(--ease-druid);
+  }
+  .druid-index p {
+    margin: 0 0 16px auto;
+  }
+  .druid-index ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .druid-index li + li {
+    margin-top: 18px;
+  }
+  .druid-index a {
+    display: inline-block;
+    color: var(--color-gold-light);
+    text-decoration: none;
+    font-family: var(--font-heading);
+    font-size: clamp(24px, 2.2vw, 28px);
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  .druid-index a[aria-current="location"]::before {
+    content: "•";
+    display: inline-block;
+    margin-inline-end: 10px;
+    color: var(--color-gold-glint);
+  }
+  .druid-gold-text {
+    color: var(--color-gold-light);
+  }
+  @supports ((background-clip: text) or (-webkit-background-clip: text)) {
+    .druid-gold-text {
+      background-image: var(--gold-text-gradient);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0.5px 1px 0 var(--color-gold-shadow));
+    }
+  }
+
+  .druid-skip {
+    position: fixed;
+    z-index: 50;
+    top: 12px;
+    left: 12px;
+    transform: translateY(-180%);
+  }
+  .druid-skip:focus {
+    transform: none;
+  }
+
+  /* ========================================================================
+     Portfolio page
+     ======================================================================== */
+
+  /* Glass header: a zero-height sticky rail, so the hero runs underneath. */
+  .pf-header-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    height: 0;
+  }
+  .pf-header {
+    position: absolute;
+    top: 12px;
+    left: 0;
+    right: 0;
+    pointer-events: none;
+  }
+  .pf-glass {
+    pointer-events: auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 28px;
+    min-height: 64px;
+    padding: 8px 10px 8px 22px;
+    border-radius: 20px;
+    color: var(--text-strong);
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    backdrop-filter: blur(14px) saturate(140%);
+    border: 1px solid var(--glass-line);
+    box-shadow:
+      inset 0 1px 0 var(--glass-hi),
+      0 12px 32px var(--glass-shadow);
+  }
+  .pf-brand {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-right: auto;
+    font-family: var(--font-heading);
+    font-size: 22px;
+    letter-spacing: -0.01em;
+    color: var(--text-strong) !important;
+    text-decoration: none;
+  }
+  .pf-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 22px;
+  }
+  .pf-nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--text-strong);
+    text-decoration: none;
+    background: linear-gradient(currentColor, currentColor) 0 calc(100% - 9px) / 0 1.5px no-repeat;
+    transition: background-size 250ms var(--ease-druid);
+  }
+  .pf-nav a:hover,
+  .pf-nav a:focus-visible {
+    background-size: 100% 1.5px;
+  }
+  .pf-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Hero ------------------------------------------------------------------- */
+  .pf-front {
+    padding-top: 120px;
+    padding-bottom: 48px;
+  }
+  .pf-hero__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 40px 48px;
+  }
+  .pf-hero__main {
+    flex: 999 1 560px;
+    min-width: 0;
+  }
+  .pf-hero__index {
+    flex: 1 1 260px;
+    max-width: 304px;
+    margin-left: auto;
+    scroll-margin-top: 100px;
+  }
+  .druid-root .pf-h1 {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 0;
+  }
+  .pf-h1__name {
+    font-size: clamp(20px, 1.9vw, 24px);
+    line-height: 1.2;
+    letter-spacing: 0;
+    color: var(--color-gold-light);
+  }
+  .pf-h1__role {
+    font-size: clamp(28px, 2.5vw, 34px);
+    line-height: 1.15;
+    max-width: 38ch;
+    color: var(--color-white);
+  }
+  .druid-root .pf-sub {
+    margin: 18px 0 0;
+    max-width: 58ch;
+  }
+  .pf-creds {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px 28px;
+    margin: 10px 0 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--font-note);
+    font-size: 16px;
+    line-height: 1.4;
+  }
+  .pf-panel {
+    position: relative;
+    margin-top: 28px;
+    padding: 30px 36px 24px;
+    border-radius: 24px;
+    background: linear-gradient(
+      140deg,
+      color-mix(in srgb, var(--color-white) 13%, transparent) 0%,
+      color-mix(in srgb, var(--color-white) 5%, transparent) 46%,
+      color-mix(in srgb, var(--color-white) 3%, transparent) 100%
+    );
+    border: 1px solid color-mix(in srgb, var(--color-white) 18%, transparent);
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, var(--color-white) 16%, transparent),
+      inset 0 -1px 0 color-mix(in srgb, black 12%, transparent),
+      0 24px 60px color-mix(in srgb, var(--color-espresso) 24%, transparent);
+  }
+  .druid-root .pf-scroll {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 44px;
+    margin: 18px -36px -24px;
+    padding: 12px 16px 14px;
+    color: var(--color-white);
+    text-decoration: none;
+    font-family: var(--font-note);
+    font-size: 18px;
+    line-height: 1.3;
+    border-top: 1px solid color-mix(in srgb, var(--color-white) 14%, transparent);
+    border-radius: 0 0 24px 24px;
+    transition: background-color 200ms ease;
+  }
+  .pf-scroll:hover {
+    background-color: color-mix(in srgb, var(--color-white) 6%, transparent);
+  }
+  .pf-scroll svg {
+    width: 22px;
+    height: 22px;
+    animation: pf-bob 2.4s var(--ease-druid) infinite;
+  }
+
+  /* The headline drum: every line shares one grid cell and rolls in on X. */
+  .pf-drum {
+    display: grid;
+    perspective: var(--perspective);
+    perspective-origin: 20% 0%;
+  }
+  .pf-line {
+    grid-area: 1 / 1;
+    min-width: 0;
+    transform-origin: 50% 0%;
+    transform: translate3d(0, 48px, -160px) rotateX(-16deg);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      transform 900ms var(--ease-druid),
+      opacity 500ms ease,
+      visibility 0s linear 900ms;
+  }
+  .pf-line.is-current {
+    transform: translate3d(0, 0, 0) rotateX(0deg);
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s, 150ms, 0s;
+  }
+  .pf-line.is-above {
+    transform: translate3d(0, -32px, -140px) rotateX(16deg);
+  }
+  .druid-root .pf-hl {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 28px;
+    color: var(--color-white);
+    text-decoration: none;
+    border-radius: 6px;
+  }
+  .pf-hl__text {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: clamp(28px, 3vw, 42px);
+    line-height: 1.1;
+    letter-spacing: -0.022em;
+    max-width: 32ch;
+    text-wrap: pretty;
+    text-decoration-line: underline;
+    text-decoration-color: transparent;
+    text-decoration-thickness: 3px;
+    text-underline-offset: 0.16em;
+    transition: text-decoration-color 200ms ease;
+  }
+  .pf-hl:hover .pf-hl__text {
+    text-decoration-color: var(--color-gold-light);
+  }
+  .pf-attr {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 14px;
+  }
+  .pf-attr .druid-tag {
+    margin: 0;
+  }
+  .pf-attr__title {
+    font-family: var(--font-heading);
+    font-size: clamp(18px, 1.6vw, 22px);
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+  }
+  .druid-root .pf-proof {
+    margin: 12px 0 0;
+    max-width: 76ch;
+  }
+  .pf-segs {
+    display: flex;
+    gap: 6px;
+    list-style: none;
+    margin: 24px 0 0;
+    padding: 0;
+  }
+  .pf-segs li {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  .pf-seg {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+  }
+  .pf-seg__bar {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    background: color-mix(in srgb, var(--color-white) 28%, transparent);
+    overflow: hidden;
+  }
+  .pf-seg__fill {
+    position: absolute;
+    inset: 0;
+    background: var(--color-gold-light);
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+  }
+  .pf-seg.is-done .pf-seg__fill {
+    transform: scaleX(1);
+  }
+  .pf-seg.is-active .pf-seg__fill {
+    animation: pf-fill 7s linear forwards;
+  }
+  .pf-front.is-paused .pf-seg.is-active .pf-seg__fill {
+    animation-play-state: paused;
+  }
+  .pf-hero__controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 24px;
+    margin-top: 12px;
+  }
+  .pf-hero__nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+  .druid-root .pf-hero__count {
+    margin: 0 0 0 8px;
+  }
+
+  /* Role sections and their depth stacks ---------------------------------- */
+  .pf-cat__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px 32px;
+    margin-bottom: 16px;
+  }
+  .druid-root .pf-cat__title {
+    font-size: clamp(40px, 4.4vw, 56px);
+    line-height: 1.12;
+    margin: 0;
+  }
+  .pf-back {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  .pf-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 16px;
+  }
+  .druid-root .pf-count {
+    margin: 0;
+    min-width: 4.5ch;
+  }
+  .pf-next {
+    max-width: 100%;
+    text-align: left;
+  }
+  .druid-root .pf-hint {
+    margin: 10px 0 0;
+  }
+  .pf-stage {
+    --pf-top: 64px;
+    --pf-w: min(100% - 220px, 940px);
+    --pf-d1x: 104px;
+    --pf-d1y: -56px;
+    --pf-d1z: -120px;
+    --pf-d2x: 188px;
+    --pf-d2y: -104px;
+    --pf-d2z: -240px;
+    position: relative;
+    padding: var(--pf-top) 0 28px;
+    perspective: var(--perspective);
+    touch-action: pan-y;
+  }
+  .pf-slot {
+    position: absolute;
+    top: var(--pf-top);
+    bottom: 28px;
+    left: 0;
+    width: var(--pf-w);
+    z-index: 1;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translate3d(var(--pf-d2x), var(--pf-d2y), -360px) rotateY(-4deg);
+    transition:
+      transform 700ms var(--ease-druid),
+      opacity 450ms ease,
+      visibility 0s linear 700ms;
+    will-change: transform;
+  }
+  .pf-slot.is-active {
+    position: relative;
+    top: auto;
+    bottom: auto;
+    z-index: 5;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translate3d(0, 0, 0) rotateY(0deg);
+    transition-delay: 0s;
+  }
+  .pf-slot.is-d1 {
+    z-index: 4;
+    opacity: 1;
+    visibility: visible;
+    transform: translate3d(var(--pf-d1x), var(--pf-d1y), var(--pf-d1z)) rotateY(-4deg);
+    transition-delay: 0s;
+  }
+  .pf-slot.is-d2 {
+    z-index: 3;
+    opacity: 1;
+    visibility: visible;
+    transform: translate3d(var(--pf-d2x), var(--pf-d2y), var(--pf-d2z)) rotateY(-4deg);
+    transition-delay: 0s;
+  }
+  .pf-slot.is-far {
+    z-index: 2;
+  }
+  .pf-slot.is-past {
+    z-index: 6;
+    transform: translate3d(-14%, 40px, 80px) rotateY(5deg);
+  }
+  .pf-slot.is-behind .pf-content,
+  .pf-slot.is-behind .pf-media {
+    visibility: hidden;
+  }
+  .pf-slot .druid-card,
+  .pf-slot .druid-card__face {
+    height: 100%;
+  }
+
+  /* Card layout: picture beside the text once the card is wide enough. */
+  .pf-card {
+    container-type: inline-size;
+  }
+  .pf-face {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .pf-media {
+    position: relative;
+    z-index: 1;
+    padding: 12px 12px 0;
+  }
+  .pf-content {
+    min-width: 0;
+  }
+  @container (min-width: 760px) {
+    .pf-face {
+      grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+      align-items: start;
+    }
+    .pf-media {
+      padding: 12px 0 12px 12px;
+    }
+  }
+  .pf-picture {
+    display: block;
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+  .pf-vvp {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    aspect-ratio: 3 / 2;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    color: var(--color-walnut);
+    background:
+      repeating-linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--color-mauve-ink) 10%, transparent) 0 1px,
+        transparent 1px 10px
+      ),
+      color-mix(in srgb, var(--color-mauve-soft) 35%, var(--color-cream));
+    outline: 1.5px dashed color-mix(in srgb, var(--color-mauve-ink) 45%, transparent);
+    outline-offset: -10px;
+  }
+  .pf-vvp svg {
+    width: 40px;
+    height: 40px;
+    color: var(--color-mauve-ink);
+  }
+  .druid-root .pf-vvp__label {
+    margin: 0;
+    font-family: var(--font-note);
+    font-size: 18px;
+    line-height: 1.3;
+    color: var(--color-mauve-ink);
+  }
+  .druid-root .pf-vvp__title {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-size: 20px;
+    line-height: 1.25;
+    max-width: 22ch;
+    text-wrap: balance;
+  }
+  .pf-content .druid-tag {
+    margin-bottom: 14px;
+  }
+  .druid-root .pf-content h3 {
+    margin: 0 0 6px;
+  }
+  .druid-root .pf-org {
+    margin: 0 0 4px;
+  }
+  .druid-root .pf-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px 16px;
+    margin: 0 0 16px;
+  }
+  .druid-root .pf-tagline {
+    margin: 0 0 16px;
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--color-mauve-ink);
+  }
+  .druid-root .pf-summary {
+    margin: 0 0 16px;
+  }
+  .pf-list {
+    margin: 0 0 20px;
+    padding: 0 0 0 20px;
+    list-style: disc;
+    font-size: 16px;
+    line-height: 1.55;
+    max-width: 72ch;
+  }
+  .pf-list li + li {
+    margin-top: 6px;
+  }
+  .pf-list li::marker {
+    color: var(--color-mauve-accent);
+  }
+  .pf-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style: none;
+    margin: 0 0 20px;
+    padding: 0;
+  }
+  .pf-skills .druid-tag {
+    margin: 0;
+  }
+  .pf-visit {
+    margin-top: 4px;
+  }
+
+  /* Live demo slot under each picture */
+  .druid-root .pf-demo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 12px;
+    min-height: 76px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    color: var(--color-walnut);
+    text-decoration: none;
+  }
+  .pf-demo.is-empty {
+    border: 1.5px dashed color-mix(in srgb, var(--color-mauve-ink) 45%, transparent);
+    background: color-mix(in srgb, var(--color-mauve-soft) 12%, transparent);
+  }
+  .druid-root .pf-demo.is-live {
+    border: 1.5px solid var(--color-brown-rich);
+    background: var(--color-brown-rich);
+    color: var(--color-white);
+    transition: filter 180ms ease;
+  }
+  .pf-demo.is-live:hover {
+    filter: brightness(1.12);
+  }
+  .pf-demo__icon {
+    display: grid;
+    place-items: center;
+    flex: 0 0 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1.5px solid currentColor;
+  }
+  .pf-demo__icon svg {
+    width: 14px;
+    height: 14px;
+    margin-left: 2px;
+  }
+  .pf-demo__title {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 18px;
+    line-height: 1.2;
+  }
+  .pf-demo__note {
+    display: block;
+    font-family: var(--font-note);
+    font-size: 16px;
+    line-height: 1.3;
+    color: var(--color-mauve-ink);
+  }
+  .pf-demo.is-live .pf-demo__note {
+    color: inherit;
+  }
+
+  /* Executive summary under each role */
+  .pf-brief {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(380px, 100%), 1fr));
+    gap: 24px 64px;
+    margin-top: 48px;
+    padding-top: 36px;
+  }
+  .pf-brief::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.22;
+  }
+  .druid-root .pf-brief__title {
+    margin: 0 0 12px;
+  }
+  .druid-root .pf-brief__body {
+    margin: 0;
+    max-width: 64ch;
+  }
+  .druid-root .pf-brief__label {
+    margin: 0 0 12px;
+  }
+
+  /* Education and contact */
+  .pf-edu {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr));
+    gap: 32px;
+  }
+  .pf-edu > * {
+    min-width: 0;
+    padding: 0 14px 18px 0;
+  }
+  .druid-root .pf-footer {
+    padding-block: 64px;
+  }
+  .pf-contact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px 64px;
+    align-items: flex-start;
+  }
+  .druid-root .pf-contact h2 {
+    margin-bottom: 12px;
+  }
+  .druid-root .pf-contact p {
+    margin: 0 0 8px;
+  }
+  .pf-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 20px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .pf-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  /* Live liquid backgrounds: three soft colour masses per surface, moved only
+     by transform, paused while their section is off screen. */
+  .pf-liquid {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .pf-liquid i {
+    position: absolute;
+    display: block;
+    width: clamp(420px, 62%, 1100px);
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    will-change: transform;
+    animation: pf-drift-a 38s ease-in-out infinite alternate;
+  }
+  .pf-liquid i:nth-child(1) {
+    left: -14%;
+    top: -24%;
+    background: radial-gradient(58% 46% at 42% 46%, var(--l1) 0%, transparent 72%);
+  }
+  .pf-liquid i:nth-child(2) {
+    right: -16%;
+    top: 18%;
+    background: radial-gradient(52% 60% at 56% 50%, var(--l2) 0%, transparent 72%);
+    animation-name: pf-drift-b;
+    animation-duration: 46s;
+  }
+  .pf-liquid i:nth-child(3) {
+    left: 18%;
+    bottom: -34%;
+    background: radial-gradient(62% 44% at 50% 54%, var(--l3) 0%, transparent 72%);
+    animation-name: pf-drift-c;
+    animation-duration: 53s;
+  }
+  .pf-liquid.is-idle i {
+    animation-play-state: paused;
+  }
+  .pf-liquid--brown {
+    --l1: var(--liquid-brown-1);
+    --l2: var(--liquid-brown-2);
+    --l3: var(--liquid-brown-3);
+  }
+  .pf-liquid--green {
+    --l1: var(--liquid-green-1);
+    --l2: var(--liquid-green-2);
+    --l3: var(--liquid-green-3);
+  }
+  .pf-liquid--page {
+    --l1: var(--liquid-page-1);
+    --l2: var(--liquid-page-2);
+    --l3: var(--liquid-page-3);
+  }
+
+  /* Responsive ------------------------------------------------------------ */
+  @media (max-width: 959px) {
+    .druid-container {
+      width: min(100% - 64px, 1280px);
+    }
+    .pf-stage {
+      --pf-w: calc(100% - 110px);
+      --pf-d1x: 52px;
+      --pf-d1y: -44px;
+      --pf-d1z: -60px;
+      --pf-d2x: 96px;
+      --pf-d2y: -80px;
+      --pf-d2z: -120px;
+    }
+  }
+  @media (max-width: 639px) {
+    .druid-root {
+      font-size: 16px;
+    }
+    .druid-container {
+      width: calc(100% - 32px);
+    }
+    .druid-section {
+      padding-block: 56px;
+      scroll-margin-top: 140px;
+    }
+    .druid-card__content {
+      padding: 20px;
+    }
+    .druid-index {
+      padding: 20px;
+    }
+    .pf-glass {
+      padding: 6px 8px 6px 16px;
+      gap: 0 12px;
+    }
+    .pf-brand {
+      font-size: 19px;
+    }
+    .pf-nav {
+      order: 3;
+      width: 100%;
+      gap: 0 18px;
+      padding-bottom: 2px;
+    }
+    .pf-front {
+      padding-top: 148px;
+    }
+    .pf-panel {
+      padding: 22px 18px 16px;
+      border-radius: 20px;
+    }
+    .druid-root .pf-scroll {
+      margin: 14px -18px -16px;
+      border-radius: 0 0 20px 20px;
+    }
+    .pf-stage {
+      --pf-top: 60px;
+      --pf-w: calc(100% - 34px);
+      --pf-d1x: 16px;
+      --pf-d1y: -30px;
+      --pf-d1z: -24px;
+      --pf-d2x: 30px;
+      --pf-d2y: -56px;
+      --pf-d2z: -48px;
+    }
+  }
+
+  /* Hover lift and button depth on fine pointers only. */
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .druid-index:hover {
+      --hover-z: 24px;
+    }
+    .druid-button:hover {
+      transform: perspective(1200px) translateZ(6px) translateY(-1px);
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .druid-index:focus-within {
+      --hover-z: 24px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pf-seg.is-active .pf-seg__fill {
+      animation: none;
+      transform: scaleX(1);
+    }
+    .pf-liquid i,
+    .pf-scroll svg {
+      animation: none !important;
+    }
+    .druid-index {
+      transform: none !important;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .druid-gold-text {
+      background: none;
+      color: LinkText;
+      -webkit-text-fill-color: LinkText;
+      filter: none;
+    }
+    .druid-card__face {
+      border-color: CanvasText;
+    }
+    .druid-card::before {
+      border: 1px solid CanvasText;
+    }
   }
 }
 
-/* Duotone plates.
-
-   Gallery images are arbitrary user screenshots. Left alone, one blue dashboard
-   destroys the paper world. Every image in the page renders warm-duotoned into
-   the palette; the lightbox is the only place true colour exists. */
-@utility plate {
-  filter: grayscale(1) sepia(0.42) saturate(1.25) hue-rotate(-8deg) contrast(1.06) brightness(0.99);
+@keyframes pf-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(6px);
+  }
+}
+@keyframes pf-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes pf-drift-a {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1, 1);
+  }
+  50% {
+    transform: translate3d(16%, 12%, 0) rotate(28deg) scale(1.18, 0.88);
+  }
+  100% {
+    transform: translate3d(-6%, 22%, 0) rotate(-14deg) scale(0.94, 1.12);
+  }
+}
+@keyframes pf-drift-b {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1, 1);
+  }
+  50% {
+    transform: translate3d(-18%, -10%, 0) rotate(-24deg) scale(0.9, 1.16);
+  }
+  100% {
+    transform: translate3d(-8%, 14%, 0) rotate(18deg) scale(1.12, 0.94);
+  }
+}
+@keyframes pf-drift-c {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1, 1);
+  }
+  50% {
+    transform: translate3d(12%, -18%, 0) rotate(34deg) scale(1.1, 0.9);
+  }
+  100% {
+    transform: translate3d(-14%, -6%, 0) rotate(-20deg) scale(0.92, 1.1);
+  }
 }
 
 /* Global motion opt-out. Individual components must not re-enable motion. */

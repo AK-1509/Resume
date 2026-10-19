@@ -60,12 +60,9 @@ async function landmarks(page: Page) {
 }
 
 async function focusRings(page: Page) {
-  // Reload first, then count. Earlier checks scroll the page (Playwright
-  // scrolls an element into view before clicking it), which reveals the sticky
-  // bar — counting in one scroll state and tabbing in another would report
-  // controls as unreachable when they are simply not present.
-  // Chromium restores the previous scroll offset across a reload, so reset it
-  // explicitly — otherwise the sticky bar is still on screen and gets counted.
+  // Reload first, then count, so the hero and every stack are back at their
+  // first item. Chromium restores the previous scroll offset across a reload,
+  // so reset it explicitly.
   await page.reload({ waitUntil: "networkidle" });
   await page.evaluate(() => window.scrollTo(0, 0));
   await page.waitForTimeout(400);
@@ -82,8 +79,8 @@ async function focusRings(page: Page) {
           r.width > 0 &&
           r.height > 0 &&
           s.visibility !== "hidden" &&
-          // The sticky bar is inert while scrolled out of view; its controls
-          // are correctly not tabbable and must not be counted as missing.
+          // Headlines not on the drum and cards behind the front of a stack
+          // are inert; their controls are correctly not tabbable.
           !el.closest("[inert]") &&
           el.closest("main,header,footer")
         );
@@ -121,9 +118,9 @@ async function focusRings(page: Page) {
     if (!info.hasRing) ringless.push(`${info.tag} "${info.label}"`);
   }
 
-  // Tabbing scrolls the page, which can reveal the sticky bar part-way through
-  // the sequence — so more controls may be reached than were present at the
-  // top. What matters is that none of the ones counted were missed.
+  // The headline drum can roll while tabbing, so more controls may be reached
+  // than were counted. What matters is that none of the counted ones were
+  // missed.
   const missed = expected.filter((k) => !seen.has(k));
   if (missed.length) console.log(`        never reached: ${missed.join(" | ")}`);
 
@@ -164,19 +161,17 @@ async function main() {
       const applied = await page.evaluate(() => document.documentElement.dataset.theme);
       check(`theme follows the OS preference`, applied === theme, `applied ${applied}`);
 
-      // Modal content is only in the DOM while open, so audit it open too.
-      await page
-        .getByRole("button", { name: new RegExp(escapeRe(openableEntry().title)) })
-        .first()
-        .click();
-      await page.waitForTimeout(250);
+      // Stop the headline drum so axe measures one settled frame rather than
+      // a line mid-roll.
+      await page.getByRole("button", { name: "Pause headlines" }).click();
+      await page.waitForTimeout(1000);
 
       const results = await new AxeBuilder({ page })
         .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
         .analyze();
 
       check(
-        "axe-core clean (page + open modal)",
+        "axe-core clean",
         results.violations.length === 0,
         results.violations.map((v) => `${v.id} (${v.nodes.length})`).join(", "),
       );
@@ -184,9 +179,6 @@ async function main() {
         console.log(`        ${v.id}: ${v.help}`);
         for (const node of v.nodes.slice(0, 3)) console.log(`          ${node.target.join(" ")}`);
       }
-
-      await page.keyboard.press("Escape");
-      await page.waitForTimeout(200);
 
       if (vp.name === "desktop" && theme === "light") {
         await landmarks(page);

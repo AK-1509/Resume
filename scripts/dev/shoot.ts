@@ -20,8 +20,8 @@ const VIEWPORTS = [
 ] as const;
 
 /**
- * Drives the real switch rather than poking documentElement, so the knob
- * position in the screenshot reflects what a visitor would actually see.
+ * Drives the real switch rather than poking documentElement, so the switch
+ * label in the screenshot reflects what a visitor would actually see.
  */
 async function setTheme(page: Page, theme: "light" | "dark") {
   const toggle = page.getByRole("banner").getByRole("switch", { name: "Dark mode" });
@@ -47,31 +47,19 @@ async function main() {
     for (const theme of ["light", "dark"] as const) {
       await setTheme(page, theme);
       await page.screenshot({ path: join(OUT, `${vp.name}-${theme}.png`), fullPage: true });
+
+      // One viewport-sized frame per section, so the depth stacks can be read
+      // at their real size rather than shrunk inside a full-page image.
+      for (const id of ["top", "product-management", "design-thinking", "education", "contact"]) {
+        await page.locator(`#${id}`).scrollIntoViewIfNeeded();
+        await page.evaluate((target) => {
+          document.getElementById(target)?.scrollIntoView({ block: "start", behavior: "instant" });
+        }, id);
+        await page.waitForTimeout(250);
+        await page.screenshot({ path: join(OUT, `${vp.name}-${theme}-${id}.png`) });
+      }
+      await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
     }
-
-    // The modal and lightbox, in the theme that shows each best.
-    await setTheme(page, "light");
-    await page.getByRole("button", { name: new RegExp(escapeRe(openableEntry().title)) }).click();
-    await page.waitForTimeout(300);
-    await page.screenshot({ path: join(OUT, `${vp.name}-modal.png`) });
-
-    // Only when the content actually has an image to open.
-    const withGallery = entryWithGallery();
-    if (withGallery) {
-      await page
-        .getByRole("button", { name: new RegExp(escapeRe(withGallery.gallery[0].alt)) })
-        .click();
-      await page.waitForTimeout(400);
-      await page.screenshot({ path: join(OUT, `${vp.name}-lightbox.png`) });
-      await page.keyboard.press("Escape");
-    }
-    await page.keyboard.press("Escape");
-
-    // The filtered state — the rail lit along the entries that prove a skill.
-    await page.goto(`${BASE}/?skills=${busiestSkill().id}`, { waitUntil: "networkidle" });
-    await page.evaluate(() => document.fonts.ready);
-    await page.waitForTimeout(400);
-    await page.screenshot({ path: join(OUT, `${vp.name}-filtered.png`), fullPage: true });
 
     const overflow = await page.evaluate(
       () => document.documentElement.scrollWidth - document.documentElement.clientWidth,

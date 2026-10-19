@@ -1,6 +1,6 @@
 # Resume
 
-An interactive resume. Every experience is a card you can open; every skill in the index at the foot of the page filters the sections above; a filtered view is a shareable URL; and the whole thing exports as a one-page PDF.
+An interactive portfolio built on the Druid design system. A brown hero rotates one headline per entry, each backed by a bullet quoted from the resume. The role index leads to four sections: Product management, Design thinking, Operations and Business development. Each one stacks its entries as Content Cards in a shallow 3D deck. The whole resume still exports as a one-page PDF.
 
 **Live:** <https://resume-phi-roan.vercel.app> · **Specimen:** <https://resume-phi-roan.vercel.app/specimen>
 
@@ -22,11 +22,13 @@ The skill transcribes verbatim — it will not fix a typo, rewrite a bullet, inv
 
 Images live in `public/gallery/<experience-id>/` and are referenced by path from the JSON.
 
+How the page *presents* the resume lives in [`content/portfolio.json`](content/portfolio.json): the role sections and their card order, the executive summaries, the hero copy, the rotating headlines, and live-demo links. It is edited directly. Validation checks that every id resolves and that every headline's proof is a bullet copied word for word from `resume.json`.
+
 ## Commands
 
 ```bash
 npm run dev        # dev server on :3000
-npm run validate   # schema + filesystem check on content/resume.json
+npm run validate   # schema + filesystem check on resume.json, and portfolio.json against it
 npm run build      # validates first, then builds
 npm run lint
 ```
@@ -37,7 +39,7 @@ npm run lint
 
 Next.js 16 (App Router) + TypeScript · Tailwind CSS v4 · Zod · `@react-pdf/renderer` · `@dnd-kit` · `next/font/google`.
 
-The page is statically prerendered. Filter state syncs to `?skills=…` through the history API rather than the router, which keeps it that way.
+The page is statically prerendered.
 
 ## Design
 
@@ -45,10 +47,10 @@ Design tokens are CSS custom properties in the `@theme` block of [`app/globals.c
 
 Two things worth knowing before changing any colour:
 
-- **`brass` is a dark-surface colour** — 2.7:1 on `paper`, so it fails text *and* the non-text UI floor on cream.
-- **Dark mode is not an inversion** — `claret` is 1.9:1 on `ink`, so `--accent` becomes `brass` there. Components use the semantic tokens (`bg-surface`, `text-strong`, `border-rule`, …), never the raw palette.
+- **The Content Card and the Index are fixed materials.** They look the same in both themes. Cards have a cream face, walnut text and a hatched brown shadow; the Index is a mauve card with metallic gold labels.
+- **Dark mode is not an inversion.** Light is green-led and dark is brown-led. Links move from `green-deep` to `green-sage`, and actions flip from a brown fill to a sage fill. Components use the semantic tokens (`bg-surface`, `text-strong`, `bg-action`, ...), never the raw palette.
 
-The signature element is the **evidence rail**: the left border of each card. Cards are date-ordered, so when a skill filter is active the lit segments show the stretch of a career where that skill was in play, per column.
+Frutiger, Druid's heading face, is not committed because its licence doesn't cover a public repo. Headings use Schibsted Grotesk; captions and dates use Dekko.
 
 ## Verification
 
@@ -56,14 +58,12 @@ The checks in `scripts/dev/` are the ones that were actually run at each checkpo
 
 ```bash
 npx tsx scripts/dev/audit.ts          # axe-core, landmarks, focus rings, 200% zoom, both themes
-npx tsx scripts/dev/keyboard.ts       # modal + lightbox + theme, keyboard only
 npx tsx scripts/dev/keyboard-export.ts# export incl. drag-reorder, keyboard only
-npx tsx scripts/dev/filter.ts         # AND logic, URL sync, empty state
 npx tsx scripts/dev/export-cases.ts <sparse|typical|overloaded>
-npx tsx scripts/dev/cross-browser.ts  # Chromium, Firefox, WebKit
-npx tsx scripts/dev/usability.ts      # the task-based runs from the brief
-npx tsx scripts/dev/shoot.ts          # checkpoint screenshots
+npx tsx scripts/dev/shoot.ts          # full-page and per-section screenshots, both themes
 ```
+
+`keyboard.ts`, `cross-browser.ts` and `usability.ts` predate the Druid redesign and still drive the old detail modal and skill filter.
 
 `export-cases.ts overloaded` needs an oversized `content/resume.json`; it proves the export refuses rather than silently spilling onto a second page.
 

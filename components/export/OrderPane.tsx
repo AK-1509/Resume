@@ -92,7 +92,7 @@ function SortableRow({ entry }: { entry: Experience }) {
     <li
       ref={setNodeRef}
       style={{ transform: CSS.Transform.toString(transform), transition }}
-      className={`flex items-center gap-3 rounded-[2px] border border-rule bg-panel p-3 ${
+      className={`flex items-center gap-3 rounded-[10px] border border-rule bg-panel p-3 ${
         isDragging ? "opacity-60" : ""
       }`}
     >
@@ -100,7 +100,7 @@ function SortableRow({ entry }: { entry: Experience }) {
         type="button"
         {...attributes}
         {...listeners}
-        className="shrink-0 cursor-grab rounded-[2px] border border-rule p-2 text-soft transition-colors hover:border-accent active:cursor-grabbing"
+        className="shrink-0 cursor-grab rounded-[10px] border border-rule p-2 text-soft transition-colors hover:border-accent active:cursor-grabbing"
         aria-label={`Reorder ${entry.title}`}
       >
         <svg viewBox="0 0 16 16" className="h-4 w-4" aria-hidden="true" fill="currentColor">

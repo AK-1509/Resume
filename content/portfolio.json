@@ -1,0 +1,134 @@
+{
+  "hero": {
+    "role": "Product management and business development, grounded in design thinking and operations.",
+    "sub": "I take health-tech and AI products from idea to tested prototype and build the business case around them.",
+    "credentials": [
+      "MS candidate, USC Iovine and Young Academy",
+      "BS, Biopharmaceutical Sciences, USC Mann"
+    ]
+  },
+  "roles": [
+    {
+      "id": "product-management",
+      "label": "Product management",
+      "experienceIds": [
+        "market-distance-matrix",
+        "symptom-visualizer",
+        "stealth-startup-agentic-product-development-business-development-lead",
+        "validex-health-labs-solopreneur"
+      ],
+      "summary": "I take products from an idea to a tested prototype. On Validex I ran product solo: shaped the idea, built the prototype, sized the market, wrote user personas and ran validation tests, reaching a 3.4% traffic-conversion rate from more than 2,000 impressions. I designed and built Symptom Visualizer and Market Distance Matrix end to end in TypeScript and React, with unit and browser tests behind both. As Product Leader at a stealth AI startup, I moved the product from prototype to investor readiness."
+    },
+    {
+      "id": "design-thinking",
+      "label": "Design thinking",
+      "experienceIds": [
+        "symptom-visualizer",
+        "usc-mann-school-of-pharmacy-and-pharmaceutical-sciences-communications-associate",
+        "validex-health-labs-solopreneur",
+        "game-night-studios-marketing-team-member",
+        "sneh-foundation-teaching-assistant"
+      ],
+      "summary": "I start with the people who will use the thing. I led UI/UX research for the USC Mann website across 19 institutional and corporate benchmark reports, ran playtests with six participants at Game Night Studios, and tested Validex with real people through social media and digital interviews. Then I turn the research into design: an interactive body map where every effect traces back to its FDA label, and science lessons taught in two languages with digital content built for remote classes."
+    },
+    {
+      "id": "operations-and-process-improvement",
+      "label": "Operations and process improvement",
+      "experienceIds": [
+        "usc-mann-school-of-pharmacy-and-pharmaceutical-sciences-communications-associate",
+        "stealth-startup-agentic-product-development-business-development-lead",
+        "serum-institute-of-india-operations-intern",
+        "eisen-pharmaceutical-co-pvt-ltd-quality-assurance-and-production-intern",
+        "hewlett-packard-enterprise-corporate-gurukul-data-science-and-ai-ml-implementation-intern"
+      ],
+      "summary": "My operations grounding is GMP manufacturing. At Serum Institute of India I ran protein-quantification tests at 99.4% accuracy and worked across quality assurance, upstream and downstream teams. At Eisen Pharmaceutical I QA-tested 8–10 drug batches and streamlined dispensing, compounding and packaging. I bring the same discipline to teams outside the plant: standardized communication templates at USC Mann, progress trackers and delivery timelines for a four-person startup team, and statistical tests of a machine-learning model’s predictive accuracy on the HPE and Corporate Gurukul capstone."
+    },
+    {
+      "id": "business-development",
+      "label": "Business development",
+      "experienceIds": [
+        "market-distance-matrix",
+        "stealth-startup-agentic-product-development-business-development-lead",
+        "game-night-studios-marketing-team-member",
+        "everplate-financial-analyst",
+        "nexus-group-usc-board-member"
+      ],
+      "summary": "I build the case for a venture and the network around it. For Everplate I modeled cash flow and valuation and built a funding strategy projected to reach break-even within eight quarters. At a stealth AI startup I managed the full BD pipeline and produced five pitch decks and investor documents. I wrote the documents guiding Game Night Studios from ideation to go-to-market strategy, helped grow Nexus Group USC to more than 40 members, and built Market Distance Matrix to measure how close competitors sit to a product."
+    }
+  ],
+  "headlines": [
+    {
+      "experienceId": "validex-health-labs-solopreneur",
+      "roleId": "product-management",
+      "line": "Add one supplement at a time, track how you feel, and keep only what works.",
+      "proof": "Achieved a 3.4% traffic-conversion rate from more than 2,000 impressions."
+    },
+    {
+      "experienceId": "stealth-startup-agentic-product-development-business-development-lead",
+      "roleId": "business-development",
+      "line": "Took an AI startup from prototype to investor-ready while running its full BD pipeline.",
+      "proof": "Produced five brand-aligned pitch decks and investor documents using Figma, Canva, and Descript."
+    },
+    {
+      "experienceId": "symptom-visualizer",
+      "roleId": "product-management",
+      "line": "Click a body region and read the exact FDA label text behind every effect.",
+      "proof": "Shipped a 94-drug dataset in which every effect quotes verbatim label text and cites its section and DailyMed source."
+    },
+    {
+      "experienceId": "everplate-financial-analyst",
+      "roleId": "business-development",
+      "line": "A funding strategy projected to bring an AI nutrition startup to break-even in eight quarters.",
+      "proof": "Conducted market-sizing and positioning studies to inform and validate three-year financial models and projections."
+    },
+    {
+      "experienceId": "usc-mann-school-of-pharmacy-and-pharmaceutical-sciences-communications-associate",
+      "roleId": "design-thinking",
+      "line": "UI/UX research for the USC Mann website, synthesized from 19 benchmark reports.",
+      "proof": "Designed official internal and external communications, including 20+ flyers, webpages, and videos."
+    },
+    {
+      "experienceId": "market-distance-matrix",
+      "roleId": "product-management",
+      "line": "A map that places every competitor at its measured distance from your product.",
+      "proof": "Designed a market-overlap model that turns SAM and customer-segment splits into a distance score between 0 and 1 for every pair of products."
+    },
+    {
+      "experienceId": "serum-institute-of-india-operations-intern",
+      "roleId": "operations-and-process-improvement",
+      "line": "Protein-quantification tests run at 99.4% accuracy under GMP in vaccine manufacturing.",
+      "proof": "Collaborated across three functional teams: Quality Assurance, Downstream Processing, and Upstream Processing."
+    },
+    {
+      "experienceId": "nexus-group-usc-board-member",
+      "roleId": "business-development",
+      "line": "Grew a biobusiness student group from an idea to more than 40 members.",
+      "proof": "Led upskilling workshops, fundraising efforts, and professional-development initiatives."
+    },
+    {
+      "experienceId": "game-night-studios-marketing-team-member",
+      "roleId": "design-thinking",
+      "line": "Ran playtests with six participants and fed the results into the game and its launch plan.",
+      "proof": "Developed administrative documents guiding the startup from ideation through go-to-market strategy."
+    },
+    {
+      "experienceId": "eisen-pharmaceutical-co-pvt-ltd-quality-assurance-and-production-intern",
+      "roleId": "operations-and-process-improvement",
+      "line": "QA/QC testing on 8–10 drug batches, plus streamlined dispensing, compounding and packaging.",
+      "proof": "Led QA testing for an in-house water-sterilization project intended to reduce operating costs."
+    },
+    {
+      "experienceId": "hewlett-packard-enterprise-corporate-gurukul-data-science-and-ai-ml-implementation-intern",
+      "roleId": "operations-and-process-improvement",
+      "line": "Led the implementation of a custom machine-learning model and tested its predictive accuracy.",
+      "proof": "Cleaned, preprocessed, and analyzed data for Python- and Microsoft Azure-based algorithms."
+    },
+    {
+      "experienceId": "sneh-foundation-teaching-assistant",
+      "roleId": "design-thinking",
+      "line": "Taught physics, chemistry and biology in two languages to get past language barriers.",
+      "proof": "Conducted weekly virtual classes using varied student-engagement tools."
+    }
+  ],
+  "demos": {}
+}
