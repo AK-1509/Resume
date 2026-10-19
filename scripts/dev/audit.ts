@@ -10,10 +10,6 @@
  */
 import { chromium, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
-import { openableEntry } from "./fixtures";
-
-/** Entry titles come from user content and may contain regex metacharacters. */
-const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 const BASE = process.argv[2] ?? "http://localhost:3000";
 
