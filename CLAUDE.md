@@ -18,7 +18,7 @@ npm run lint
 
 ## Design system: Druid
 
-The page implements the Druid design system: a green-led light theme and a brown-led dark theme on a glassy gradient canvas built from the palette, with frosted glass containers floating on it. Each role section is a two-page pager: side projects on a green page (a 3D stack of image slides) and experience and education on a brown page (a disclosure list). The Index is a mauve card docked behind a tab on the right edge; Languages is a mauve card at the bottom right. The palette is fixed. All of it lives in `app/globals.css`.
+The page implements the Druid design system: a green-led light theme and a brown-led dark theme on a glassy gradient canvas built from the palette, with frosted glass containers floating on it. Each role section is a two-page pager laid side by side in a horizontal, snapping track: side projects on a green page (a 3D stack of image slides) and experience and education on a brown page (a disclosure list). The page in view fills the track and a dimmed sliver of the other shows at the edge. A gold switch above it (`PageSwitch`, a two-tab tablist) moves between them; its handle can be dragged, and the pages follow it live. The Index is a mauve card docked behind a tab on the right edge; Languages is a mauve card at the bottom right. The palette is fixed. All of it lives in `app/globals.css`.
 
 ## Contrast constraints
 
@@ -64,7 +64,7 @@ The annotated content schema lives in `lib/schema.ts`, next to the code that enf
 
 ## Verifying a change
 
-`scripts/dev/` holds the checks used at each checkpoint: `audit.ts` (axe, landmarks, focus rings, 200% zoom, both themes), `keyboard.ts` (theme switch, headline drum, role carousels, Index, export dialog, keyboard only), `keyboard-export.ts`, `cross-browser.ts` (Chromium, Firefox, WebKit), `usability.ts` (timed reader tasks at both viewports), `export-cases.ts` and `shoot.ts`. Run the relevant ones rather than describing the behaviour. Their targets come from `content/resume.json` and `content/portfolio.json` through `scripts/dev/fixtures.ts`, never hardcoded titles.
+`scripts/dev/` holds the checks used at each checkpoint: `audit.ts` (axe, landmarks, focus rings, 200% zoom, both themes), `keyboard.ts` (theme switch, headline drum, role carousels, Index, export dialog, keyboard only), `keyboard-export.ts`, `pager.ts` (the side-by-side pages and the gold switch: tabs, keys, dragging, sideways scrolling), `cross-browser.ts` (Chromium, Firefox, WebKit), `usability.ts` (timed reader tasks at both viewports), `export-cases.ts` and `shoot.ts`. Run the relevant ones rather than describing the behaviour. Their targets come from `content/resume.json` and `content/portfolio.json` through `scripts/dev/fixtures.ts`, never hardcoded titles.
 
 Two environment notes that will otherwise cost time:
 

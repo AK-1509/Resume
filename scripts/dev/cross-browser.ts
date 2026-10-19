@@ -259,7 +259,14 @@ async function run(name: string, browser: Browser) {
 
   // --- Pager and disclosure ------------------------------------------------
   await section.getByRole("button", { name: "Experience and education" }).click();
-  await page.waitForTimeout(100);
+  // The track scrolls sideways to the other page; wait for it to arrive.
+  await page
+    .waitForFunction(
+      (id) => document.querySelector(`#${id} .pf-page--experience`)?.getAttribute("data-state") === "here",
+      role.id,
+      { timeout: 3000 },
+    )
+    .catch(() => null);
   await transitionsDone(page, role);
   const paged = await page.evaluate((id) => {
     const s = document.getElementById(id)!;
@@ -268,13 +275,18 @@ async function run(name: string, browser: Browser) {
     button?.focus();
     return {
       experience: s.querySelector(".pf-page--experience")?.getAttribute("data-state"),
-      awayVisibility: away ? getComputedStyle(away).visibility : "",
+      awayOpacity: away ? Number(getComputedStyle(away).opacity) : 1,
+      awayBodyInert: Boolean(away?.querySelector(".pf-page__body")?.hasAttribute("inert")),
       awayTookFocus: button !== null && document.activeElement === button,
       focus: document.activeElement?.textContent?.trim(),
     };
   }, role.id);
-  check("the switch turns to the experience page", paged.experience === "here");
-  check("the away page is hidden and refuses focus", paged.awayVisibility === "hidden" && !paged.awayTookFocus, paged.awayVisibility);
+  check("the bottom button turns to the experience page", paged.experience === "here");
+  check(
+    "the away page is a dimmed sliver whose content refuses focus",
+    paged.awayOpacity < 1 && paged.awayBodyInert && !paged.awayTookFocus,
+    `opacity ${paged.awayOpacity}`,
+  );
 
   const first = section.locator(".pf-xp > li").first();
   const toggleRow = first.locator(".pf-xp__toggle");

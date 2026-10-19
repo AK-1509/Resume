@@ -1,6 +1,6 @@
 # Resume
 
-An interactive portfolio built on the Druid design system, set on a glassy gradient canvas. The hero rotates one headline per entry, each backed by a bullet quoted from the resume. Four role sections follow: Product management, Design thinking, Operations and Business development. Each is a two-page pager: side projects as a 3D stack of image slides on a green page, and experience and education as an expandable list on a brown one. A mauve index is docked on the right edge, and a mauve Languages card sits at the bottom right. The whole resume still exports as a one-page PDF.
+An interactive portfolio built on the Druid design system, set on a glassy gradient canvas. The hero rotates one headline per entry, each backed by a bullet quoted from the resume. Four role sections follow: Product management, Design thinking, Operations and Business development. Each holds two pages side by side: side projects as a 3D stack of image slides on a green page, and experience and education as an expandable list on a brown one. A gold switch slides between them; drag its handle and the pages follow. A mauve index is docked on the right edge, and a mauve Languages card sits at the bottom right. The whole resume still exports as a one-page PDF.
 
 **Live:** <https://resume-phi-roan.vercel.app> · **Specimen:** <https://resume-phi-roan.vercel.app/specimen>
 
@@ -60,6 +60,7 @@ The checks in `scripts/dev/` are the ones that were actually run at each checkpo
 npx tsx scripts/dev/audit.ts          # axe-core, landmarks, focus rings, 200% zoom, both themes
 npx tsx scripts/dev/keyboard.ts       # theme switch, headline drum, project carousels, experience pager, Index dock, export dialog, keyboard only
 npx tsx scripts/dev/keyboard-export.ts# export incl. drag-reorder, keyboard only
+npx tsx scripts/dev/pager.ts         # side-by-side pages and the gold switch: tabs, keys, drag, swipe
 npx tsx scripts/dev/cross-browser.ts  # the engine-sensitive paths in Chromium, Firefox and WebKit
 npx tsx scripts/dev/usability.ts      # timed reader tasks, desktop and mobile
 npx tsx scripts/dev/export-cases.ts <sparse|typical|overloaded>

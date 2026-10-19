@@ -75,6 +75,9 @@ async function focusRings(page: Page) {
           r.width > 0 &&
           r.height > 0 &&
           s.visibility !== "hidden" &&
+          // Roving tabindex (the page switch's unselected tab) is reached
+          // with the arrow keys, not Tab.
+          (el as HTMLElement).tabIndex >= 0 &&
           // Headlines not on the drum and cards behind the front of a stack
           // are inert; their controls are correctly not tabbable.
           !el.closest("[inert]") &&

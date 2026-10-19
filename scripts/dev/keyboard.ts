@@ -33,13 +33,41 @@ function check(label: string, ok: boolean, detail = "") {
   console.log(`  ${ok ? "PASS" : "FAIL"}  ${label}${detail ? ` — ${detail}` : ""}`);
 }
 
-/** Wait for the page's smooth scroll to finish: scrollY unchanged across two reads. */
-async function settle(page: Page) {
+/** Wait until a role's given page is the one in view (the track scrolls there). */
+async function arrive(page: Page, role: Role, kind: "projects" | "experience") {
+  await page
+    .waitForFunction(
+      ([id, k]) => document.querySelector(`#${id} .pf-page--${k}`)?.getAttribute("data-state") === "here",
+      [role.id, kind] as const,
+      { timeout: 3000 },
+    )
+    .catch(() => null);
   await page.waitForTimeout(200);
+}
+
+/** Wait for the dock's card to finish showing or hiding (it fades over 420ms). */
+async function dockSettles(page: Page, visible: boolean) {
+  await page
+    .waitForFunction(
+      (want) => (getComputedStyle(document.querySelector(".pf-dock__panel")!).visibility === "visible") === want,
+      visible,
+      { timeout: 2000 },
+    )
+    .catch(() => null);
+}
+
+/**
+ * Wait for the page's smooth scroll to finish: scrollY unchanged across three
+ * reads. One repeat is not enough — a long jump can stall for a frame before
+ * it gets going.
+ */
+async function settle(page: Page) {
+  await page.waitForTimeout(250);
   let last = -1;
-  for (let i = 0; i < 40; i++) {
+  let still = 0;
+  for (let i = 0; i < 60 && still < 3; i++) {
     const y = await page.evaluate(() => window.scrollY);
-    if (y === last) return;
+    still = y === last ? still + 1 : 0;
     last = y;
     await page.waitForTimeout(120);
   }
@@ -102,7 +130,9 @@ const roleState = (page: Page, role: Role) =>
       return el
         ? {
             state: el.getAttribute("data-state"),
-            inert: el.hasAttribute("inert"),
+            // The page out of view stays visible as a dimmed sliver; it is
+            // its content that goes inert.
+            inert: Boolean(el.querySelector(".pf-page__body")?.hasAttribute("inert")),
             hidden: el.getAttribute("aria-hidden") === "true",
           }
         : null;
@@ -384,7 +414,7 @@ async function pager(page: Page, role: Role) {
   console.log(`\n  ${role.label}: pager and experience list\n`);
   // Continues from carousel(): focus is on the "Experience and education" switch.
   await page.keyboard.press("Enter");
-  await page.waitForTimeout(600);
+  await arrive(page, role, "experience");
   let s = await roleState(page, role);
   let el = await active(page);
   check("Enter turns to the experience page", s.experience?.state === "here" && !s.experience.inert);
@@ -431,7 +461,7 @@ async function pager(page: Page, role: Role) {
   check('Tab walks the rows to "Side projects"', reachedSwitch, `${toggles} stop(s) on the way`);
 
   await page.keyboard.press("Enter");
-  await page.waitForTimeout(600);
+  await arrive(page, role, "projects");
   s = await roleState(page, role);
   el = await active(page);
   check("Enter turns back to the projects page", s.projects?.state === "here" && s.experience?.state === "away");
@@ -482,14 +512,14 @@ async function index(page: Page) {
   check("closed: aria-expanded=false and the card hidden", d.expanded === "false" && !d.visible);
 
   await page.keyboard.press("Enter");
-  await page.waitForTimeout(500);
+  await dockSettles(page, true);
   d = await dock(page);
   let el = await active(page);
   check("Enter opens it", d.expanded === "true" && d.visible);
   check("and focuses the first role link", el?.tag === "a" && el.name === roles[0].label, el?.name ?? "");
 
   await page.keyboard.press("Escape");
-  await page.waitForTimeout(500);
+  await dockSettles(page, false);
   d = await dock(page);
   el = await active(page);
   check("Escape closes it", d.expanded === "false" && !d.visible);
@@ -499,7 +529,7 @@ async function index(page: Page) {
   await page.waitForTimeout(400);
   await page.keyboard.press("Shift+Tab");
   await page.keyboard.press("Shift+Tab");
-  await page.waitForTimeout(500);
+  await dockSettles(page, false);
   d = await dock(page);
   check("focus leaving the dock closes it", d.open === "false" && !d.visible, `focus on "${(await active(page))?.name}"`);
 
