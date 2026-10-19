@@ -3,17 +3,20 @@
  *
  * Usage: npx tsx scripts/dev/usability.ts [baseUrl]
  *
- * Each task reports pass/fail against the target from the brief, plus the
- * friction observed — the timing alone doesn't say whether the path was
- * pleasant.
+ * Each task reports pass/fail against its target, plus the friction observed —
+ * the timing alone doesn't say whether the path was pleasant.
  */
 import { chromium, devices, type Browser, type Page } from "@playwright/test";
 import { mkdirSync } from "node:fs";
-import { resolve } from "node:path";
-import { busiestSkill, entryWithGallery, openableEntry } from "./fixtures";
+import { join, resolve } from "node:path";
+import { headlineBehindTheFront, movableRole, roles } from "./fixtures";
 
 const BASE = process.argv[2] ?? "http://localhost:3000";
 const OUT = resolve(import.meta.dirname, "..", "..", ".screenshots");
+
+
+/** "March 2024 – Present", as formatDurationLong() writes it. */
+const DURATION = /[A-Z][a-z]+ \d{4} – ([A-Z][a-z]+ \d{4}|Present)/;
 
 type Result = { task: string; ok: boolean; took: string; note: string };
 const results: Result[] = [];
@@ -22,118 +25,124 @@ function record(task: string, ok: boolean, started: number, note: string) {
   results.push({ task, ok, took: `${((Date.now() - started) / 1000).toFixed(1)}s`, note });
 }
 
-/** 1 — How long did I work at my most recent role? Target: <5s, ≤1 click. */
+/** Wait for the page's smooth scroll to finish: scrollY unchanged across two reads. */
+async function settle(page: Page) {
+  await page.waitForTimeout(200);
+  let last = -1;
+  for (let i = 0; i < 40; i++) {
+    const y = await page.evaluate(() => window.scrollY);
+    if (y === last) return;
+    last = y;
+    await page.waitForTimeout(120);
+  }
+}
+
+async function fresh(page: Page) {
+  await page.goto(`${BASE}/`, { waitUntil: "networkidle" });
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+}
+
+/** How much of an element is inside the viewport, 0–1. */
+const visible = (page: Page, selector: string) =>
+  page.evaluate((sel) => {
+    const el = document.querySelector(sel);
+    if (!el) return 0;
+    const r = el.getBoundingClientRect();
+    const shown = Math.min(r.bottom, window.innerHeight) - Math.max(r.top, 0);
+    return r.height > 0 ? Math.max(0, shown) / r.height : 0;
+  }, selector);
+
+/** 1 — Who is this and what do they do? Target: answered above the fold, 0 clicks. */
 async function task1(page: Page, mobile: boolean) {
   const started = Date.now();
-  await page.goto(BASE, { waitUntil: "networkidle" });
+  await fresh(page);
 
-  const card = page.locator("section[aria-labelledby='experience-heading'] li").first();
-  const text = (await card.innerText()).replace(/\s+/g, " ");
-  const hasMonths = /[A-Z]{3}( \d{4})? — ([A-Z]{3} \d{4}|PRESENT)/.test(text);
-
-  const inFold = await card.evaluate((el) => {
-    const r = el.getBoundingClientRect();
-    return r.top >= 0 && r.top < window.innerHeight;
-  });
+  const name = await visible(page, "h1");
+  const headline = await visible(page, ".pf-line.is-current .pf-hl__text");
+  const proof = await visible(page, ".pf-line.is-current .pf-proof");
 
   record(
-    "1. Duration of most recent role",
-    hasMonths,
+    "1. Who is this and what do they do",
+    name === 1 && (headline > 0.5 || mobile),
     started,
-    hasMonths
-      ? `0 clicks; month precision on the card${inFold ? "; visible without scrolling" : "; one scroll past the hero" + (mobile ? " (expected on a phone)" : "")}`
-      : `card reads "${text.slice(0, 60)}" — duration needs a click`,
+    `0 clicks; name and role ${name === 1 ? "in" : "NOT in"} the first viewport; current headline ${
+      headline > 0.5 ? "in view" : "below the fold"
+    }${proof > 0.5 ? " with its proof" : ""}${mobile && headline <= 0.5 ? " (one scroll on a phone)" : ""}`,
   );
 }
 
-/** 2 — Find every experience using a skill. Target: <15s. */
+/**
+ * 2 — Find the evidence behind a headline, and how long it ran. Target: the
+ * card lands in view with no hunting. On a phone its media sits above the
+ * title, so the title itself may be one scroll further; that is reported.
+ */
 async function task2(page: Page) {
   const started = Date.now();
-  await page.goto(BASE, { waitUntil: "networkidle" });
+  await fresh(page);
+  const target = headlineBehindTheFront();
 
-  const bubble = page.locator("#skills-heading").locator("..").getByRole("button", { name: busiestSkill().label, exact: false }).first();
-  await bubble.scrollIntoViewIfNeeded();
-  await bubble.click();
-  await page.waitForTimeout(300);
+  // The drum rolls on its own; pick the headline through its segment, which a
+  // reader can see and click, then follow the call to action.
+  await page.getByRole("button", { name: `Headline ${target.position}:` }).click();
+  await page.getByRole("link", { name: `Open the ${target.shortName} card` }).click();
+  await settle(page);
 
-  const lit = await page.evaluate(
-    () =>
-      [...document.querySelectorAll("main li > button, main li > article")].filter(
-        (el) => getComputedStyle(el).borderLeftColor === "rgb(114, 47, 53)",
-      ).length,
-  );
-  // Feedback must be visible from where the control is — the index sits at the
-  // foot of the page, so the results it changes are off-screen above.
-  // No named helpers inside evaluate: tsx's esbuild transform instruments them
-  // with a `__name` shim that does not exist in the page.
-  const feedback = await page.evaluate(() => {
-    const bar = document.querySelector("div.fixed.top-0") as HTMLElement | null;
-    const local = document.querySelector("#skills-heading")?.closest("section") as HTMLElement | null;
-    const barRect = bar ? bar.getBoundingClientRect() : null;
-    const barInView = barRect
-      ? barRect.height > 0 && barRect.top < window.innerHeight && barRect.bottom > 0
-      : false;
-    return {
-      bar: bar && barInView ? bar.innerText.replace(/\s+/g, " ").trim() : "",
-      local: local ? local.innerText.replace(/\s+/g, " ").trim() : "",
-    };
-  });
-
-  const barCount = /(\d+)\s*match/i.test(feedback.bar);
-  const localCount = /(\d+) experiences? match/i.test(feedback.local);
+  const card = `#${target.role.id} .pf-slot.is-active`;
+  const front = await page.locator(`${card} h3`).innerText();
+  const cardTop = await page.evaluate((sel) => document.querySelector(sel)!.getBoundingClientRect().top, card);
+  const cardInView = cardTop >= 0 && cardTop < page.viewportSize()!.height;
+  const titleInView = await visible(page, `${card} h3`);
+  const meta = await page.locator(`${card} .pf-meta`).innerText();
 
   record(
-    "2. Find every experience using a skill",
-    lit > 0 && (barCount || localCount),
+    "2. Evidence behind a headline, and its dates",
+    front === target.title && cardInView && DURATION.test(meta),
     started,
-    `${lit} lit; feedback where the control is: ${
-      localCount ? "index line yes" : "index line NO"
-    }, ${barCount ? "sticky bar yes" : "sticky bar not in view"}`,
+    `2 clicks (segment, then the call to action); "${front}" at the front of ${target.role.label}, card ${
+      cardInView ? "in view" : "NOT in view"
+    }${titleInView === 1 ? " with its title" : ", title one scroll down"}; ${DURATION.test(meta) ? `dates on the card: ${meta.match(DURATION)![0]}` : "no dates on the card"}`,
   );
 }
 
-/** 3 — Open an experience, view a gallery image, return. Target: no dead ends. */
+/** 3 — Browse one role from the index and come back. Target: no dead ends. */
 async function task3(page: Page) {
   const started = Date.now();
-  await page.goto(BASE, { waitUntil: "networkidle" });
+  await fresh(page);
+  // Not the first role: that one is already current at the top of the page,
+  // so landing on it would not show the index responding.
+  const role = roles.slice(1).find((r) => r.titles.length > 1) ?? movableRole();
 
-  const target = entryWithGallery() ?? openableEntry();
-  await page.getByRole("button", { name: target.title, exact: false }).first().click();
-  await page.waitForTimeout(300);
-  if (target.gallery.length > 0) {
-    await page.getByRole("button", { name: target.gallery[0].alt, exact: false }).click();
-    await page.waitForTimeout(400);
-    await page.keyboard.press("Escape");
-    await page.waitForTimeout(250);
-  }
-  await page.keyboard.press("Escape");
-  await page.waitForTimeout(250);
-  await page.keyboard.press("Escape");
-  await page.waitForTimeout(250);
-
-  const closed = await page.evaluate(
-    () => [...document.querySelectorAll("dialog")].every((d) => !d.open),
+  await page.locator(".druid-index").getByRole("link", { name: role.label }).click();
+  await settle(page);
+  const current = await page.evaluate(
+    () => document.querySelector(".druid-index a[aria-current='location']")?.getAttribute("href") ?? "",
   );
-  // Passed in: evaluate runs in the page, where `target` does not exist.
-  const focusRestored = await page.evaluate(
-    (title) => (document.activeElement?.textContent ?? "").includes(title),
-    target.title,
-  );
+  const headingInView = await visible(page, `#${role.id}-title`);
 
+  const section = page.locator(`section#${role.id}`);
+  await section.getByRole("button", { name: /^Next:/ }).click();
+  await page.waitForTimeout(400);
+  const second = await section.locator(".pf-slot.is-active h3").innerText();
+
+  await section.getByRole("link", { name: "Back to the role index" }).click();
+  await settle(page);
+  const indexInView = await visible(page, ".druid-index");
+
+  const ok = current === `#${role.id}` && headingInView === 1 && second === role.titles[1] && indexInView > 0.5;
   record(
-    "3. Open an experience, view an image, return",
-    closed && focusRestored,
+    "3. Browse a role from the index and return",
+    ok,
     started,
-    closed
-      ? `both layers closed; focus returned to the originating card${focusRestored ? "" : " (focus NOT restored)"}`
-      : "a dialog stayed open — dead end",
+    `3 clicks; ${headingInView === 1 ? "heading in view" : "heading NOT in view"}, index marks ${current || "nothing"}; Next showed "${second}"; ${
+      indexInView > 0.5 ? "back at the index" : "index NOT in view after Back"
+    }`,
   );
 }
 
 /** 4 — Export a two-experience resume as a PDF. Target: <60s. */
-async function task4(page: Page, tag: string) {
+async function task4(page: Page) {
   const started = Date.now();
-  await page.goto(BASE, { waitUntil: "networkidle" });
+  await fresh(page);
 
   await page.getByRole("button", { name: "Export resume" }).first().click();
   await page.waitForTimeout(500);
@@ -162,7 +171,6 @@ async function task4(page: Page, tag: string) {
       ? `${download.suggestedFilename()}; renderer loaded on demand at this point`
       : "no download produced",
   );
-  void tag;
 }
 
 async function run(browser: Browser, name: string, mobile: boolean) {
@@ -177,7 +185,9 @@ async function run(browser: Browser, name: string, mobile: boolean) {
   await task1(page, mobile);
   await task2(page);
   await task3(page);
-  await task4(page, name);
+  await task4(page);
+  await fresh(page);
+  await page.screenshot({ path: join(OUT, `usability-${mobile ? "mobile" : "desktop"}.png`) });
 
   console.log(`\n  ${name}\n`);
   for (const r of results) {

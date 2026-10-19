@@ -58,12 +58,13 @@ The checks in `scripts/dev/` are the ones that were actually run at each checkpo
 
 ```bash
 npx tsx scripts/dev/audit.ts          # axe-core, landmarks, focus rings, 200% zoom, both themes
+npx tsx scripts/dev/keyboard.ts       # theme switch, headline drum, role carousels, Index, export dialog, keyboard only
 npx tsx scripts/dev/keyboard-export.ts# export incl. drag-reorder, keyboard only
+npx tsx scripts/dev/cross-browser.ts  # the engine-sensitive paths in Chromium, Firefox and WebKit
+npx tsx scripts/dev/usability.ts      # timed reader tasks, desktop and mobile
 npx tsx scripts/dev/export-cases.ts <sparse|typical|overloaded>
 npx tsx scripts/dev/shoot.ts          # full-page and per-section screenshots, both themes
 ```
-
-`keyboard.ts`, `cross-browser.ts` and `usability.ts` predate the Druid redesign and still drive the old detail modal and skill filter.
 
 `export-cases.ts overloaded` needs an oversized `content/resume.json`; it proves the export refuses rather than silently spilling onto a second page.
 

@@ -61,7 +61,7 @@ The annotated content schema lives in `lib/schema.ts`, next to the code that enf
 
 ## Verifying a change
 
-`scripts/dev/` holds the checks used at each checkpoint: `audit.ts` (axe, landmarks, focus rings, 200% zoom, both themes), `keyboard-export.ts`, `export-cases.ts` and `shoot.ts`. Run the relevant ones rather than describing the behaviour. `keyboard.ts`, `cross-browser.ts` and `usability.ts` still drive the pre-Druid detail modal, lightbox and skill filter. Rewrite them before relying on them.
+`scripts/dev/` holds the checks used at each checkpoint: `audit.ts` (axe, landmarks, focus rings, 200% zoom, both themes), `keyboard.ts` (theme switch, headline drum, role carousels, Index, export dialog, keyboard only), `keyboard-export.ts`, `cross-browser.ts` (Chromium, Firefox, WebKit), `usability.ts` (timed reader tasks at both viewports), `export-cases.ts` and `shoot.ts`. Run the relevant ones rather than describing the behaviour. Their targets come from `content/resume.json` and `content/portfolio.json` through `scripts/dev/fixtures.ts`, never hardcoded titles.
 
 Two environment notes that will otherwise cost time:
 
