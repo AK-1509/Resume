@@ -8,8 +8,8 @@ type Theme = "light" | "dark";
  * Light/dark switch.
  *
  * `role="switch"` rather than a button, so assistive tech announces the state
- * rather than just the label. The knob position and the icons both carry the
- * state, so it never depends on colour alone.
+ * rather than just the label. The icon and the word both carry the state, so
+ * it never depends on colour alone.
  *
  * The applied theme lives on <html data-theme>, set by the inline script in
  * app/layout.tsx before first paint. That element is the source of truth, not
@@ -48,6 +48,9 @@ export function ThemeToggle() {
     window.dispatchEvent(new Event(THEME_EVENT));
   }
 
+  // A Druid quiet button. The visible word names the mode the switch turns
+  // on, and the icon beside it shows the mode in force, so the state never
+  // rests on colour alone.
   return (
     <button
       type="button"
@@ -55,25 +58,18 @@ export function ThemeToggle() {
       aria-checked={dark}
       aria-label="Dark mode"
       onClick={toggle}
-      className="relative inline-flex h-8 w-[3.25rem] shrink-0 items-center rounded-full border border-brass/60 bg-ink px-1 transition-colors hover:border-brass"
+      className="druid-button druid-button--quiet shrink-0 px-3.5"
     >
-      {/* Both icons are always present; the knob slides over the inactive one,
-          so the state reads from position as well as from contrast. */}
-      <span className="pointer-events-none absolute inset-0 flex items-center justify-between px-[0.45rem]">
-        <SunIcon className={dark ? "text-brass/45" : "text-ink"} />
-        <MoonIcon className={dark ? "text-ink" : "text-brass/45"} />
+      {dark ? <MoonIcon /> : <SunIcon />}
+      {/* The word yields below 640px; the icon still shows the mode. */}
+      <span aria-hidden="true" className="max-sm:hidden">
+        {dark ? "Dark" : "Light"}
       </span>
-      <span
-        aria-hidden="true"
-        className={`pointer-events-none z-10 h-6 w-6 rounded-full bg-brass transition-transform duration-200 ${
-          dark ? "translate-x-[1.375rem]" : "translate-x-0"
-        }`}
-      />
     </button>
   );
 }
 
-function SunIcon({ className }: { className: string }) {
+function SunIcon({ className = "" }: { className?: string }) {
   return (
     <svg viewBox="0 0 16 16" className={`h-3.5 w-3.5 ${className}`} aria-hidden="true">
       <circle cx="8" cy="8" r="3.1" fill="currentColor" />
@@ -84,7 +80,7 @@ function SunIcon({ className }: { className: string }) {
   );
 }
 
-function MoonIcon({ className }: { className: string }) {
+function MoonIcon({ className = "" }: { className?: string }) {
   return (
     <svg viewBox="0 0 16 16" className={`h-3.5 w-3.5 ${className}`} aria-hidden="true">
       <path d="M13.2 9.8A5.8 5.8 0 0 1 6.2 2.8a5.9 5.9 0 1 0 7 7Z" fill="currentColor" />

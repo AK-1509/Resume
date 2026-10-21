@@ -1,110 +1,171 @@
 @import "tailwindcss";
 
 /* ---------------------------------------------------------------------------
-   Design tokens.
+   Design tokens — the Druid system.
 
    Every colour used anywhere in the app comes from here. Components must never
-   contain a hex value. See CLAUDE.md for the contrast constraints that govern
-   which of these may be placed on which background — brass and sage are NOT
-   general-purpose colours.
+   contain a hex value. See CLAUDE.md for which of these may sit on which
+   surface: the gold mid-tones, mauve-accent and the wire greens are decorative
+   and never carry text.
+
+   The default Tailwind palette is cleared so an off-system colour cannot be
+   written by accident.
    --------------------------------------------------------------------------- */
 @theme {
-  /* Surfaces and text */
-  --color-ink: #171719; /* dark surfaces; body text on light */
-  --color-paper: #f2ebdd; /* main content background */
-  --color-card: #e3d9c7; /* card surfaces */
-  --color-muted: #4b5052; /* secondary text (6.9:1 on paper, 5.9:1 on card) */
+  --color-*: initial;
+  --color-white: #ffffff;
 
-  /* Accents */
-  --color-claret: #722f35; /* primary CTA; 8.1:1 on paper */
-  --color-claret-dim: #4a1f27; /* CTA hover */
-  --color-brass: #b08a4a; /* DARK-SURFACE ONLY — 2.7:1 on paper, fails */
-  --color-sage: #65756a; /* metadata scale and borders only — 4.1:1 on paper */
+  /* Greens: the light-mode ground and the projects page. */
+  --color-green-pale: #f1f5ef; /* light page */
+  --color-green-soft: #dfe9dc; /* light green page */
+  --color-green-sage: #b8ceb2; /* dark-mode actions and links */
+  --color-green-deep: #375c48; /* light-mode links, muted text, focus (6.8:1 on pale) */
+  --color-green-dark: #1e352b; /* dark green page */
+  --color-green-wire-light: #bdcdb8; /* DECORATIVE ONLY — 1.5:1 */
+  --color-green-wire-dark: #14271e; /* DECORATIVE ONLY */
 
-  /* Type families. Wired to next/font variables in app/layout.tsx. */
-  --font-serif: var(--font-cormorant), ui-serif, Georgia, serif;
-  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, monospace;
+  /* Browns: the dark-mode ground and the experience page. */
+  --color-espresso: #211a16; /* dark page */
+  --color-walnut: #30251e; /* dark raised surfaces; text on gold and mauve tags */
+  --color-brown-rich: #49372a; /* light actions, brown page, slide hatch */
 
-  /* Modular type scale, ~1.25 ratio. Names are roles, not sizes, so a change
-     to the scale propagates rather than requiring a find-and-replace. */
-  --text-hero: clamp(3rem, 8vw, 6rem);
-  --text-hero--line-height: 0.95;
-  --text-hero--letter-spacing: 0.01em;
+  /* Metallic gold. Only gold-shadow (on pale) and gold-light/glint (on dark)
+     carry text. gold-light is also the tag fill off brown grounds. gold-base
+     is a gradient stop. */
+  --color-gold-shadow: #765728;
+  --color-gold-base: #b7924b;
+  --color-gold-light: #d8b96e;
+  --color-gold-glint: #f4e4ba;
 
-  --text-section: 2.25rem;
-  --text-section--line-height: 1.1;
+  --color-ink: #141613; /* main text on pale and white */
 
+  --color-cream: #f5efdf;
+  --color-mauve-soft: #c7a7b7; /* tag fill on brown grounds only */
+  --color-mauve-accent: #8d6e82; /* DECORATIVE ONLY — 3.9:1 on cream */
+  --color-mauve-ink: #624557;
+  --color-mauve-index: #5e4054; /* the Index and Languages cards */
+  --color-frame-brown: #5d342b;
+  --color-frame-red: #88483e;
+  --color-frame-highlight: #d3a18b;
+  --color-frame-shadow: #3a241d;
+
+  --color-error: #8a3638;
+  --color-error-light: #f0bbb7;
+
+  /* Type families, wired to next/font variables in app/layout.tsx. Frutiger is
+     the system's heading face, but its licence does not cover a public repo,
+     so headings run on the system's own fallback, Schibsted Grotesk. */
+  --font-heading: var(--font-schibsted), system-ui, sans-serif;
+  --font-sans: var(--font-schibsted), system-ui, sans-serif;
+  --font-note: var(--font-dekko), "Comic Sans MS", cursive;
+
+  /* Type scale for the dialog and specimen. Page headings use the clamps in
+     the component layer below. */
+  --text-section: 2rem;
+  --text-section--line-height: 1.22;
   --text-entry: 1.375rem;
-  --text-entry--line-height: 1.2;
-
-  --text-org: 1rem;
-  --text-org--line-height: 1.4;
-
-  /* Hero subtitle — the scale's next step above body. */
-  --text-lead: 1.25rem;
-  --text-lead--line-height: 1.5;
-
+  --text-entry--line-height: 1.25;
   --text-body: 1rem;
   --text-body--line-height: 1.6;
-
   --text-ui: 0.9375rem;
   --text-ui--line-height: 1.3;
+  --text-caption: 1rem;
+  --text-caption--line-height: 1.4;
 
-  --text-meta: 0.8125rem;
-  --text-meta--line-height: 1.3;
-  --text-meta--letter-spacing: 0.05em;
-
-  --text-bubble: 0.75rem;
-  --text-bubble--line-height: 1.2;
-  --text-bubble--letter-spacing: 0.03em;
+  --ease-druid: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
-/* Cormorant Garamond is optically small — never set it below 1.125rem. */
-
 /* ---------------------------------------------------------------------------
-   Semantic surfaces.
+   Semantic layer.
 
-   The palette above is fixed, but it only describes a light page. Dark mode
-   needs surfaces it does not contain, and it cannot simply invert: `claret` is
-   1.9:1 on ink and fails as text entirely, so the link/accent colour has to
-   change role between themes rather than flip.
+   Light is green-led, dark is brown-led. Dark mode is not an inversion: the
+   accent moves from green-deep to sage, and actions flip from a brown fill
+   with white text to a sage fill with ink text.
 
-   Everything below derives from the eight fixed colours — the two dark
-   surfaces are `ink` lifted toward `paper` with color-mix, so no new hex enters
-   the system. Components style themselves from these semantic names, never
-   from the raw palette, except the hero, which is `ink` in both themes.
+   The page sits on a glassy gradient canvas built from the palette — pale
+   greens, mauve and gold in light; espresso, mauve-index, green-dark and
+   frame-red in dark — with frosted glass containers floating on it.
 
    Ratios (measured, see /specimen):
-     dark  strong  #F2EBDD on #171719   15.1:1   any text
-     dark  soft    70% paper on ink      7.8:1   any text
-     dark  accent  #B08A4A on #171719    5.6:1   any text
-     dark  rule    #65756A on #171719    3.7:1   borders and non-text UI only
+     light strong  #141613 on #F1F5EF   16.5:1
+     light soft    #375C48 on #F1F5EF    6.8:1
+     dark  strong  #FFFFFF on #211A16   17.2:1
+     dark  soft    #B8CEB2 on #211A16   10.2:1
+     action light  #FFFFFF on #49372A   11.3:1
+     action dark   #141613 on #B8CEB2   10.8:1
+     tag           #30251E on #D8B96E    7.1:1
    --------------------------------------------------------------------------- */
 :root {
-  --surface-page: var(--color-paper);
-  --surface-panel: var(--color-card);
+  --surface-page: var(--color-green-pale);
+  --surface-panel: var(--color-white);
   --text-strong: var(--color-ink);
-  --text-soft: var(--color-muted);
-  --rule: var(--color-sage);
-  /* Text-bearing accent. claret on paper is 8.1:1. */
-  --accent: var(--color-claret);
-  --focus: var(--color-claret);
+  --text-soft: var(--color-green-deep);
+  --rule: var(--color-green-deep);
+  --accent: var(--color-green-deep);
+  --focus: var(--color-green-deep);
+  --action: var(--color-brown-rich);
+  --on-action: var(--color-white);
+  --page-green: var(--color-green-soft);
+  --page-green-text: var(--color-ink);
+  --page-brown: var(--color-brown-rich);
+  /* The hero's name and the headline timer. */
+  --hero-name: var(--color-gold-shadow);
+  --meter: var(--color-green-deep);
+
+  /* Canvas: four soft colour fields over a pale diagonal wash. */
+  --canvas:
+    radial-gradient(60% 55% at 8% 6%, color-mix(in srgb, var(--color-green-sage) 75%, transparent), transparent 70%),
+    radial-gradient(50% 50% at 92% 14%, color-mix(in srgb, var(--color-mauve-soft) 55%, transparent), transparent 72%),
+    radial-gradient(55% 50% at 78% 88%, color-mix(in srgb, var(--color-gold-light) 38%, transparent), transparent 70%),
+    radial-gradient(50% 45% at 12% 82%, color-mix(in srgb, var(--color-green-sage) 45%, transparent), transparent 70%),
+    linear-gradient(160deg, var(--color-green-pale) 0%, var(--color-cream) 55%, var(--color-green-soft) 100%);
+  --liquid-1: color-mix(in srgb, var(--color-green-sage) 55%, transparent);
+  --liquid-2: color-mix(in srgb, var(--color-mauve-soft) 40%, transparent);
+  --liquid-3: color-mix(in srgb, var(--color-gold-light) 30%, transparent);
+
+  /* Glass: frosted white over the canvas, a 1px light edge, a top-left shine. */
+  --glass-bg: color-mix(in srgb, var(--color-green-pale) 72%, transparent);
+  --glass-card: color-mix(in srgb, var(--color-white) 44%, transparent);
+  --glass-line: color-mix(in srgb, var(--color-white) 70%, transparent);
+  --glass-hi: color-mix(in srgb, var(--color-white) 85%, transparent);
+  --glass-shadow: color-mix(in srgb, var(--color-espresso) 12%, transparent);
 }
 
 :root[data-theme="dark"] {
-  --surface-page: var(--color-ink);
-  --surface-panel: color-mix(in srgb, var(--color-paper) 8%, var(--color-ink));
-  --text-strong: var(--color-paper);
-  --text-soft: color-mix(in srgb, var(--color-paper) 70%, var(--color-ink));
-  --rule: var(--color-sage);
-  /* claret is unreadable on ink (1.9:1), so brass carries the accent here. */
-  --accent: var(--color-brass);
-  --focus: var(--color-brass);
+  --surface-page: var(--color-espresso);
+  --surface-panel: var(--color-walnut);
+  --text-strong: var(--color-white);
+  --text-soft: var(--color-green-sage);
+  --rule: var(--color-green-sage);
+  --accent: var(--color-green-sage);
+  --focus: var(--color-gold-light);
+  --action: var(--color-green-sage);
+  --on-action: var(--color-ink);
+  --page-green: var(--color-green-dark);
+  --page-green-text: var(--color-white);
+  --page-brown: var(--color-walnut);
+  --hero-name: var(--color-gold-light);
+  --meter: var(--color-gold-light);
+
+  --canvas:
+    radial-gradient(60% 55% at 8% 6%, color-mix(in srgb, var(--color-green-dark) 95%, transparent), transparent 70%),
+    radial-gradient(55% 55% at 92% 12%, color-mix(in srgb, var(--color-mauve-index) 75%, transparent), transparent 72%),
+    radial-gradient(55% 50% at 80% 90%, color-mix(in srgb, var(--color-frame-red) 45%, transparent), transparent 70%),
+    radial-gradient(50% 45% at 10% 85%, color-mix(in srgb, var(--color-gold-shadow) 35%, transparent), transparent 70%),
+    linear-gradient(160deg, var(--color-espresso) 0%, var(--color-walnut) 55%, var(--color-espresso) 100%);
+  --liquid-1: color-mix(in srgb, var(--color-green-deep) 45%, transparent);
+  --liquid-2: color-mix(in srgb, var(--color-mauve-index) 50%, transparent);
+  --liquid-3: color-mix(in srgb, var(--color-frame-red) 30%, transparent);
+
+  --glass-bg: color-mix(in srgb, var(--color-espresso) 62%, transparent);
+  --glass-card: color-mix(in srgb, var(--color-white) 7%, transparent);
+  --glass-line: color-mix(in srgb, var(--color-white) 16%, transparent);
+  --glass-hi: color-mix(in srgb, var(--color-white) 14%, transparent);
+  --glass-shadow: color-mix(in srgb, black 32%, transparent);
 }
 
-/* Expose the semantic layer to Tailwind as utilities: bg-surface, bg-panel,
-   text-strong, text-soft, border-rule, text-accent. */
+/* Utilities for components: bg-surface, bg-panel, text-strong, text-soft,
+   border-rule, text-accent, bg-action, text-on-action. */
 @theme inline {
   --color-surface: var(--surface-page);
   --color-panel: var(--surface-panel);
@@ -112,6 +173,8 @@
   --color-soft: var(--text-soft);
   --color-rule: var(--rule);
   --color-accent: var(--accent);
+  --color-action: var(--action);
+  --color-on-action: var(--on-action);
 }
 
 @layer base {
@@ -119,6 +182,7 @@
     background-color: var(--surface-page);
     color: var(--text-strong);
     color-scheme: light;
+    scroll-behavior: smooth;
   }
 
   html[data-theme="dark"] {
@@ -129,52 +193,1574 @@
     font-family: var(--font-sans);
     font-size: var(--text-body);
     line-height: 1.6;
+    font-synthesis: none;
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Focus rings follow the theme: claret on light surfaces (8.1:1), brass on
-     dark (5.6:1). The hero is `ink` in both themes, so it opts in with
-     .on-ink regardless of which theme is active. */
   :focus-visible {
-    outline: 2px solid var(--focus);
-    outline-offset: 2px;
+    outline: 3px solid var(--focus);
+    outline-offset: 5px;
   }
 
-  .on-ink :focus-visible,
-  .on-ink:focus-visible {
-    outline-color: var(--color-brass);
-  }
-
-  /* Mono metadata is uppercase and tracked everywhere it appears. */
+  /* Captions and dates are Dekko, the system's note hand. */
   .metadata {
-    font-family: var(--font-mono);
-    font-size: var(--text-meta);
-    letter-spacing: var(--text-meta--letter-spacing);
-    text-transform: uppercase;
-    font-variant-numeric: tabular-nums;
+    font-family: var(--font-note);
+    font-size: var(--text-caption);
+    line-height: var(--text-caption--line-height);
   }
 }
 
-/* The measure. Every region aligns to this, including the brass rule in the
-   hero, which is what makes that rule structural rather than decorative. */
-@utility shell {
-  margin-inline: auto;
-  width: 100%;
-  max-width: 72rem;
-  padding-inline: 1.5rem;
+/* ===========================================================================
+   Druid component material.
 
-  @media (width >= 48rem) {
-    padding-inline: 2.5rem;
+   Scoped to `.druid-root` (the page wrapper) so element rules such as heading
+   margins never reach the export dialog, which renders outside it. Everything
+   here sits in the components layer, so a Tailwind utility always wins.
+   =========================================================================== */
+@layer components {
+  .druid-root {
+    --frame-gradient: linear-gradient(
+      135deg,
+      var(--color-frame-highlight) 0%,
+      var(--color-frame-red) 35%,
+      var(--color-frame-brown) 72%,
+      var(--color-frame-shadow) 100%
+    );
+    --gold-text-gradient: linear-gradient(
+      115deg,
+      var(--color-gold-light) 0%,
+      var(--color-gold-glint) 48%,
+      var(--color-gold-light) 100%
+    );
+    --perspective: 1200px;
+    --link: var(--accent);
+    --button-bg: var(--action);
+    --button-text: var(--on-action);
+
+    position: relative;
+    color: var(--text-strong);
+    font: 400 18px/1.6 var(--font-sans);
+    overflow-wrap: anywhere;
+  }
+
+  .druid-root h1,
+  .druid-root h2,
+  .druid-root h3,
+  .druid-root h4 {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    line-height: 1.22;
+    letter-spacing: -0.02em;
+    margin: 0 0 24px;
+    text-wrap: balance;
+  }
+  .druid-root h2 {
+    font-size: clamp(26px, 3vw, 36px);
+  }
+  .druid-root h3 {
+    font-size: clamp(22px, 2.2vw, 28px);
+  }
+  .druid-root p {
+    max-width: 68ch;
+    margin: 0 0 20px;
+  }
+  .druid-root a {
+    color: var(--link);
+    text-underline-offset: 0.2em;
+  }
+  .druid-root :focus-visible {
+    outline-color: var(--focus);
+  }
+
+  /* The canvas: a fixed glassy gradient with slow colour masses and grain. */
+  .pf-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: var(--canvas);
+    pointer-events: none;
+  }
+  .pf-canvas::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.07;
+    mix-blend-mode: overlay;
+    background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="200"%3E%3Cfilter id="n"%3E%3CfeTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="3" stitchTiles="stitch"/%3E%3CfeColorMatrix type="saturate" values="0"/%3E%3C/filter%3E%3Crect width="200" height="200" filter="url(%23n)"/%3E%3C/svg%3E');
+  }
+
+  /* Glass containers (Level 2) sit on the canvas. */
+  .pf-glass-card {
+    position: relative;
+    border-radius: 24px;
+    background: var(--glass-card);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    backdrop-filter: blur(20px) saturate(140%);
+    border: 1px solid var(--glass-line);
+    box-shadow:
+      inset 1px 1px 0 var(--glass-hi),
+      0 8px 32px var(--glass-shadow);
+  }
+
+  /* Layout ---------------------------------------------------------------- */
+  .druid-container {
+    width: min(100% - 96px, 1280px);
+    margin-inline: auto;
+  }
+  .druid-section {
+    position: relative;
+    padding-block: 96px;
+    scroll-margin-top: 100px;
+  }
+
+  /* Coloured grounds. Each one re-points the link, button and focus colours
+     so everything inside stays legible without per-element overrides. */
+  .on-green {
+    background: var(--page-green);
+    color: var(--page-green-text);
+    --link: var(--color-green-deep);
+    --focus: var(--color-green-deep);
+    --soft: var(--color-green-deep);
+  }
+  :root[data-theme="dark"] .on-green {
+    --link: var(--color-green-sage);
+    --button-bg: var(--color-green-sage);
+    --button-text: var(--color-ink);
+    --focus: var(--color-gold-light);
+    --soft: var(--color-green-sage);
+  }
+  .on-brown {
+    background: var(--page-brown);
+    color: var(--color-white);
+    --link: var(--color-green-sage);
+    --button-bg: var(--color-green-sage);
+    --button-text: var(--color-ink);
+    --focus: var(--color-gold-light);
+    --soft: var(--color-green-sage);
+  }
+
+  /* Type roles ------------------------------------------------------------ */
+  .druid-caption,
+  .druid-tab {
+    font-family: var(--font-note);
+    font-weight: 400;
+    letter-spacing: normal;
+  }
+  .druid-caption {
+    font-size: 16px;
+    line-height: 1.4;
+  }
+  .druid-tab {
+    font-size: 18px;
+    line-height: 1.2;
+  }
+
+  /* Actions --------------------------------------------------------------- */
+  .druid-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    padding: 10px 18px;
+    background: var(--button-bg);
+    color: var(--button-text) !important;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      filter 180ms ease,
+      transform 180ms var(--ease-druid);
+  }
+  .druid-button:hover {
+    filter: brightness(1.08);
+  }
+  .druid-button[disabled] {
+    cursor: default;
+    opacity: 0.7;
+  }
+  .druid-button--quiet {
+    background: transparent;
+    border-color: currentColor;
+    color: inherit !important;
+  }
+  .druid-button svg {
+    width: 18px;
+    height: 18px;
+    flex: none;
+  }
+
+  /* Tags: gold by default; mauve only on brown grounds. */
+  .druid-tag {
+    display: inline-block;
+    margin-bottom: 18px;
+    padding: 4px 10px;
+    border-radius: 7px;
+    background: var(--color-gold-light);
+    color: var(--color-walnut);
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  .on-brown .druid-tag {
+    background: var(--color-mauve-soft);
+  }
+
+  /* The Druid card material — hatched cast shadow behind a framed face. The
+     project slides are built on it. */
+  .druid-card {
+    position: relative;
+    margin: 0;
+    transform-style: preserve-3d;
+  }
+  .druid-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    background: repeating-linear-gradient(
+      135deg,
+      transparent 0 3px,
+      var(--color-brown-rich) 3px 4px,
+      transparent 4px 5px
+    );
+    transform: translate(8px, 10px);
+    box-shadow: 0 3px 8px color-mix(in srgb, var(--color-espresso) 7%, transparent);
+    pointer-events: none;
+  }
+  /* Mauve cards: the Index and Languages. Fixed in both themes, gold labels. */
+  .druid-index {
+    background: var(--color-mauve-index);
+    color: var(--color-gold-light);
+    border-radius: 18px;
+    padding: 24px;
+    text-align: right;
+    --focus: var(--color-gold-glint);
+    box-shadow:
+      inset 0 1px color-mix(in srgb, var(--color-mauve-soft) 30%, transparent),
+      0 8px 24px color-mix(in srgb, var(--color-espresso) 18%, transparent);
+  }
+  .druid-root .druid-index p {
+    margin: 0 0 16px auto;
+  }
+  .druid-index ol,
+  .druid-index ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .druid-index li + li {
+    margin-top: 18px;
+  }
+  .druid-root .druid-index a {
+    display: inline-block;
+    color: var(--color-gold-light);
+    text-decoration: none;
+    font-family: var(--font-heading);
+    font-size: clamp(22px, 2vw, 26px);
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  .druid-index a[aria-current="location"]::before {
+    content: "•";
+    display: inline-block;
+    margin-inline-end: 10px;
+    color: var(--color-gold-glint);
+  }
+  .druid-gold-text {
+    color: var(--color-gold-light);
+  }
+  @supports ((background-clip: text) or (-webkit-background-clip: text)) {
+    .druid-gold-text {
+      background-image: var(--gold-text-gradient);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0.5px 1px 0 var(--color-gold-shadow));
+    }
+  }
+
+  .druid-skip {
+    position: fixed;
+    z-index: 60;
+    top: 12px;
+    left: 12px;
+    transform: translateY(-180%);
+  }
+  .druid-skip:focus {
+    transform: none;
+  }
+
+  /* ========================================================================
+     Portfolio page
+     ======================================================================== */
+
+  /* Glass header (Level 3): a zero-height sticky rail, so the page runs
+     underneath it. */
+  .pf-header-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    height: 0;
+  }
+  .pf-header {
+    position: absolute;
+    top: 12px;
+    left: 0;
+    right: 0;
+    pointer-events: none;
+  }
+  .pf-glass {
+    pointer-events: auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 28px;
+    min-height: 64px;
+    padding: 8px 10px 8px 22px;
+    border-radius: 20px;
+    color: var(--text-strong);
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: blur(40px) saturate(150%);
+    backdrop-filter: blur(40px) saturate(150%);
+    border: 1px solid var(--glass-line);
+    box-shadow:
+      inset 1px 1px 0 var(--glass-hi),
+      0 8px 32px var(--glass-shadow);
+  }
+  .pf-brand {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-right: auto;
+    font-family: var(--font-heading);
+    font-size: 22px;
+    letter-spacing: -0.01em;
+    color: var(--text-strong) !important;
+    text-decoration: none;
+  }
+  .pf-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 22px;
+  }
+  .druid-root .pf-nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--text-strong);
+    text-decoration: none;
+    background: linear-gradient(currentColor, currentColor) 0 calc(100% - 9px) / 0 1.5px no-repeat;
+    transition: background-size 250ms var(--ease-druid);
+  }
+  .pf-nav a:hover,
+  .pf-nav a:focus-visible {
+    background-size: 100% 1.5px;
+  }
+  .pf-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* The index dock: a small mauve tab on the right edge that opens into the
+     full Index on hover, or on click and keyboard via its button. */
+  /* An explicit width: a vertical-text button's shrink-to-fit width is not
+     reliable across engines, and a wider dock pushes the tab off the edge. */
+  .pf-dock {
+    position: fixed;
+    top: 112px;
+    right: 0;
+    z-index: 45;
+    width: 48px;
+  }
+  .pf-dock__tab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 48px;
+    padding: 16px 12px;
+    border: 1px solid color-mix(in srgb, var(--color-mauve-soft) 40%, transparent);
+    border-right: 0;
+    border-radius: 14px 0 0 14px;
+    background: var(--color-mauve-index);
+    color: var(--color-gold-light);
+    font-family: var(--font-heading);
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    writing-mode: vertical-rl;
+    cursor: pointer;
+    box-shadow: -6px 8px 24px color-mix(in srgb, var(--color-espresso) 20%, transparent);
+    --focus: var(--color-gold-glint);
+  }
+  .pf-dock__dot {
+    color: var(--color-gold-glint);
+  }
+  /* Closed, the card is clipped away from its left edge rather than moved
+     off screen: an element parked past the right edge widens a phone's
+     layout viewport and drags every fixed element with it. */
+  .pf-dock__panel {
+    position: absolute;
+    top: 0;
+    right: 12px;
+    width: min(304px, calc(100vw - 24px));
+    clip-path: inset(0 0 0 100% round 18px);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      clip-path 420ms var(--ease-druid),
+      opacity 240ms ease,
+      visibility 0s linear 420ms;
+  }
+  .pf-dock:hover .pf-dock__panel,
+  .pf-dock__panel:focus-within,
+  .pf-dock[data-open="true"] .pf-dock__panel {
+    clip-path: inset(0 0 0 0 round 18px);
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+  }
+
+  /* Hero ------------------------------------------------------------------- */
+  .pf-front {
+    padding-top: 208px;
+    padding-bottom: 136px;
+  }
+  .pf-hero__main {
+    max-width: 780px;
+  }
+  .druid-root .pf-h1 {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin: 0;
+  }
+  .pf-h1__name {
+    font-size: clamp(20px, 1.9vw, 24px);
+    line-height: 1.2;
+    letter-spacing: 0;
+    color: var(--hero-name);
+  }
+  .pf-h1__role {
+    font-size: clamp(30px, 3vw, 40px);
+    line-height: 1.15;
+    max-width: 30ch;
+  }
+  .druid-root .pf-sub {
+    margin: 22px 0 0;
+    max-width: 56ch;
+  }
+  .pf-creds {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px 28px;
+    margin: 12px 0 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--font-note);
+    font-size: 16px;
+    line-height: 1.4;
+    color: var(--text-soft);
+  }
+  .pf-panel {
+    margin-top: 48px;
+    padding: 32px 36px 24px;
+    -webkit-backdrop-filter: blur(40px) saturate(150%);
+    backdrop-filter: blur(40px) saturate(150%);
+  }
+  .druid-root .pf-scroll {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 44px;
+    margin: 18px -36px -24px;
+    padding: 12px 16px 14px;
+    color: inherit;
+    text-decoration: none;
+    font-family: var(--font-note);
+    font-size: 18px;
+    line-height: 1.3;
+    border-top: 1px solid var(--glass-line);
+    border-radius: 0 0 24px 24px;
+    transition: background-color 200ms ease;
+  }
+  .pf-scroll:hover {
+    background-color: var(--glass-card);
+  }
+  .pf-scroll svg {
+    width: 22px;
+    height: 22px;
+    animation: pf-bob 2.4s var(--ease-druid) infinite;
+  }
+
+  /* The headline drum: every line shares one grid cell and rolls in on X. */
+  .pf-drum {
+    display: grid;
+    perspective: var(--perspective);
+    perspective-origin: 20% 0%;
+  }
+  .pf-line {
+    grid-area: 1 / 1;
+    min-width: 0;
+    transform-origin: 50% 0%;
+    transform: translate3d(0, 48px, -160px) rotateX(-16deg);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      transform 900ms var(--ease-druid),
+      opacity 500ms ease,
+      visibility 0s linear 900ms;
+  }
+  .pf-line.is-current {
+    transform: translate3d(0, 0, 0) rotateX(0deg);
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s, 150ms, 0s;
+  }
+  .pf-line.is-above {
+    transform: translate3d(0, -32px, -140px) rotateX(16deg);
+  }
+  .druid-root .pf-hl {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+    color: inherit;
+    text-decoration: none;
+    border-radius: 6px;
+  }
+  .pf-hl__text {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: clamp(28px, 2.8vw, 40px);
+    line-height: 1.1;
+    letter-spacing: -0.022em;
+    max-width: 30ch;
+    text-wrap: pretty;
+    text-decoration-line: underline;
+    text-decoration-color: transparent;
+    text-decoration-thickness: 3px;
+    text-underline-offset: 0.16em;
+    transition: text-decoration-color 200ms ease;
+  }
+  .pf-hl:hover .pf-hl__text {
+    text-decoration-color: var(--meter);
+  }
+  .pf-attr {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 14px;
+  }
+  .pf-attr .druid-tag {
+    margin: 0;
+  }
+  .pf-attr__title {
+    font-family: var(--font-heading);
+    font-size: clamp(18px, 1.6vw, 22px);
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+  }
+  .druid-root .pf-proof {
+    margin: 12px 0 0;
+    max-width: 70ch;
+    color: var(--text-soft);
+  }
+  .pf-segs {
+    display: flex;
+    gap: 6px;
+    list-style: none;
+    margin: 24px 0 0;
+    padding: 0;
+  }
+  .pf-segs li {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  .pf-seg {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+  }
+  .pf-seg__bar {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    background: color-mix(in srgb, currentColor 22%, transparent);
+    overflow: hidden;
+  }
+  .pf-seg__fill {
+    position: absolute;
+    inset: 0;
+    background: var(--meter);
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+  }
+  .pf-seg.is-done .pf-seg__fill {
+    transform: scaleX(1);
+  }
+  .pf-seg.is-active .pf-seg__fill {
+    animation: pf-fill 7s linear forwards;
+  }
+  .pf-front.is-paused .pf-seg.is-active .pf-seg__fill {
+    animation-play-state: paused;
+  }
+  .pf-hero__controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 24px;
+    margin-top: 12px;
+  }
+  .pf-hero__nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+  .druid-root .pf-hero__count {
+    margin: 0 0 0 8px;
+  }
+
+  /* Role sections ---------------------------------------------------------- */
+  .pf-role {
+    padding-block: 72px 112px;
+  }
+  .pf-role__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px 32px;
+    margin-bottom: 72px;
+  }
+  .druid-root .pf-role__title {
+    font-size: clamp(40px, 4.4vw, 56px);
+    line-height: 1.12;
+    margin: 0;
+  }
+  .pf-back {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  /* The gold switch between a role's two pages: a glass rail, two tabs, and
+     a gold handle that tracks the pager's scroll position. */
+  .pf-switch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin: 0 auto 32px;
+  }
+  .pf-switch__rail {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: min(100%, 520px);
+    padding: 6px;
+    border-radius: 999px;
+    background: var(--glass-card);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    backdrop-filter: blur(20px) saturate(140%);
+    border: 1px solid var(--glass-line);
+    box-shadow:
+      inset 1px 1px 0 var(--glass-hi),
+      0 8px 32px var(--glass-shadow);
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: grab;
+  }
+  .pf-switch__rail.is-dragging {
+    cursor: grabbing;
+  }
+  .pf-switch__thumb {
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    left: 6px;
+    width: calc(50% - 6px);
+    border-radius: 999px;
+    /* The shine travels across the handle as it slides. */
+    background: linear-gradient(
+        115deg,
+        var(--color-gold-light) 0%,
+        var(--color-gold-glint) 45%,
+        var(--color-gold-light) 60%,
+        var(--color-gold-base) 100%
+      )
+      calc(var(--p) * 100%) 50% / 240% 100%;
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, var(--color-white) 65%, transparent),
+      inset 0 -2px 0 color-mix(in srgb, var(--color-gold-shadow) 45%, transparent),
+      0 6px 18px color-mix(in srgb, var(--color-espresso) 28%, transparent);
+    transform: translateX(calc(var(--p) * 100%));
+    transition:
+      scale 380ms cubic-bezier(0.34, 1.56, 0.64, 1),
+      translate 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  /* Squashed while held; it springs back with a small overshoot on release. */
+  .pf-switch__rail.is-dragging .pf-switch__thumb {
+    scale: 1.04 0.9;
+    transition: scale 160ms ease-out;
+  }
+  /* Two little columns of grip dots, one at each end of the handle. */
+  .pf-switch__grip {
+    position: absolute;
+    top: calc(50% - 9px);
+    left: 12px;
+    right: 12px;
+    height: 18px;
+    opacity: 0.4;
+    background:
+      radial-gradient(circle, var(--color-walnut) 1.3px, transparent 1.7px) left top / 5px 6px repeat-y,
+      radial-gradient(circle, var(--color-walnut) 1.3px, transparent 1.7px) right top / 5px 6px repeat-y;
+  }
+  .pf-switch__tab {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 48px;
+    padding: 8px 24px;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--text-strong);
+    font-family: var(--font-heading);
+    font-size: 17px;
+    line-height: 1.2;
+    cursor: inherit;
+    transition: color 200ms ease;
+  }
+  .pf-switch__tab[aria-selected="true"] {
+    color: var(--color-walnut);
+  }
+  .pf-switch__count {
+    display: grid;
+    place-items: center;
+    min-width: 26px;
+    height: 26px;
+    padding: 0 6px;
+    border-radius: 999px;
+    font-family: var(--font-note);
+    font-size: 15px;
+    background: color-mix(in srgb, currentColor 14%, transparent);
+  }
+  .druid-root .pf-switch__hint {
+    margin: 0;
+    max-width: none;
+    text-align: center;
+    color: var(--text-soft);
+  }
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    /* Hovering the other side teases the handle toward it. */
+    .pf-switch__rail:not(.is-dragging):has(> button:nth-of-type(2)[aria-selected="false"]:hover) .pf-switch__thumb {
+      translate: 12px 0;
+    }
+    .pf-switch__rail:not(.is-dragging):has(> button:nth-of-type(1)[aria-selected="false"]:hover) .pf-switch__thumb {
+      translate: -12px 0;
+    }
+  }
+
+  /* The pager track: both pages side by side in a native horizontal scroller
+     that snaps to either one. The page in view fills the width; a dimmed
+     sliver of the other shows at the edge. Its height is set from script to
+     the page in view, so the track is clipped vertically. */
+  .pf-track {
+    --peek: 64px;
+    --gap: 22px;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: calc(100% - var(--peek));
+    gap: var(--gap);
+    align-items: start;
+    padding-bottom: 40px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .pf-track::-webkit-scrollbar {
+    display: none;
+  }
+  .pf-track.is-dragging {
+    scroll-snap-type: none;
+  }
+  .pf-track > .pf-page:first-child {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+  .pf-track > .pf-page:last-child {
+    scroll-snap-align: end;
+    scroll-snap-stop: always;
+  }
+  .pf-track--single {
+    grid-auto-columns: 100%;
+    padding-bottom: 24px;
+    overflow: visible;
+  }
+  .pf-page {
+    position: relative;
+    border-radius: 28px;
+    padding: 40px 44px 32px;
+    border: 1px solid var(--glass-line);
+    box-shadow:
+      inset 1px 1px 0 color-mix(in srgb, var(--color-white) 18%, transparent),
+      0 16px 40px var(--glass-shadow);
+    transition: opacity 300ms ease;
+  }
+  .pf-page[data-state="away"] {
+    opacity: 0.45;
+    cursor: pointer;
+  }
+  .pf-page[data-state="away"]:hover {
+    opacity: 0.75;
+  }
+  .pf-page__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px 24px;
+    margin-bottom: 8px;
+  }
+  .druid-root .pf-page__title {
+    margin: 0;
+  }
+  .pf-page__foot {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 36px;
+  }
+  .pf-page--experience .pf-page__foot {
+    justify-content: flex-start;
+  }
+
+  /* Project carousel: a depth stack of image slides. */
+  .pf-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 16px;
+  }
+  .druid-root .pf-count {
+    margin: 0;
+    min-width: 4.5ch;
+    text-align: center;
+  }
+  .pf-stage {
+    --pf-top: 64px;
+    --pf-w: min(100% - 200px, 900px);
+    --pf-d1x: 96px;
+    --pf-d1y: -52px;
+    --pf-d1z: -120px;
+    --pf-d2x: 176px;
+    --pf-d2y: -98px;
+    --pf-d2z: -240px;
+    position: relative;
+    padding: var(--pf-top) 0 28px;
+    perspective: var(--perspective);
+  }
+  .pf-slot {
+    position: absolute;
+    top: var(--pf-top);
+    left: 0;
+    width: var(--pf-w);
+    z-index: 1;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translate3d(var(--pf-d2x), var(--pf-d2y), -360px) rotateY(-4deg);
+    transition:
+      transform 700ms var(--ease-druid),
+      opacity 450ms ease,
+      visibility 0s linear 700ms;
+    will-change: transform;
+  }
+  .pf-slot.is-active {
+    position: relative;
+    top: auto;
+    z-index: 5;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translate3d(0, 0, 0) rotateY(0deg);
+    transition-delay: 0s;
+  }
+  .pf-slot.is-d1 {
+    z-index: 4;
+    opacity: 1;
+    visibility: visible;
+    transform: translate3d(var(--pf-d1x), var(--pf-d1y), var(--pf-d1z)) rotateY(-4deg);
+    transition-delay: 0s;
+  }
+  .pf-slot.is-d2 {
+    z-index: 3;
+    opacity: 1;
+    visibility: visible;
+    transform: translate3d(var(--pf-d2x), var(--pf-d2y), var(--pf-d2z)) rotateY(-4deg);
+    transition-delay: 0s;
+  }
+  .pf-slot.is-far {
+    z-index: 2;
+  }
+  .pf-slot.is-past {
+    z-index: 6;
+    transform: translate3d(-14%, 40px, 80px) rotateY(5deg);
+  }
+  .pf-slot.is-behind .pf-slide__text {
+    visibility: hidden;
+  }
+
+  .pf-slide__face {
+    position: relative;
+    z-index: 1;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border: 3px solid transparent;
+    border-radius: 20px;
+    background:
+      linear-gradient(var(--color-espresso), var(--color-espresso)) padding-box,
+      var(--frame-gradient) border-box;
+    color: var(--color-white);
+  }
+  .pf-slide__img {
+    object-fit: cover;
+  }
+  /* Until a VVP is added: a labelled, patterned placeholder. */
+  .pf-slide__ph {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 24px 28px;
+    color: var(--color-gold-light);
+    background:
+      repeating-linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--color-white) 7%, transparent) 0 1px,
+        transparent 1px 12px
+      ),
+      radial-gradient(70% 80% at 85% 10%, color-mix(in srgb, var(--color-mauve-index) 90%, transparent), transparent 70%),
+      radial-gradient(60% 70% at 10% 30%, color-mix(in srgb, var(--color-green-deep) 70%, transparent), transparent 70%),
+      linear-gradient(150deg, var(--color-brown-rich), var(--color-espresso));
+  }
+  .pf-slide__ph svg {
+    width: 28px;
+    height: 28px;
+    flex: none;
+  }
+  .druid-root .pf-slide__ph p {
+    margin: 0;
+    font-family: var(--font-note);
+    font-size: 18px;
+    line-height: 1.5;
+  }
+  .pf-slide__scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      color-mix(in srgb, var(--color-espresso) 92%, transparent) 0%,
+      color-mix(in srgb, var(--color-espresso) 55%, transparent) 38%,
+      transparent 70%
+    );
+  }
+  .pf-slide__text {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: 28px 32px 30px;
+  }
+  .druid-root .pf-slide__label {
+    margin: 0 0 8px;
+    font-family: var(--font-note);
+    font-size: 17px;
+    line-height: 1.3;
+    color: var(--color-gold-light);
+  }
+  .druid-root .pf-slide__headline {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: clamp(22px, 2.4vw, 34px);
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    max-width: 26ch;
+    text-wrap: balance;
+    text-shadow: 0 2px 4px color-mix(in srgb, black 30%, transparent);
+  }
+
+  /* The front project's details, under the stack. */
+  .pf-detail {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: 24px 48px;
+    margin-top: 12px;
+  }
+  .druid-root .pf-detail__title {
+    margin: 0 0 6px;
+    font-size: clamp(24px, 2.4vw, 30px);
+  }
+  .druid-root .pf-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px 18px;
+    margin: 0 0 14px;
+    color: var(--soft, var(--text-soft));
+  }
+  .druid-root .pf-tagline {
+    margin: 0 0 14px;
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--soft, var(--text-soft));
+  }
+  .druid-root .pf-summary {
+    margin: 0 0 16px;
+  }
+  .pf-detail__side {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    align-items: stretch;
+  }
+  .pf-list {
+    margin: 12px 0 0;
+    padding: 0 0 0 20px;
+    list-style: disc;
+    font-size: 16px;
+    line-height: 1.55;
+    max-width: 72ch;
+  }
+  .pf-list li + li {
+    margin-top: 6px;
+  }
+  .pf-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .pf-skills .druid-tag {
+    margin: 0;
+  }
+  .pf-more summary {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    cursor: pointer;
+    font-family: var(--font-note);
+    font-size: 18px;
+  }
+
+  /* Live demo slot */
+  .druid-root .pf-demo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-height: 72px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    color: inherit;
+    text-decoration: none;
+  }
+  .pf-demo.is-empty {
+    border: 1.5px dashed currentColor;
+    background: color-mix(in srgb, var(--color-white) 18%, transparent);
+  }
+  :root[data-theme="dark"] .pf-demo.is-empty {
+    background: color-mix(in srgb, var(--color-white) 5%, transparent);
+  }
+  .druid-root .pf-demo.is-live {
+    background: var(--button-bg);
+    color: var(--button-text);
+    transition: filter 180ms ease;
+  }
+  .pf-demo.is-live:hover {
+    filter: brightness(1.1);
+  }
+  .pf-demo__icon {
+    display: grid;
+    place-items: center;
+    flex: 0 0 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1.5px solid currentColor;
+  }
+  .pf-demo__icon svg {
+    width: 14px;
+    height: 14px;
+    margin-left: 2px;
+  }
+  .pf-demo__title {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 18px;
+    line-height: 1.2;
+  }
+  .pf-demo__note {
+    display: block;
+    font-family: var(--font-note);
+    font-size: 16px;
+    line-height: 1.3;
+  }
+
+  /* Experience list (brown page): a plain disclosure list, no pictures. */
+  .pf-xp-group + .pf-xp-group {
+    margin-top: 40px;
+  }
+  .druid-root .pf-xp-group__title {
+    margin: 0 0 8px;
+    font-family: var(--font-note);
+    font-size: 20px;
+    letter-spacing: normal;
+    color: var(--soft);
+  }
+  .pf-xp {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  }
+  .pf-xp > li {
+    border-bottom: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  }
+  .pf-xp__toggle {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto 24px;
+    align-items: center;
+    gap: 4px 24px;
+    width: 100%;
+    min-height: 44px;
+    padding: 18px 12px;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition:
+      background-color 200ms ease,
+      transform 300ms var(--ease-druid);
+  }
+  .pf-xp__toggle:hover {
+    background: color-mix(in srgb, var(--color-white) 8%, transparent);
+  }
+  .pf-xp__title {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: clamp(19px, 1.7vw, 22px);
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+  }
+  .pf-xp__org {
+    display: block;
+    margin-top: 2px;
+    font-size: 16px;
+    line-height: 1.4;
+    color: var(--soft);
+  }
+  .pf-xp__when {
+    font-family: var(--font-note);
+    font-size: 16px;
+    line-height: 1.3;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .pf-xp__chevron {
+    width: 20px;
+    height: 20px;
+    transition: transform 300ms var(--ease-druid);
+  }
+  .pf-xp__toggle[aria-expanded="true"] .pf-xp__chevron {
+    transform: rotate(180deg);
+  }
+  .pf-xp__body {
+    display: grid;
+    grid-template-rows: 1fr;
+    transition:
+      grid-template-rows 320ms var(--ease-druid),
+      visibility 0s linear 0s;
+  }
+  .pf-xp__body[data-open="false"] {
+    grid-template-rows: 0fr;
+    visibility: hidden;
+    transition:
+      grid-template-rows 320ms var(--ease-druid),
+      visibility 0s linear 320ms;
+  }
+  .pf-xp__inner {
+    min-height: 0;
+    overflow: hidden;
+  }
+  .pf-xp__content {
+    padding: 0 12px 24px;
+  }
+  .pf-xp__content .pf-list {
+    margin: 0 0 18px;
+  }
+
+  /* Executive summary under each role. */
+  .pf-brief {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(360px, 100%), 1fr));
+    gap: 24px 56px;
+    margin-top: 40px;
+    padding: 32px 36px;
+  }
+  .druid-root .pf-brief__title {
+    margin: 0 0 12px;
+  }
+  .druid-root .pf-brief__body {
+    margin: 0;
+    max-width: 64ch;
+  }
+  .druid-root .pf-brief__label {
+    margin: 0 0 12px;
+    color: var(--text-soft);
+  }
+
+  /* Footer: contact on the left, the Languages card bottom right. */
+  .pf-footer {
+    padding-block: 48px 72px;
+  }
+  .pf-footer__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 40px 64px;
+  }
+  .pf-contact {
+    padding: 32px 36px;
+    min-width: min(100%, 360px);
+  }
+  .druid-root .pf-contact h2 {
+    margin-bottom: 12px;
+  }
+  .druid-root .pf-contact p {
+    margin: 0 0 8px;
+  }
+  .pf-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 20px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .pf-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  /* Languages: each name lights up and lifts toward the reader on hover,
+     while its neighbours settle back a little. */
+  .pf-langs {
+    width: min(100%, 304px);
+    margin-inline-start: auto;
+  }
+  .druid-root .pf-langs__title {
+    margin: 0 0 16px;
+    font-family: var(--font-note);
+    font-size: 16px;
+    line-height: 1.4;
+    letter-spacing: normal;
+  }
+  .pf-langs ul {
+    perspective: 600px;
+  }
+  .pf-langs li {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: clamp(22px, 2vw, 26px);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--color-gold-light);
+    transform-origin: 100% 50%;
+    transition:
+      transform 320ms var(--ease-druid),
+      color 200ms ease,
+      text-shadow 200ms ease;
+  }
+  .pf-langs li + li {
+    margin-top: 14px;
+  }
+  .pf-langs li:hover {
+    color: var(--color-gold-glint);
+    text-shadow:
+      0 0 14px color-mix(in srgb, var(--color-gold-glint) 65%, transparent),
+      0 0 2px var(--color-gold-glint);
+    transform: translateZ(36px) rotateX(10deg) rotateY(-12deg);
+  }
+  .pf-langs ul:hover li:not(:hover) {
+    transform: translateZ(-10px);
+  }
+
+  /* Drifting colour masses, behind the canvas glass. */
+  .pf-liquid {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .pf-liquid i {
+    position: absolute;
+    display: block;
+    width: clamp(420px, 62%, 1100px);
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    will-change: transform;
+    animation: pf-drift-a 38s ease-in-out infinite alternate;
+  }
+  .pf-liquid i:nth-child(1) {
+    left: -14%;
+    top: -24%;
+    background: radial-gradient(58% 46% at 42% 46%, var(--liquid-1) 0%, transparent 72%);
+  }
+  .pf-liquid i:nth-child(2) {
+    right: -16%;
+    top: 18%;
+    background: radial-gradient(52% 60% at 56% 50%, var(--liquid-2) 0%, transparent 72%);
+    animation-name: pf-drift-b;
+    animation-duration: 46s;
+  }
+  .pf-liquid i:nth-child(3) {
+    left: 18%;
+    bottom: -34%;
+    background: radial-gradient(62% 44% at 50% 54%, var(--liquid-3) 0%, transparent 72%);
+    animation-name: pf-drift-c;
+    animation-duration: 53s;
+  }
+  .pf-liquid.is-idle i {
+    animation-play-state: paused;
+  }
+
+  /* Responsive ------------------------------------------------------------ */
+  @media (max-width: 959px) {
+    .druid-container {
+      width: min(100% - 64px, 1280px);
+    }
+    .pf-stage {
+      --pf-w: calc(100% - 100px);
+      --pf-d1x: 48px;
+      --pf-d1y: -40px;
+      --pf-d1z: -60px;
+      --pf-d2x: 90px;
+      --pf-d2y: -76px;
+      --pf-d2z: -120px;
+    }
+    .pf-detail {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (max-width: 639px) {
+    .druid-root {
+      font-size: 16px;
+    }
+    .druid-container {
+      width: calc(100% - 32px);
+    }
+    .druid-section {
+      scroll-margin-top: 140px;
+    }
+    .pf-glass {
+      padding: 6px 8px 6px 16px;
+      gap: 0 12px;
+    }
+    .pf-brand {
+      font-size: 19px;
+    }
+    .pf-nav {
+      order: 3;
+      width: 100%;
+      gap: 0 18px;
+      padding-bottom: 2px;
+    }
+    .pf-dock {
+      top: 152px;
+    }
+    .pf-front {
+      padding-top: 184px;
+      padding-bottom: 72px;
+    }
+    .pf-panel {
+      padding: 22px 18px 16px;
+    }
+    .druid-root .pf-scroll {
+      margin: 14px -18px -16px;
+    }
+    .pf-role {
+      padding-block: 40px 72px;
+    }
+    .pf-role__head {
+      margin-bottom: 40px;
+    }
+    .pf-page {
+      padding: 24px 18px 20px;
+      border-radius: 22px;
+    }
+    .pf-track {
+      --peek: 34px;
+      --gap: 12px;
+    }
+    .pf-switch__tab {
+      padding: 8px 12px;
+      font-size: 16px;
+    }
+    /* No room for grip dots beside the label on a phone. */
+    .pf-switch__grip {
+      display: none;
+    }
+    .pf-stage {
+      --pf-top: 52px;
+      --pf-w: calc(100% - 28px);
+      --pf-d1x: 14px;
+      --pf-d1y: -26px;
+      --pf-d1z: -24px;
+      --pf-d2x: 26px;
+      --pf-d2y: -48px;
+      --pf-d2z: -48px;
+    }
+    .pf-slide__face {
+      aspect-ratio: 4 / 5;
+    }
+    .pf-slide__text {
+      padding: 20px 20px 22px;
+    }
+    .pf-xp__toggle {
+      grid-template-columns: minmax(0, 1fr) 24px;
+      padding: 16px 6px;
+    }
+    .pf-xp__when {
+      grid-column: 1;
+      grid-row: 2;
+      text-align: left;
+    }
+    .pf-xp__chevron {
+      grid-column: 2;
+      grid-row: 1 / span 2;
+    }
+    .pf-brief,
+    .pf-contact {
+      padding: 24px 20px;
+    }
+    .druid-index {
+      padding: 20px;
+    }
+  }
+
+  /* Hover lift on fine pointers only. */
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .druid-button:hover {
+      transform: perspective(1200px) translateZ(6px) translateY(-1px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pf-seg.is-active .pf-seg__fill {
+      animation: none;
+      transform: scaleX(1);
+    }
+    .pf-liquid i,
+    .pf-scroll svg {
+      animation: none !important;
+    }
+    .pf-langs li,
+    .pf-langs li:hover,
+    .pf-langs ul:hover li:not(:hover) {
+      transform: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .druid-gold-text {
+      background: none;
+      color: LinkText;
+      -webkit-text-fill-color: LinkText;
+      filter: none;
+    }
+    .pf-slide__face {
+      border-color: CanvasText;
+    }
+    .druid-card::before {
+      border: 1px solid CanvasText;
+    }
   }
 }
 
-/* Duotone plates.
-
-   Gallery images are arbitrary user screenshots. Left alone, one blue dashboard
-   destroys the paper world. Every image in the page renders warm-duotoned into
-   the palette; the lightbox is the only place true colour exists. */
-@utility plate {
-  filter: grayscale(1) sepia(0.42) saturate(1.25) hue-rotate(-8deg) contrast(1.06) brightness(0.99);
+@keyframes pf-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(6px);
+  }
+}
+@keyframes pf-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes pf-drift-a {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1, 1);
+  }
+  50% {
+    transform: translate3d(16%, 12%, 0) rotate(28deg) scale(1.18, 0.88);
+  }
+  100% {
+    transform: translate3d(-6%, 22%, 0) rotate(-14deg) scale(0.94, 1.12);
+  }
+}
+@keyframes pf-drift-b {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1, 1);
+  }
+  50% {
+    transform: translate3d(-18%, -10%, 0) rotate(-24deg) scale(0.9, 1.16);
+  }
+  100% {
+    transform: translate3d(-8%, 14%, 0) rotate(18deg) scale(1.12, 0.94);
+  }
+}
+@keyframes pf-drift-c {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1, 1);
+  }
+  50% {
+    transform: translate3d(12%, -18%, 0) rotate(34deg) scale(1.1, 0.9);
+  }
+  100% {
+    transform: translate3d(-14%, -6%, 0) rotate(-20deg) scale(0.92, 1.1);
+  }
 }
 
 /* Global motion opt-out. Individual components must not re-enable motion. */
