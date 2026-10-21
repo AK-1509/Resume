@@ -172,7 +172,7 @@ async function task4(page: Page) {
   const headingInView = await visible(page, `#${role.id}-title`);
 
   const section = page.locator(`section#${role.id}`);
-  await section.getByRole("button", { name: /^Next:/ }).click();
+  await section.getByRole("button", { name: "Next project" }).click();
   await page.waitForTimeout(400);
   const second = await section.locator(".pf-detail__title").innerText();
 

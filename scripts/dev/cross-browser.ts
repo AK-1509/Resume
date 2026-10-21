@@ -7,7 +7,7 @@
  * re-running everything: web fonts, the fixed gradient canvas, color-mix()
  * and backdrop-filter on the glass, the `inert` attribute on off-drum
  * headlines, slides behind the front, the page not showing and closed rows,
- * 3D transforms on the stack, the native wheel handler, CSS animation
+ * 3D transforms on the stack, wheel over the stack scrolling the page, CSS animation
  * play-state on the headline timer, the grid-template-rows disclosure, the
  * hover-opened Index dock with aria-current, and the native modal <dialog>.
  */
@@ -200,20 +200,19 @@ async function run(name: string, browser: Browser) {
   check("and opens its row, in view", landed.expanded === "true" && landed.bodyHeight > 0 && landed.inView, JSON.stringify(landed));
 
   // --- Role carousel -------------------------------------------------------
-  // Reload so every role starts on its projects page at the first slide: the
-  // wheel only steps forward when there is a slide left to step to.
+  // Reload so every role starts on its projects page at the first slide.
   await fresh(page);
   const role = movableRole();
   const section = page.locator(`section#${role.id}`);
   await section.locator(".pf-stage").scrollIntoViewIfNeeded();
   await page.waitForTimeout(300);
   const start = await roleState(page, role);
-  await section.getByRole("button", { name: /^Next:/ }).click();
+  await section.getByRole("button", { name: "Next project" }).click();
   await page.waitForTimeout(500);
   const moved = await roleState(page, role);
   check(`${role.label}: Next moves the stack`, moved.front !== start.front && moved.count !== start.count, `${start.count} → ${moved.count}`);
 
-  await section.getByRole("button", { name: "Previous", exact: true }).focus();
+  await section.getByRole("button", { name: "Previous project" }).focus();
   await page.keyboard.press("ArrowRight");
   await page.waitForTimeout(500);
   const arrowed = await roleState(page, role);
@@ -241,21 +240,27 @@ async function run(name: string, browser: Browser) {
     `${stage.inertBehind}/${stage.slots - 1}`,
   );
 
-  // The wheel handler is bound natively with passive: false; each engine must
-  // let it take the event and step the stack. Measured here, not earlier:
-  // focusing the buttons above can scroll the page.
+  // The stack moves only by its buttons and keys: a wheel over the pictures
+  // must scroll the page and leave the stack where it is, in every engine.
   await section.locator(".pf-stage").scrollIntoViewIfNeeded();
   await page.waitForTimeout(300);
+  const beforeWheel = await roleState(page, role);
+  const scrollBefore = await page.evaluate(() => window.scrollY);
   const box = await section.locator(".pf-stage").boundingBox();
   if (box) {
     const top = Math.max(box.y, 0);
     const bottom = Math.min(box.y + box.height, 900);
     await page.mouse.move(box.x + box.width / 2, (top + bottom) / 2);
-    await page.mouse.wheel(0, 120);
+    await page.mouse.wheel(0, 240);
     await page.waitForTimeout(800);
   }
   const wheeled = await roleState(page, role);
-  check("wheel over the stack steps it", wheeled.count !== start.count, `${start.count} → ${wheeled.count}`);
+  const scrollAfter = await page.evaluate(() => window.scrollY);
+  check(
+    "wheel over the stack scrolls the page, not the stack",
+    wheeled.count === beforeWheel.count && scrollAfter > scrollBefore,
+    `stack ${beforeWheel.count} → ${wheeled.count}, page ${Math.round(scrollBefore)} → ${Math.round(scrollAfter)}`,
+  );
 
   // --- Pager and disclosure ------------------------------------------------
   await section.getByRole("button", { name: "Experience and education" }).click();

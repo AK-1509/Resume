@@ -143,7 +143,6 @@ const roleState = (page: Page, role: Role) =>
       experience,
       count: section.querySelector(".pf-count")?.textContent?.trim() ?? "",
       front: section.querySelector(".pf-detail__title")?.textContent?.trim() ?? "",
-      next: section.querySelector(".pf-next")?.textContent?.trim() ?? "",
       slots: slots.length,
       inertBehind: slots.filter((s) => !s.classList.contains("is-active") && s.hasAttribute("inert")).length,
       frontInert: Boolean(section.querySelector(".pf-slot.is-active[inert]")),
@@ -359,10 +358,9 @@ async function carousel(page: Page, role: Role) {
   const titles = role.projects.map((p) => p.title);
 
   const inSection = (el: Focused) => el.section === role.id;
-  check("Next reachable by Tab", await tabTo(page, (el) => inSection(el) && el.name.startsWith("Next:"), { limit: 6 }));
+  check("Next reachable by Tab", await tabTo(page, (el) => inSection(el) && el.name === "Next project", { limit: 6 }));
   let s = await roleState(page, role);
   check("starts on the first project", s.count === `1 of ${n}` && s.front === titles[0], s.count);
-  check("Next names the project behind", s.next === `Next: ${titles[1 % n]}`, s.next);
 
   await page.keyboard.press("Enter");
   await page.waitForTimeout(400);
@@ -371,7 +369,7 @@ async function carousel(page: Page, role: Role) {
 
   check(
     "Previous reachable by Shift+Tab",
-    await tabTo(page, (el) => inSection(el) && el.name === "Previous", { back: true, limit: 3 }),
+    await tabTo(page, (el) => inSection(el) && el.name === "Previous project", { back: true, limit: 3 }),
   );
   await page.keyboard.press("Enter");
   await page.waitForTimeout(400);

@@ -117,6 +117,23 @@ async function main() {
   v = await view(page, role.id);
   check("a sideways scroll on the pages turns back to projects", v.selected === "projects" && v.at === 0, JSON.stringify(v));
 
+  // Sideways over the pictures moves the page too: the stack no longer
+  // takes the wheel, so it reaches the track.
+  const count = () => page.evaluate((id) => document.querySelector(`#${id} .pf-count`)?.textContent?.trim() ?? "", role.id);
+  const countBefore = await count();
+  const stage = await section.locator(".pf-page--projects .pf-stage").boundingBox();
+  await page.mouse.move(stage!.x + stage!.width / 2, Math.min(stage!.y + 160, 860));
+  await page.mouse.wheel(600, 0);
+  await settle(page, role.id);
+  v = await view(page, role.id);
+  check(
+    "a sideways scroll over the pictures turns to experience, the stack untouched",
+    v.selected === "experience" && (await count()) === countBefore,
+    `${JSON.stringify(v)} ${countBefore} → ${await count()}`,
+  );
+  await section.getByRole("tab", { name: /^Projects/ }).click();
+  await settle(page, role.id);
+
   // The dimmed sliver is a shortcut.
   const sliver = await section.locator(".pf-page--experience").boundingBox();
   await page.mouse.click(sliver!.x + 12, sliver!.y + 120);

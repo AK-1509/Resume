@@ -1,16 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef } from "react";
 import { formatStartMonth } from "@/lib/format";
 import type { Experience, Skill } from "@/lib/schema";
-
-/** Wheel distance that counts as one step through the stack. */
-const WHEEL_STEP = 40;
-/** Minimum time between wheel steps, so one flick doesn't skip three slides. */
-const WHEEL_LOCK_MS = 650;
-/** Horizontal travel that counts as a swipe. */
-const SWIPE_MIN = 48;
 
 function slotClass(offset: number): string {
   if (offset === 0) return "pf-slot is-active";
@@ -28,6 +20,22 @@ function linkLabel(url: string): string {
   } catch {
     return "Visit site";
   }
+}
+
+function Chevron({ back = false }: { back?: boolean }) {
+  return (
+    <svg
+      viewBox="0 0 20 20"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d={back ? "M12 5l-5 5 5 5" : "M8 5l5 5-5 5"} />
+    </svg>
+  );
 }
 
 function PlayIcon() {
@@ -95,9 +103,12 @@ function Slide({ project, line }: { project: Experience; line: string | null }) 
  * The projects carousel: a depth stack of image slides, then the front
  * project's details — start month, summary, live demo, link and skills.
  *
- * Only the front slide is in the reading and tab order. Wheel, swipe, the
- * arrow keys and the buttons all move through the same index, which the
- * parent owns so a hero headline can bring a specific project forward.
+ * The stack moves only with its Previous and Next buttons, or the arrow keys
+ * while focus is inside it. Wheel and swipe are deliberately left alone, so
+ * scrolling over the pictures always moves the page — down the page, or
+ * sideways to the experience page. Only the front slide is in the reading
+ * and tab order. The index lives in the parent, so a hero headline can bring
+ * a specific project forward.
  */
 export function ProjectCarousel({
   label,
@@ -121,48 +132,9 @@ export function ProjectCarousel({
   const current = Math.min(Math.max(index, 0), n - 1);
   const go = (i: number) => onIndexChange(((i % n) + n) % n);
 
-  // Wheel over the stack moves through it; at either end the wheel goes back
-  // to scrolling the page, so the stack never traps a reader. Bound natively
-  // because React's onWheel is passive and cannot preventDefault.
-  const stageRef = useRef<HTMLDivElement>(null);
-  const latest = useRef({ current, n, onIndexChange });
-  useEffect(() => {
-    latest.current = { current, n, onIndexChange };
-  });
-  useEffect(() => {
-    const stage = stageRef.current;
-    if (!stage) return;
-    let acc = 0;
-    let lockUntil = 0;
-    const onWheel = (ev: WheelEvent) => {
-      if (ev.ctrlKey) return;
-      const d = Math.abs(ev.deltaX) > Math.abs(ev.deltaY) ? ev.deltaX : ev.deltaY;
-      if (!d) return;
-      const { current: cur, n: count, onIndexChange: set } = latest.current;
-      const forward = d > 0;
-      if ((forward && cur >= count - 1) || (!forward && cur <= 0)) {
-        acc = 0;
-        return;
-      }
-      ev.preventDefault();
-      const now = Date.now();
-      if (now < lockUntil) return;
-      acc = acc !== 0 && acc > 0 !== forward ? d : acc + d;
-      if (Math.abs(acc) < WHEEL_STEP) return;
-      acc = 0;
-      lockUntil = now + WHEEL_LOCK_MS;
-      set(forward ? cur + 1 : cur - 1);
-    };
-    stage.addEventListener("wheel", onWheel, { passive: false });
-    return () => stage.removeEventListener("wheel", onWheel);
-  }, []);
-
-  const swipe = useRef<{ x: number; y: number } | null>(null);
-
   if (n === 0) return null;
 
   const front = projects[current];
-  const next = projects[(current + 1) % n];
   const demo = demos[front.id];
   const skills = skillsOf(front);
 
@@ -185,36 +157,21 @@ export function ProjectCarousel({
         <>
           <div className="pf-controls">
             <button type="button" className="druid-button druid-button--quiet" onClick={() => go(current - 1)}>
-              Previous
+              <Chevron back />
+              Previous<span className="sr-only"> project</span>
             </button>
             <p className="druid-tab pf-count" aria-live="polite">
               {current + 1} of {n}
             </p>
-            <button type="button" className="druid-button pf-next" onClick={() => go(current + 1)}>
-              Next: {next.title}
+            <button type="button" className="druid-button" onClick={() => go(current + 1)}>
+              Next<span className="sr-only"> project</span>
+              <Chevron />
             </button>
           </div>
-          <p className="druid-caption pf-hint">Scroll over the pictures or swipe to move through them.</p>
         </>
       )}
 
-      <div
-        ref={stageRef}
-        className="pf-stage"
-        onPointerDown={(ev) => {
-          if (ev.pointerType !== "mouse") swipe.current = { x: ev.clientX, y: ev.clientY };
-        }}
-        onPointerUp={(ev) => {
-          const start = swipe.current;
-          swipe.current = null;
-          if (!start) return;
-          const dx = ev.clientX - start.x;
-          const dy = ev.clientY - start.y;
-          if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < Math.abs(dy) * 1.3) return;
-          const target = dx < 0 ? current + 1 : current - 1;
-          if (target >= 0 && target < n) onIndexChange(target);
-        }}
-      >
+      <div className="pf-stage">
         {projects.map((project, i) => {
           const active = i === current;
           return (

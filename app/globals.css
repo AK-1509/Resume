@@ -1065,13 +1065,7 @@
   .druid-root .pf-count {
     margin: 0;
     min-width: 4.5ch;
-  }
-  .pf-next {
-    max-width: 100%;
-    text-align: left;
-  }
-  .druid-root .pf-hint {
-    margin: 10px 0 0;
+    text-align: center;
   }
   .pf-stage {
     --pf-top: 64px;
@@ -1085,7 +1079,6 @@
     position: relative;
     padding: var(--pf-top) 0 28px;
     perspective: var(--perspective);
-    touch-action: pan-y;
   }
   .pf-slot {
     position: absolute;

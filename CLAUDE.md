@@ -54,6 +54,7 @@ The applied theme lives on `<html data-theme>`, set by an inline script in `app/
 - **No component may assume an optional field is populated.** `summary` is often `""`, `gallery` is often `[]`, `thumbnailId` is often `null`, `organization` is `""` for personal projects. The skill is forbidden from filling these in, so a component that looks broken when one is empty is a component bug. A slide with no thumbnail shows the labelled VVP placeholder; a project with no demo link shows the empty demo slot. A role with no projects opens on its experience page and offers no switch.
 - Pictures and demo links belong to projects only. The experience list never shows them.
 - Projects show their start month only (`formatStartMonth`); experience rows show the full range.
+- The project stack moves only by its Previous and Next buttons (and the arrow keys inside it). Wheel and swipe are never captured there: scrolling always moves the page, down or sideways to the other page.
 - Only what is on screen is in the reading and tab order. The page not showing, slides behind the front, closed experience rows, and headlines not on the drum are all `inert`.
 - Endorsement counts are derived at render time via `endorsementCounts()`. Never store them.
 - Sort direction for every experience list lives in one constant: `SORT_DIRECTION` in `lib/resume.ts`.
