@@ -280,3 +280,102 @@ export function endorsementCounts(resume: Resume): Map<string, number> {
   }
   return counts;
 }
+
+/* ---------------------------------------------------------------------------
+ * The portfolio layer: `content/portfolio.json`.
+ *
+ * resume.json says what happened; this file says how the page presents it —
+ * which role sections exist, which entries each one stacks, the rotating
+ * headlines in the hero, and a few live-demo links. It never restates facts:
+ * entries are referenced by id, and each headline's `proof` must be a bullet
+ * copied word for word from that entry's responsibilities, which
+ * `portfolioIssues` enforces.
+ * ------------------------------------------------------------------------- */
+
+export const RoleSchema = z.object({
+  id: slug("role id"),
+  label: z.string().min(1, { error: "role label is required and must be non-empty." }),
+  /** Card order inside the section's stack, front first. */
+  experienceIds: z.array(slug("role experienceIds entry")).min(1, {
+    error: "a role needs at least one experience id, or it renders an empty stack. Remove the role instead.",
+  }),
+  /** The executive summary under the stack. */
+  summary: z.string(),
+});
+export type Role = z.infer<typeof RoleSchema>;
+
+export const HeadlineSchema = z.object({
+  experienceId: slug("headline experienceId"),
+  /** The role section whose card the headline opens. */
+  roleId: slug("headline roleId"),
+  line: z.string().min(1, { error: "headline line is required and must be non-empty." }),
+  /** Verbatim responsibility bullet from the referenced experience. */
+  proof: z.string().min(1, { error: "headline proof is required and must be non-empty." }),
+});
+export type Headline = z.infer<typeof HeadlineSchema>;
+
+export const PortfolioSchema = z.object({
+  hero: z.object({
+    role: z.string().min(1, { error: "hero.role is required." }),
+    sub: z.string(),
+    credentials: z.array(z.string().min(1)),
+  }),
+  roles: z.array(RoleSchema),
+  headlines: z.array(HeadlineSchema),
+  /** experience id → live demo URL. A card without one shows the empty demo slot. */
+  demos: z.record(z.string(), z.url({ error: "a demo link must be an absolute URL including the scheme." })),
+});
+export type Portfolio = z.infer<typeof PortfolioSchema>;
+
+/**
+ * Cross-file integrity between portfolio.json and resume.json. Returned rather
+ * than thrown so `npm run validate` can list every problem at once.
+ */
+export function portfolioIssues(portfolio: Portfolio, resume: Resume): { where: string; what: string }[] {
+  const issues: { where: string; what: string }[] = [];
+  const byId = new Map(resume.experiences.map((e) => [e.id, e]));
+  const roleIds = new Set<string>();
+  const known = (id: string) =>
+    `"${id}" is not an experience id in resume.json. Known ids: ${[...byId.keys()].map((k) => `"${k}"`).join(", ")}.`;
+
+  portfolio.roles.forEach((role, i) => {
+    if (roleIds.has(role.id)) issues.push({ where: `roles[${i}].id`, what: `Duplicate role id "${role.id}".` });
+    roleIds.add(role.id);
+    role.experienceIds.forEach((id, j) => {
+      if (!byId.has(id)) issues.push({ where: `roles[${i}].experienceIds[${j}]`, what: known(id) });
+    });
+    if (new Set(role.experienceIds).size !== role.experienceIds.length) {
+      issues.push({ where: `roles[${i}].experienceIds`, what: `Role "${role.id}" lists an experience twice.` });
+    }
+  });
+
+  portfolio.headlines.forEach((h, i) => {
+    const where = `headlines[${i}]`;
+    const exp = byId.get(h.experienceId);
+    if (!exp) {
+      issues.push({ where: `${where}.experienceId`, what: known(h.experienceId) });
+      return;
+    }
+    const role = portfolio.roles.find((r) => r.id === h.roleId);
+    if (!role) {
+      issues.push({ where: `${where}.roleId`, what: `"${h.roleId}" is not a role id in portfolio.json.` });
+    } else if (!role.experienceIds.includes(h.experienceId)) {
+      issues.push({
+        where: `${where}.roleId`,
+        what: `Role "${h.roleId}" does not stack "${h.experienceId}", so the headline would open the wrong card. Pick a role that lists it.`,
+      });
+    }
+    if (!exp.responsibilities.includes(h.proof)) {
+      issues.push({
+        where: `${where}.proof`,
+        what: `The proof must be copied word for word from "${h.experienceId}".responsibilities. No bullet there matches "${h.proof}".`,
+      });
+    }
+  });
+
+  for (const id of Object.keys(portfolio.demos)) {
+    if (!byId.has(id)) issues.push({ where: `demos["${id}"]`, what: known(id) });
+  }
+
+  return issues;
+}

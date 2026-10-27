@@ -150,12 +150,12 @@ export function ExportDialog({
       onClick={(event) => {
         if (event.target === ref.current) onClose();
       }}
-      className="m-auto w-[min(60rem,calc(100vw-2rem))] max-w-none rounded-[2px] bg-surface p-0 text-strong backdrop:bg-ink/70"
+      className="m-auto w-[min(60rem,calc(100vw-2rem))] max-w-none rounded-[20px] bg-surface p-0 text-strong backdrop:bg-espresso/70"
     >
       <div className="flex max-h-[min(88vh,54rem)] flex-col">
         <div className="flex items-start justify-between gap-6 border-b border-rule p-6 pb-4 sm:px-8">
           <div>
-            <h2 id="export-title" className="font-serif text-section font-medium">
+            <h2 id="export-title" className="font-heading text-section">
               Export resume
             </h2>
             <p className="mt-1 font-sans text-ui text-soft">
@@ -166,7 +166,7 @@ export function ExportDialog({
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="shrink-0 rounded-[2px] border border-rule p-2 transition-colors hover:border-accent"
+            className="shrink-0 rounded-[10px] border border-rule p-2 transition-colors hover:border-accent"
           >
             <svg viewBox="0 0 16 16" className="h-4 w-4" aria-hidden="true">
               <path
@@ -277,7 +277,7 @@ export function ExportDialog({
               <button
                 type="button"
                 onClick={() => setPane(pane === "select" ? "order" : "preview")}
-                className="rounded-[2px] border border-rule px-5 py-3 font-sans text-ui font-medium transition-colors hover:border-accent"
+                className="rounded-[10px] border border-rule px-5 py-3 font-sans text-ui font-medium transition-colors hover:border-accent"
               >
                 Next
               </button>
@@ -286,7 +286,7 @@ export function ExportDialog({
               type="button"
               onClick={download}
               disabled={!result?.fits || busy}
-              className="rounded-[2px] bg-claret px-5 py-3 font-sans text-ui font-medium text-white transition-colors hover:bg-claret-dim disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-[12px] bg-action px-5 py-3 font-sans text-ui font-medium text-on-action transition-[filter] hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {busy ? "Building…" : "Download PDF"}
             </button>
@@ -339,7 +339,7 @@ function FitReport({ result }: { result: ReturnType<typeof useAutoFit>["result"]
   }
 
   return (
-    <div className="max-w-[65ch] border-s-2 border-claret bg-panel p-4">
+    <div className="max-w-[65ch] border-s-2 border-error bg-panel p-4">
       <p className="font-sans text-body font-semibold text-strong">
         This does not fit on one page.
       </p>

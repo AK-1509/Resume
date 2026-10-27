@@ -4,24 +4,31 @@
  * This is the ONLY place in the codebase outside globals.css that may contain a
  * hex value, and it exists for exactly one consumer: the /specimen page, which
  * computes and displays contrast ratios. Components style themselves with the
- * Tailwind classes the tokens generate (bg-paper, text-ink, …) and must never
+ * Tailwind classes the tokens generate (bg-cream, text-walnut, …) and must never
  * import from here.
  */
 export const TOKENS = {
-  ink: "#171719",
-  paper: "#F2EBDD",
-  card: "#E3D9C7",
-  claret: "#722F35",
-  "claret-dim": "#4A1F27",
-  brass: "#B08A4A",
-  sage: "#65756A",
-  muted: "#4B5052",
+  "green-pale": "#F1F5EF",
+  "green-soft": "#DFE9DC",
+  "green-sage": "#B8CEB2",
+  "green-deep": "#375C48",
+  "green-dark": "#1E352B",
+  espresso: "#211A16",
+  walnut: "#30251E",
+  "brown-rich": "#49372A",
+  "gold-shadow": "#765728",
+  "gold-base": "#B7924B",
+  "gold-light": "#D8B96E",
+  "gold-glint": "#F4E4BA",
+  ink: "#141613",
   white: "#FFFFFF",
-
-  /* Dark-theme surfaces. Derived from the fixed palette with color-mix in
-     globals.css — resolved here so /specimen can measure them. */
-  "ink-panel": "#2A2A2A", // color-mix(in srgb, paper 8%, ink)
-  "soft-dark": "#ADA79E", // color-mix(in srgb, paper 70%, ink)
+  cream: "#F5EFDF",
+  "mauve-soft": "#C7A7B7",
+  "mauve-accent": "#8D6E82",
+  "mauve-ink": "#624557",
+  "mauve-index": "#5E4054",
+  error: "#8A3638",
+  "error-light": "#F0BBB7",
 } as const;
 
 export type TokenName = keyof typeof TOKENS;

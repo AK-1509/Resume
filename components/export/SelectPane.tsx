@@ -26,7 +26,7 @@ function Checkbox({
         type="checkbox"
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
-        className="mt-[0.2rem] h-4 w-4 shrink-0 accent-claret"
+        className="mt-[0.2rem] h-4 w-4 shrink-0 accent-action"
       />
       <span className="min-w-0">
         <span className="font-sans text-ui text-strong">{label}</span>

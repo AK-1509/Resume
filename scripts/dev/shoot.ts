@@ -7,9 +7,6 @@
 import { chromium, devices, type Page } from "@playwright/test";
 import { mkdirSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { busiestSkill, entryWithGallery, openableEntry } from "./fixtures";
-
-const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 const BASE = process.argv[2] ?? "http://localhost:3000";
 const OUT = resolve(import.meta.dirname, "..", "..", ".screenshots");
@@ -20,8 +17,8 @@ const VIEWPORTS = [
 ] as const;
 
 /**
- * Drives the real switch rather than poking documentElement, so the knob
- * position in the screenshot reflects what a visitor would actually see.
+ * Drives the real switch rather than poking documentElement, so the switch
+ * label in the screenshot reflects what a visitor would actually see.
  */
 async function setTheme(page: Page, theme: "light" | "dark") {
   const toggle = page.getByRole("banner").getByRole("switch", { name: "Dark mode" });
@@ -47,31 +44,38 @@ async function main() {
     for (const theme of ["light", "dark"] as const) {
       await setTheme(page, theme);
       await page.screenshot({ path: join(OUT, `${vp.name}-${theme}.png`), fullPage: true });
-    }
 
-    // The modal and lightbox, in the theme that shows each best.
-    await setTheme(page, "light");
-    await page.getByRole("button", { name: new RegExp(escapeRe(openableEntry().title)) }).click();
-    await page.waitForTimeout(300);
-    await page.screenshot({ path: join(OUT, `${vp.name}-modal.png`) });
-
-    // Only when the content actually has an image to open.
-    const withGallery = entryWithGallery();
-    if (withGallery) {
-      await page
-        .getByRole("button", { name: new RegExp(escapeRe(withGallery.gallery[0].alt)) })
-        .click();
-      await page.waitForTimeout(400);
-      await page.screenshot({ path: join(OUT, `${vp.name}-lightbox.png`) });
+      // One viewport-sized frame per section, so the depth stacks can be read
+      // at their real size rather than shrunk inside a full-page image.
+      for (const id of ["top", "product-management", "operations-and-process-improvement", "contact"]) {
+        await page.locator(`#${id}`).scrollIntoViewIfNeeded();
+        await page.evaluate((target) => {
+          document.getElementById(target)?.scrollIntoView({ block: "start", behavior: "instant" });
+        }, id);
+        await page.waitForTimeout(250);
+        await page.screenshot({ path: join(OUT, `${vp.name}-${theme}-${id}.png`) });
+      }
+      // The other page of a role, and the index dock opened.
+      const role = page.locator("#product-management");
+      await role.getByRole("button", { name: /Experience and education/ }).click();
+      await role.getByRole("button", { name: /Product Leader/ }).click();
+      await page.waitForTimeout(700);
+      await page.evaluate(() =>
+        document.getElementById("product-management")?.scrollIntoView({ block: "start", behavior: "instant" }),
+      );
+      await page.waitForTimeout(250);
+      await page.screenshot({ path: join(OUT, `${vp.name}-${theme}-experience.png`) });
+      await role.getByRole("button", { name: "Projects", exact: true }).click();
+      // Opened from the keyboard: a pointer opens it on hover, which slides
+      // the card over the tab, so a click would land on the card.
+      await page.getByRole("button", { name: "Index", exact: true }).focus();
+      await page.keyboard.press("Enter");
+      await page.waitForTimeout(500);
+      await page.screenshot({ path: join(OUT, `${vp.name}-${theme}-index.png`) });
       await page.keyboard.press("Escape");
-    }
-    await page.keyboard.press("Escape");
 
-    // The filtered state — the rail lit along the entries that prove a skill.
-    await page.goto(`${BASE}/?skills=${busiestSkill().id}`, { waitUntil: "networkidle" });
-    await page.evaluate(() => document.fonts.ready);
-    await page.waitForTimeout(400);
-    await page.screenshot({ path: join(OUT, `${vp.name}-filtered.png`), fullPage: true });
+      await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+    }
 
     const overflow = await page.evaluate(
       () => document.documentElement.scrollWidth - document.documentElement.clientWidth,

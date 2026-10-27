@@ -30,7 +30,8 @@ export function formatDuration(startDate: string, endDate: string | null): strin
   return `${start.month} ${start.year} — ${end.month} ${end.year}`;
 }
 
-/** Long form for the detail modal, e.g. "September 2024 — April 2025". */
+/** Long form for the Content Cards, e.g. "September 2024 – April 2025". A
+ *  plain range, so an en dash. */
 const LONG_MONTHS = [
   "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December",
@@ -41,5 +42,14 @@ export function formatDurationLong(startDate: string, endDate: string | null): s
     const [year, mm] = m.split("-");
     return `${LONG_MONTHS[Number(mm) - 1]} ${year}`;
   };
-  return `${long(startDate)} — ${endDate === null ? "Present" : long(endDate)}`;
+  return `${long(startDate)} – ${endDate === null ? "Present" : long(endDate)}`;
+}
+
+/**
+ * Projects show only when they began, e.g. "Started October 2026" —
+ * many are ongoing, and an end date says little about a project.
+ */
+export function formatStartMonth(startDate: string): string {
+  const [year, mm] = startDate.split("-");
+  return `Started ${LONG_MONTHS[Number(mm) - 1]} ${year}`;
 }

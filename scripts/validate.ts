@@ -13,10 +13,11 @@
  */
 import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { ResumeSchema, type Resume } from "../lib/schema";
+import { PortfolioSchema, ResumeSchema, portfolioIssues, type Resume } from "../lib/schema";
 
 const ROOT = resolve(import.meta.dirname, "..");
 const CONTENT = join(ROOT, "content", "resume.json");
+const PORTFOLIO = join(ROOT, "content", "portfolio.json");
 const GALLERY_ROOT = join(ROOT, "public", "gallery");
 
 type Problem = { where: string; what: string };
@@ -67,14 +68,13 @@ const resume: Resume = result.data;
 
 // --- Layer 2: filesystem ---------------------------------------------------
 {
-  // A skill nothing endorses can never filter to anything, so the index at the
-  // foot of the page drops it rather than rendering a dead control. Surface it
-  // here so it is never silently lost.
+  // A skill nothing endorses appears on no card and in no role's kit. Surface
+  // it here so it is never silently lost.
   const endorsed = new Set(resume.experiences.flatMap((e) => e.endorsedSkills));
   for (const skill of resume.skills) {
     if (!endorsed.has(skill.id)) {
       notes.push(
-        `skill "${skill.id}" (${skill.label}) is in the registry but no experience endorses it, so it is hidden from the skills index. Endorse it somewhere, or remove it from skills[].`,
+        `skill "${skill.id}" (${skill.label}) is in the registry but no experience endorses it, so it appears nowhere on the page. Endorse it somewhere, or remove it from skills[].`,
       );
     }
   }
@@ -130,6 +130,30 @@ const resume: Resume = result.data;
         if (!referenced.has(full)) {
           notes.push(`public/gallery/${dir}/${file} is on disk but not referenced in resume.json.`);
         }
+      }
+    }
+  }
+}
+
+// --- Layer 3: content/portfolio.json --------------------------------------
+// The presentation layer references resume entries by id and quotes their
+// bullets, so it is checked against the resume that just passed.
+{
+  let portfolioJson: unknown;
+  try {
+    portfolioJson = JSON.parse(readFileSync(PORTFOLIO, "utf8"));
+  } catch (err) {
+    fail("content/portfolio.json", `is not valid JSON. ${err instanceof Error ? err.message : String(err)}`);
+  }
+  if (portfolioJson !== undefined) {
+    const parsed = PortfolioSchema.safeParse(portfolioJson);
+    if (!parsed.success) {
+      for (const issue of parsed.error.issues) {
+        fail(`portfolio.json ${issue.path.join(".") || "(root)"}`, issue.message);
+      }
+    } else {
+      for (const { where, what } of portfolioIssues(parsed.data, resume)) {
+        fail(`portfolio.json ${where}`, what);
       }
     }
   }
