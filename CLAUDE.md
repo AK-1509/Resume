@@ -48,6 +48,16 @@ The applied theme lives on `<html data-theme>`, set by an inline script in `app/
 - A headline's role must stack its entry.
 - A headline's `proof` must be a responsibility bullet copied word for word.
 
+## Case studies
+
+`content/case-studies/<slug>.json` is one project page at `/projects/<slug>`, listed in that page's Index. It is presentation content, edited directly, and checked by `CaseStudySchema` and `caseStudyIssues()` in `lib/schema.ts` at build and in `npm run validate`.
+
+- To add a project, copy `_template.json`, rename it to the slug and set `slug` to match. A leading underscore marks a template: it is never published, and in dev it previews at `/projects/template`.
+- The page is fixed: hero, role, the demo link and navigation pane in a rail, the sprint timeline, then four phases (research, goals, design, results) on alternating green and brown pages. A phase with nothing in it drops out of the page, the timeline and the pane.
+- Design and results are lists of exhibits (`steps`, `exchange`, `statement`, `list`, `figure`, `sizing`, `table`, `bars`), drawn from data so they theme and read aloud. A table cell of `yes`, `partial` or `no` becomes a mark.
+- Inline marks in the problem statement, any `lead` and the role's moves: `==text==` is the gold highlighter, `**text**` is bold.
+- Pictures live in `public/case-studies/<slug>/` with their pixel width and height. Nothing is invented: an empty role, demo or report shows a labelled placeholder.
+
 ## Rules for components
 
 - No hex values in components. Style from the tokens in `app/globals.css`; the only mirror is `lib/tokens.ts`, which exists solely for `/specimen`.

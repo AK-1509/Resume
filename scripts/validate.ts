@@ -13,11 +13,20 @@
  */
 import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { PortfolioSchema, ResumeSchema, portfolioIssues, type Resume } from "../lib/schema";
+import {
+  CaseStudySchema,
+  PortfolioSchema,
+  ResumeSchema,
+  caseStudyImages,
+  caseStudyIssues,
+  portfolioIssues,
+  type Resume,
+} from "../lib/schema";
 
 const ROOT = resolve(import.meta.dirname, "..");
 const CONTENT = join(ROOT, "content", "resume.json");
 const PORTFOLIO = join(ROOT, "content", "portfolio.json");
+const CASE_STUDIES = join(ROOT, "content", "case-studies");
 const GALLERY_ROOT = join(ROOT, "public", "gallery");
 
 type Problem = { where: string; what: string };
@@ -159,11 +168,42 @@ const resume: Resume = result.data;
   }
 }
 
+// --- Layer 4: content/case-studies/*.json ---------------------------------
+// One project page per file, the template (a leading underscore) included, so
+// a broken template is caught before it is copied.
+const caseStudyCount = (() => {
+  if (!existsSync(CASE_STUDIES)) return 0;
+  const files = readdirSync(CASE_STUDIES).filter((f) => f.endsWith(".json"));
+  for (const file of files) {
+    const where = `case-studies/${file}`;
+    let json: unknown;
+    try {
+      json = JSON.parse(readFileSync(join(CASE_STUDIES, file), "utf8"));
+    } catch (err) {
+      fail(where, `is not valid JSON. ${err instanceof Error ? err.message : String(err)}`);
+      continue;
+    }
+    const parsed = CaseStudySchema.safeParse(json);
+    if (!parsed.success) {
+      for (const issue of parsed.error.issues) fail(`${where} ${issue.path.join(".") || "(root)"}`, issue.message);
+      continue;
+    }
+    for (const { where: at, what } of caseStudyIssues(parsed.data, file.replace(/\.json$/, ""))) {
+      fail(`${where} ${at}`, what);
+    }
+    for (const image of caseStudyImages(parsed.data)) {
+      const onDisk = join(ROOT, "public", ...image.src.replace(/^\//, "").split("/"));
+      if (!existsSync(onDisk)) fail(`${where} image`, `"${image.src}" does not exist under public/. Add the file, or fix the path.`);
+    }
+  }
+  return files.filter((f) => !f.startsWith("_")).length;
+})();
+
 // --- Report ----------------------------------------------------------------
 if (problems.length) report();
 
 console.log(
-  `\n  content/resume.json is valid — ${resume.experiences.length} experiences, ${resume.skills.length} skills, ${resume.languages.length} languages.\n`,
+  `\n  content/resume.json is valid — ${resume.experiences.length} experiences, ${resume.skills.length} skills, ${resume.languages.length} languages, ${caseStudyCount} case ${caseStudyCount === 1 ? "study" : "studies"}.\n`,
 );
 
 if (notes.length) {

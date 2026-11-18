@@ -1,7 +1,7 @@
 /**
  * DEV ONLY — the accessibility floor, checked rather than assumed.
  *
- * Usage: npx tsx scripts/dev/audit.ts [baseUrl]
+ * Usage: npx tsx scripts/dev/audit.ts [pageUrl]   (the portfolio, or a /projects/<slug> page)
  *
  * Runs axe-core at both review viewports, then checks the things axe cannot
  * see: landmark structure, heading order, whether every interactive element is
@@ -161,9 +161,12 @@ async function main() {
       check(`theme follows the OS preference`, applied === theme, `applied ${applied}`);
 
       // Stop the headline drum so axe measures one settled frame rather than
-      // a line mid-roll.
-      await page.getByRole("button", { name: "Pause headlines" }).click();
-      await page.waitForTimeout(1000);
+      // a line mid-roll. A project page (/projects/<slug>) has no drum.
+      const pause = page.getByRole("button", { name: "Pause headlines" });
+      if (await pause.count()) {
+        await pause.click();
+        await page.waitForTimeout(1000);
+      }
 
       const results = await new AxeBuilder({ page })
         .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])

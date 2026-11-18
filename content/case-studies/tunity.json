@@ -1,0 +1,557 @@
+{
+  "slug": "tunity",
+  "order": 1,
+  "title": "Tunity",
+  "slugLine": "A blockchain-backed music rights and AI-licensing platform that pays artists every time AI uses their music.",
+  "tags": [
+    "Product strategy",
+    "Blue ocean strategy",
+    "Team of seven"
+  ],
+  "hero": {
+    "image": null,
+    "figure": {
+      "src": "/case-studies/tunity/concept-app.webp",
+      "alt": "Concept mockup of a creator dashboard on a phone: a My Creations screen listing 12 protected works, each marked Protected, one with a verified fingerprint.",
+      "width": 709,
+      "height": 1409
+    }
+  },
+  "role": {
+    "title": "Product Manager @ Tunity.",
+    "sprint": "3 months",
+    "summary": "",
+    "moves": [
+      "Generated a PRD to facilitate handoff to design team, and **guided creation of a compliant product prototype**",
+      "Conducted 2 expert interviews to determine product scope and direction, **identified 5 leads for sales and marketing partnership**",
+      "Created pitch deck and visual value proposition for Tunity., **yielding a successful presentation**",
+      "Designed business model and pricing strategy for Tunity. that generated **a projected 4-year break even plan with stable cash runway** for the business",
+      "Conducted a market sizing analysis with product, **positioned to capture ~17% of an $880M market**",
+      "Performed future-proofing SWOT analysis to **maintain market cap and improve product features to combat threats**"
+    ]
+  },
+  "demo": {
+    "href": null
+  },
+  "timeline": {
+    "research": "",
+    "goals": "",
+    "design": "",
+    "results": ""
+  },
+  "research": {
+    "problem": "==Independent music creators== are having their music **==scraped to train AI models==** without consent or pay, and there is no way to trace AI-generated music back to its original source.",
+    "stakeholders": [
+      {
+        "kind": "Customer",
+        "name": "Independent music creators",
+        "note": "Producers, songwriters and artists"
+      },
+      {
+        "kind": "Customer",
+        "name": "AI companies",
+        "note": "Model builders and music AI apps"
+      },
+      {
+        "kind": "Partner",
+        "name": "Performing rights organizations",
+        "note": "ASCAP and BMI"
+      },
+      {
+        "kind": "Middleman",
+        "name": "Distributors",
+        "note": "LANDR and Symphonic"
+      },
+      {
+        "kind": "Competitor",
+        "name": "Label-owned attribution tools",
+        "note": "Sureel, owned by WMG"
+      }
+    ],
+    "painPoints": [
+      {
+        "label": "Lost income",
+        "detail": "AI models that generate music undercut human creators, causing them to lose income from commissions and licensing. Even though their music has probably been used to train these models, they have no way of being compensated for its use."
+      },
+      {
+        "label": "AI slop saturation",
+        "detail": "Mass produced AI generated content quickly floods platforms and drowns out real creators. When AI music dominates the platform it makes future AI training more difficult."
+      },
+      {
+        "label": "Limited creator rights",
+        "detail": "Creators have little control over whether their work is scraped or used for AI training."
+      },
+      {
+        "label": "Lost provenance",
+        "detail": "Authorship and ownership become difficult to trace after content is copied, modified, or processed by AI, making monetization difficult."
+      },
+      {
+        "label": "Fragmented protection",
+        "detail": "Existing solutions are often platform-specific and do not give individual creators persistent, cross-platform control."
+      }
+    ],
+    "headlines": [
+      {
+        "figure": "Over 50%",
+        "headline": "of Deezer’s daily uploads are AI tracks",
+        "source": "Deezer Newsroom",
+        "date": "Jul 2026",
+        "url": "https://newsroom-deezer.com/2026/07/ai-music-exceeds-50-percent-daily-uploads-deezer/"
+      },
+      {
+        "figure": "24%",
+        "headline": "of music creators’ revenue is at risk by 2028",
+        "source": "CISAC global economic study",
+        "date": "Dec 2024",
+        "url": "https://www.cisac.org/Newsroom/news-releases/global-economic-study-shows-human-creators-future-risk-generative-ai"
+      },
+      {
+        "figure": "~250K",
+        "headline": "artists pursue music as a career",
+        "source": "Spotify Loud & Clear",
+        "date": "2025",
+        "url": "https://loudandclear.byspotify.com/faqs/there-are-millions-of-artist-profiles-on-spotify-yet-only-a-small-fraction-are-generating-money-shouldnt-a-higher-percentage-of-all-artists-on-spotify-be-making-money-arent-there-8-milli/"
+      },
+      {
+        "headline": "The EU AI Act requires AI providers to publish training-data summaries and keep a copyright policy",
+        "source": "Clifford Chance",
+        "date": "Nov 2025",
+        "url": "https://www.cliffordchance.com/insights/resources/blogs/ip-insights/2025/10/copyright-compliance-under-the-eu-ai-act-for-gpai-model-providers.html"
+      },
+      {
+        "headline": "UMG, WMG, Merlin and Kobalt licensed Udio",
+        "source": "Music Business Worldwide",
+        "date": "Apr 2026",
+        "url": "https://www.musicbusinessworldwide.com/after-universal-warner-and-merlin-deals-now-udio-inks-licensing-agreement-with-kobalt"
+      },
+      {
+        "headline": "STIM launched a collective AI licence",
+        "source": "Music Business Worldwide",
+        "date": "Sep 2025",
+        "url": "https://www.musicbusinessworldwide.com/swedens-stim-has-launched-the-worlds-first-ai-license-for-music-heres-how-the-org-says-it-will-work/"
+      },
+      {
+        "figure": "30K+",
+        "headline": "artists are already in LANDR’s Fair Trade AI program",
+        "source": "Digital Music News",
+        "date": "Jul 2026",
+        "url": "https://www.digitalmusicnews.com/2026/07/14/landr-fair-trade-ai-program-indie-artists/"
+      }
+    ]
+  },
+  "goals": {
+    "rows": [
+      {
+        "goal": "Seed a rights-cleared catalog",
+        "target": "200 producers in a private beta, then 10,000 creators in 2028",
+        "kpi": "Registered creators"
+      },
+      {
+        "goal": "Open the AI buyer side",
+        "target": "AI license pilots in Q4 2027, then 8 paying AI buyers in 2028",
+        "kpi": "Paying AI buyers"
+      },
+      {
+        "goal": "Win one PRO partnership",
+        "target": "5–10% of ASCAP’s AI-licensing flow within 3–5 years",
+        "kpi": "A 20% take of ≈ $5–10M a year"
+      },
+      {
+        "goal": "Break even",
+        "target": "2030, on $36M of AI license fees",
+        "kpi": "$3.73M EBITDA"
+      }
+    ],
+    "insights": [
+      {
+        "insight": "Most tools that pay creators run through label deals",
+        "evidence": "The competitive map splits the field two ways: defend or monetize, and built for independent creators or for labels. Sureel, Musical AI and the Udio and Suno deals all sit on the label side."
+      },
+      {
+        "insight": "Defending a catalog is not the same as earning from it",
+        "evidence": "ArtyShield is built for independent musicians, but in the comparison it neither licenses to AI nor pays creators."
+      },
+      {
+        "insight": "Regulation gives AI companies a reason to buy",
+        "evidence": "The EU AI Act requires AI providers to publish training-data summaries and keep a copyright policy. A rights-cleared catalog gives them that proof under one license, not thousands."
+      },
+      {
+        "insight": "The majors are buying up attribution",
+        "evidence": "WMG bought Sureel in June 2026 and Sony backs Vermillio. Tunity works with any distributor and keeps creators, not labels, in control."
+      }
+    ],
+    "report": {
+      "href": null
+    },
+    "roadmap": [
+      {
+        "when": "Q1 2027",
+        "what": "Private beta with 200 producers"
+      },
+      {
+        "when": "Q2 2027",
+        "what": "Public launch and $15/month Pro tier"
+      },
+      {
+        "when": "Q4 2027",
+        "what": "2,000 creators and AI license pilots"
+      },
+      {
+        "when": "2028",
+        "what": "8 paying AI buyers, 10,000 creators"
+      },
+      {
+        "when": "2030",
+        "what": "Break-even"
+      }
+    ]
+  },
+  "design": {
+    "lead": "Musicians register tracks and stems as tamper-proof proof of ownership, choose how AI may use each work, and license it to AI companies through a rights-cleared marketplace that pays them automatically for every training or sampling use.",
+    "blocks": [
+      {
+        "type": "steps",
+        "title": "How it works",
+        "items": [
+          {
+            "title": "Register",
+            "body": "Audio fingerprint + on-chain timestamp-verify registration & provenance"
+          },
+          {
+            "title": "Set terms",
+            "body": "Per track or stem: no AI, license for training, or sample with credit"
+          },
+          {
+            "title": "License",
+            "body": "AI companies license a rights-cleared catalog via smart contracts"
+          },
+          {
+            "title": "Get paid",
+            "body": "Automatic royalties, usage dashboard and misuse alerts"
+          }
+        ]
+      },
+      {
+        "type": "exchange",
+        "title": "Visual value proposition",
+        "left": {
+          "name": "Music creators",
+          "sub": "Producers · songwriters · artists",
+          "listLabel": "They get",
+          "items": [
+            "Proof they own every track",
+            "Control over how AI uses it",
+            "80% of every license fee"
+          ]
+        },
+        "hub": {
+          "name": "Tunity",
+          "sub": "Music rights + AI licensing",
+          "listLabel": "What it does",
+          "items": [
+            "On-chain track registry",
+            "Creator-set AI terms",
+            "Licensing marketplace",
+            "Automatic payouts"
+          ]
+        },
+        "right": {
+          "name": "AI companies",
+          "sub": "Model builders · music AI apps",
+          "listLabel": "They get",
+          "items": [
+            "Rights-cleared training data",
+            "Proof for EU AI Act rules",
+            "One license, not thousands"
+          ]
+        },
+        "flows": {
+          "leftToHub": "music + AI terms",
+          "hubToRight": "rights-cleared catalog",
+          "rightToHub": "license fees",
+          "hubToLeft": "80% of fees"
+        },
+        "caption": "Prove it’s yours. Set the terms. Get paid when AI uses it."
+      },
+      {
+        "type": "statement",
+        "title": "Positioning",
+        "clauses": [
+          {
+            "label": "For",
+            "text": "independent music creators: producers, songwriters and artists"
+          },
+          {
+            "label": "Who",
+            "text": "have their music scraped to train AI without consent, credit or payment,"
+          },
+          {
+            "label": "Tunity is a",
+            "text": "blockchain-backed music rights and AI-licensing platform"
+          },
+          {
+            "label": "That",
+            "text": "proves ownership of every track, lets creators set their own AI-training terms, and pays them automatically whenever AI companies license their work."
+          },
+          {
+            "label": "Unlike",
+            "text": "LANDR Fair Trade AI (tied to one distributor) or label-owned attribution tools like Sureel,"
+          },
+          {
+            "label": "Tunity",
+            "text": "works with any distributor and keeps creators, not labels, in control of their rights and revenue."
+          }
+        ],
+        "note": "Positioning statement template: Geoffrey Moore, Crossing the Chasm."
+      },
+      {
+        "type": "list",
+        "title": "Business model",
+        "items": [
+          "Free to register",
+          "20% fee on license revenue",
+          "$15/mo Pro monitoring tier"
+        ]
+      }
+    ]
+  },
+  "results": {
+    "lead": "The work ends in a seed plan: ==$2.75M for 24 months of runway==, breaking even in 2030.",
+    "blocks": [
+      {
+        "type": "sizing",
+        "title": "Market sizing",
+        "rings": [
+          {
+            "name": "TAM",
+            "value": "≈ $3.5B a year",
+            "label": "Total addressable market",
+            "note": "AI compensation owed to music creators: €12.59B global music royalties × ~25% at risk from AI (CISAC: 24%) ≈ €3.1B (≈ $3.5B). Our 20% take: ≈ $700M."
+          },
+          {
+            "name": "SAM",
+            "value": "≈ $880M a year",
+            "label": "Serviceable addressable market",
+            "note": "US performance royalties reachable via PROs: ASCAP $1.95B + BMI ~$1.57B ≈ $3.5B × 25% at risk. Our 20% take: ≈ $176M."
+          },
+          {
+            "name": "SOM",
+            "value": "$24–49M a year",
+            "label": "Serviceable obtainable market",
+            "note": "One PRO partnership (ASCAP): 5–10% of its AI-licensing flow ($1.95B × 25%) within 3–5 years. Our 20% take: ≈ $5–10M."
+          }
+        ],
+        "note": "Sources: CISAC Global Collections Report 2025; CISAC AI study, Dec 2024; ASCAP 2025 revenue, Music Business Worldwide, Feb 2026; BMI FY2022 revenue, PR Newswire."
+      },
+      {
+        "type": "table",
+        "title": "How it compares",
+        "rowHeader": "Feature",
+        "columns": [
+          {
+            "label": "Tunity",
+            "sub": "Pre-launch",
+            "highlight": true
+          },
+          {
+            "label": "DATA Foundation",
+            "sub": "ex-Story Protocol"
+          },
+          {
+            "label": "Sureel",
+            "sub": "Owned by WMG"
+          },
+          {
+            "label": "Musical AI",
+            "sub": "$4.5M raised"
+          },
+          {
+            "label": "LANDR Fair Trade AI",
+            "sub": "30K+ artists"
+          },
+          {
+            "label": "Vermillio TraceID",
+            "sub": "$16M Series A"
+          },
+          {
+            "label": "ArtyShield",
+            "sub": "Symphonic partner"
+          }
+        ],
+        "rows": [
+          {
+            "label": "Built for independent musicians",
+            "cells": [
+              "yes",
+              "no",
+              "partial",
+              "partial",
+              "yes",
+              "no",
+              "yes"
+            ]
+          },
+          {
+            "label": "Verifiable ownership record",
+            "cells": [
+              "yes",
+              "yes",
+              "no",
+              "no",
+              "no",
+              "partial",
+              "no"
+            ]
+          },
+          {
+            "label": "Creator-set AI terms",
+            "cells": [
+              "yes",
+              "yes",
+              "yes",
+              "partial",
+              "partial",
+              "yes",
+              "no"
+            ]
+          },
+          {
+            "label": "Tracks AI use of your work",
+            "cells": [
+              "partial",
+              "partial",
+              "yes",
+              "yes",
+              "no",
+              "yes",
+              "no"
+            ]
+          },
+          {
+            "label": "Licenses to AI and pays creators",
+            "cells": [
+              "yes",
+              "yes",
+              "partial",
+              "yes",
+              "yes",
+              "partial",
+              "no"
+            ]
+          },
+          {
+            "label": "Works with any distributor",
+            "cells": [
+              "yes",
+              "yes",
+              "partial",
+              "partial",
+              "no",
+              "yes",
+              "partial"
+            ]
+          },
+          {
+            "label": "Independent of major labels",
+            "cells": [
+              "yes",
+              "yes",
+              "no",
+              "yes",
+              "yes",
+              "partial",
+              "yes"
+            ]
+          }
+        ],
+        "note": "The team’s assessment of public information as of October 2026. Tunity shows planned features."
+      },
+      {
+        "type": "bars",
+        "title": "Use of funds",
+        "lead": "$2.75M seed round. 24 months of runway, January 2027 to December 2028.",
+        "items": [
+          {
+            "label": "Team (4 to 7 people)",
+            "value": "$1.76M",
+            "share": 58
+          },
+          {
+            "label": "Marketing and community",
+            "value": "$258K",
+            "share": 9
+          },
+          {
+            "label": "Legal, rights and compliance",
+            "value": "$159K",
+            "share": 5
+          },
+          {
+            "label": "AI buyer sales and partnerships",
+            "value": "$144K",
+            "share": 5
+          },
+          {
+            "label": "Product infrastructure",
+            "value": "$100K",
+            "share": 3
+          },
+          {
+            "label": "Software, insurance and admin",
+            "value": "$64K",
+            "share": 2
+          },
+          {
+            "label": "Cash reserve at end of 2028",
+            "value": "$534K",
+            "share": 18,
+            "muted": true
+          }
+        ],
+        "note": "Total uses of $3.02M are the $2.75M seed plus $272K of 2027–2028 revenue."
+      },
+      {
+        "type": "table",
+        "title": "Pro forma snapshot",
+        "rowHeader": "USD, full year",
+        "numeric": true,
+        "columns": [
+          {
+            "label": "2027"
+          },
+          {
+            "label": "2028"
+          },
+          {
+            "label": "2029"
+          },
+          {
+            "label": "2030",
+            "highlight": true
+          }
+        ],
+        "rows": [
+          {
+            "label": "Revenue",
+            "cells": [
+              "$9K",
+              "$263K",
+              "$1.67M",
+              "$7.40M"
+            ]
+          },
+          {
+            "label": "EBITDA",
+            "cells": [
+              "($925K)",
+              "($1.29M)",
+              "($958K)",
+              "$3.73M"
+            ]
+          }
+        ],
+        "note": "Break-even in 2030: a 20% take on $36M of AI license fees gives $3.73M EBITDA."
+      }
+    ]
+  }
+}

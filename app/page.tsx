@@ -4,6 +4,8 @@ import { IndexDock } from "@/components/IndexDock";
 import { LanguagesCard } from "@/components/LanguagesCard";
 import { LiquidBackground } from "@/components/LiquidBackground";
 import { ExportHost } from "@/components/ExportHost";
+import { CaseStudyCards } from "@/components/case/CaseStudyCards";
+import { caseStudies } from "@/lib/case-studies";
 import { resume } from "@/lib/resume";
 import { headlineViews, portfolio, roleViews } from "@/lib/portfolio";
 
@@ -17,6 +19,14 @@ export default function Home() {
   const { profile, languages } = resume;
   const roles = roleViews();
   const lines = Object.fromEntries(portfolio.headlines.map((h) => [h.experienceId, h.line]));
+  const studies = caseStudies().map(({ slug, title, slugLine, tags, hero, role }) => ({
+    slug,
+    title,
+    slugLine,
+    tags,
+    hero,
+    role,
+  }));
 
   return (
     <>
@@ -25,7 +35,7 @@ export default function Home() {
           <LiquidBackground />
         </div>
 
-        <SiteHeader name={profile.name} />
+        <SiteHeader name={profile.name} caseStudies={studies.length > 0} />
         {roles.length > 0 && (
           <IndexDock label="Browse by role" items={roles.map((r) => ({ id: r.id, label: r.label }))} />
         )}
@@ -40,6 +50,7 @@ export default function Home() {
             skills={resume.skills}
             demos={portfolio.demos}
           />
+          <CaseStudyCards studies={studies} />
         </main>
 
         <footer id="contact" className="druid-section pf-footer" aria-labelledby="contact-title">
