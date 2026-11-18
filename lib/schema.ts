@@ -379,3 +379,331 @@ export function portfolioIssues(portfolio: Portfolio, resume: Resume): { where: 
 
   return issues;
 }
+
+/* ---------------------------------------------------------------------------
+ * The case-study layer: `content/case-studies/<slug>.json`.
+ *
+ * One file per project page at /projects/<slug>. The page is a fixed template
+ * (hero, role, sprint timeline, then four phases: research, goals, design,
+ * results) and this schema is the template's contract. To add a project, copy
+ * `content/case-studies/_template.json`, rename it to the slug, and fill it in.
+ *
+ * Like portfolio.json, this is presentation content and is edited directly.
+ * Two rules carry over from the resume:
+ *
+ *   1. Nothing is invented. A field with no source stays empty, and the page
+ *      either drops that block or shows a labelled placeholder (hero picture,
+ *      role, demo link, report link).
+ *   2. Every block is optional. An empty string or array is a normal state, so
+ *      a component that looks broken without one is a component bug.
+ *
+ * Two inline marks are allowed in `research.problem` and in any `lead`:
+ * `==text==` draws a gold highlighter over the words, `**text**` sets them bold.
+ * ------------------------------------------------------------------------- */
+
+/** A picture under `public/case-studies/<slug>/`. Width and height are the
+ *  file's own pixel size, so the page can reserve its space before it loads. */
+export const CaseImageSchema = z.object({
+  src: z.string().startsWith("/case-studies/", {
+    error: `a case-study image src must start with "/case-studies/" and point at a file under public/ (e.g. "/case-studies/tunity/hero.jpg").`,
+  }),
+  alt: z.string().min(1, {
+    error: "a case-study image needs non-empty alt text describing what it shows.",
+  }),
+  width: z.number().int().positive({ error: "image width must be the file's width in pixels." }),
+  height: z.number().int().positive({ error: "image height must be the file's height in pixels." }),
+});
+export type CaseImage = z.infer<typeof CaseImageSchema>;
+
+const blockTitle = z.string().optional();
+const blockNote = z.string().optional();
+
+/** One party in an exchange diagram: who it is and what it gets or does. */
+const PartySchema = z.object({
+  name: z.string().min(1, { error: "a party in an exchange diagram needs a name." }),
+  sub: z.string().optional(),
+  /** Heading over the list, e.g. "They get" or "What it does". */
+  listLabel: z.string().optional(),
+  items: z.array(z.string().min(1)),
+});
+export type Party = z.infer<typeof PartySchema>;
+
+/**
+ * The exhibits a design or results phase can hold, in any order. Each is a
+ * self-contained figure drawn from data, so it follows the theme and stays
+ * readable by a screen reader, which a pasted screenshot would not.
+ */
+export const ExhibitSchema = z.discriminatedUnion("type", [
+  /** A numbered process. Use only when the order is real. */
+  z.object({
+    type: z.literal("steps"),
+    title: blockTitle,
+    items: z
+      .array(z.object({ title: z.string().min(1), body: z.string() }))
+      .min(1, { error: "a steps exhibit needs at least one step. Remove the exhibit instead." }),
+    note: blockNote,
+  }),
+  /** Three parties and the four flows between them: a visual value proposition. */
+  z.object({
+    type: z.literal("exchange"),
+    title: blockTitle,
+    left: PartySchema,
+    hub: PartySchema,
+    right: PartySchema,
+    flows: z.object({
+      leftToHub: z.string().min(1),
+      hubToRight: z.string().min(1),
+      rightToHub: z.string().min(1),
+      hubToLeft: z.string().min(1),
+    }),
+    /** The one-line promise under the diagram. */
+    caption: z.string().optional(),
+    note: blockNote,
+  }),
+  /** A labelled statement, clause by clause (a positioning statement). */
+  z.object({
+    type: z.literal("statement"),
+    title: blockTitle,
+    clauses: z
+      .array(z.object({ label: z.string().min(1), text: z.string().min(1) }))
+      .min(1, { error: "a statement exhibit needs at least one clause." }),
+    note: blockNote,
+  }),
+  /** A short plain list. */
+  z.object({
+    type: z.literal("list"),
+    title: blockTitle,
+    items: z.array(z.string().min(1)).min(1, { error: "a list exhibit needs at least one item." }),
+    note: blockNote,
+  }),
+  /** A picture in a Content Card frame. */
+  z.object({
+    type: z.literal("figure"),
+    title: blockTitle,
+    image: CaseImageSchema,
+    caption: z.string().optional(),
+  }),
+  /** Nested market sizes, widest first (TAM, SAM, SOM). */
+  z.object({
+    type: z.literal("sizing"),
+    title: blockTitle,
+    rings: z
+      .array(
+        z.object({
+          /** Short name drawn inside the ring, e.g. "TAM". */
+          name: z.string().min(1),
+          value: z.string().min(1),
+          label: z.string(),
+          note: z.string(),
+        }),
+      )
+      .min(2, { error: "a sizing exhibit needs two or three rings, widest first." })
+      .max(3, { error: "a sizing exhibit needs two or three rings, widest first." }),
+    note: blockNote,
+  }),
+  /**
+   * A table. A cell that is exactly "yes", "partial" or "no" is drawn as a
+   * full, half or empty mark, with the word kept for screen readers.
+   */
+  z.object({
+    type: z.literal("table"),
+    title: blockTitle,
+    /** Header of the first column, which labels each row. */
+    rowHeader: z.string(),
+    columns: z
+      .array(
+        z.object({
+          label: z.string().min(1),
+          sub: z.string().optional(),
+          /** Tints the column: the project's own column in a comparison. */
+          highlight: z.boolean().optional(),
+        }),
+      )
+      .min(1, { error: "a table exhibit needs at least one column." }),
+    rows: z
+      .array(z.object({ label: z.string().min(1), cells: z.array(z.string()) }))
+      .min(1, { error: "a table exhibit needs at least one row." }),
+    /** Right-aligns the cells, for money and counts. */
+    numeric: z.boolean().optional(),
+    note: blockNote,
+  }),
+  /** Horizontal bars for shares of a whole (a budget). */
+  z.object({
+    type: z.literal("bars"),
+    title: blockTitle,
+    lead: z.string().optional(),
+    items: z
+      .array(
+        z.object({
+          label: z.string().min(1),
+          value: z.string().min(1),
+          /** Percent of the whole, 0–100. Sets the bar's length. */
+          share: z
+            .number()
+            .min(0, { error: "a bar's share is a percent between 0 and 100." })
+            .max(100, { error: "a bar's share is a percent between 0 and 100." }),
+          /** A quieter bar, for what is held back rather than spent. */
+          muted: z.boolean().optional(),
+        }),
+      )
+      .min(1, { error: "a bars exhibit needs at least one bar." }),
+    note: blockNote,
+  }),
+]);
+export type Exhibit = z.infer<typeof ExhibitSchema>;
+
+/** The four phases, in the order the sprint timeline shows them. */
+export const CASE_PHASES = ["research", "goals", "design", "results"] as const;
+export type CasePhase = (typeof CASE_PHASES)[number];
+
+export const CASE_PHASE_LABELS: Record<CasePhase, string> = {
+  research: "Research & context",
+  goals: "Goals & challenges",
+  design: "Design & development",
+  results: "Results & impact",
+};
+
+const optionalLink = z
+  .url({ error: "a link must be an absolute URL including the scheme (e.g. https://example.com), or null." })
+  .nullable();
+
+export const CaseStudySchema = z.object({
+  /** The URL segment, and the file name without ".json". */
+  slug: slug("case study slug"),
+  /** Position in the Index, lowest first. Ties fall back to the title. */
+  order: z.number().optional(),
+  title: z.string().min(1, { error: "a case study needs a title." }),
+  /** The descriptive line under the title, on the hero. */
+  slugLine: z.string().min(1, { error: "a case study needs a slugLine: one sentence saying what the project is." }),
+  /** Short gold tags under the role: the kind of work, the team size. */
+  tags: z.array(z.string().min(1)),
+  hero: z.object({
+    /** A wide picture that fills the hero. null shows the Druid ground, and
+     *  the labelled placeholder if there is no figure either. */
+    image: CaseImageSchema.nullable(),
+    /** An optional cut-out set over the ground at the right, e.g. a device
+     *  mockup with a transparent background. */
+    figure: CaseImageSchema.nullable(),
+  }),
+  /** The author's own part. All of it empty shows the labelled placeholder. */
+  role: z.object({
+    title: z.string(),
+    /** How long the sprint ran, e.g. "Six weeks, autumn 2026". */
+    sprint: z.string(),
+    summary: z.string(),
+    /**
+     * One sentence per move, in the author's own words: what was done, then
+     * what it changed. Wrap the impact in `**double asterisks**` to set it bold.
+     */
+    moves: z.array(z.string().min(1, { error: "a move cannot be an empty string. Remove it instead." })),
+  }),
+  /** null: the project has no demo and the slot is not shown. `href: null`
+   *  shows the empty slot, as a reminder that a link is still to come. */
+  demo: z.object({ href: optionalLink }).nullable(),
+  /** When each phase ran, shown on the sprint timeline. "" leaves it off. */
+  timeline: z.object({
+    research: z.string(),
+    goals: z.string(),
+    design: z.string(),
+    results: z.string(),
+  }),
+  research: z.object({
+    problem: z.string(),
+    stakeholders: z.array(
+      z.object({
+        /** The part they play: "Customer", "Supplier", "Competitor". */
+        kind: z.string().min(1),
+        name: z.string().min(1),
+        note: z.string().optional(),
+      }),
+    ),
+    painPoints: z.array(z.object({ label: z.string().min(1), detail: z.string().min(1) })),
+    headlines: z.array(
+      z.object({
+        /** An optional figure set large above the headline, e.g. "24%". */
+        figure: z.string().optional(),
+        headline: z.string().min(1),
+        source: z.string().min(1, { error: "a research headline needs its source." }),
+        date: z.string().optional(),
+        url: z.url({ error: "a headline url must be an absolute URL including the scheme." }).optional(),
+      }),
+    ),
+  }),
+  goals: z.object({
+    rows: z.array(z.object({ goal: z.string().min(1), target: z.string(), kpi: z.string() })),
+    insights: z.array(z.object({ insight: z.string().min(1), evidence: z.string() })),
+    /** The full report. null hides the slot; `href: null` shows it empty. */
+    report: z.object({ href: optionalLink }).nullable(),
+    roadmap: z.array(z.object({ when: z.string().min(1), what: z.string().min(1) })),
+  }),
+  design: z.object({ lead: z.string(), blocks: z.array(ExhibitSchema) }),
+  results: z.object({ lead: z.string(), blocks: z.array(ExhibitSchema) }),
+});
+export type CaseStudy = z.infer<typeof CaseStudySchema>;
+
+/** Every picture a case study references, wherever it sits. */
+export function caseStudyImages(study: CaseStudy): CaseImage[] {
+  const images: CaseImage[] = [];
+  if (study.hero.image) images.push(study.hero.image);
+  if (study.hero.figure) images.push(study.hero.figure);
+  for (const block of [...study.design.blocks, ...study.results.blocks]) {
+    if (block.type === "figure") images.push(block.image);
+  }
+  return images;
+}
+
+/** Whether a phase has anything to show. An empty phase is left off the page,
+ *  the sprint timeline and the navigation pane alike. */
+export function phaseHasContent(study: CaseStudy, phase: CasePhase): boolean {
+  switch (phase) {
+    case "research": {
+      const r = study.research;
+      return Boolean(r.problem.trim()) || r.stakeholders.length + r.painPoints.length + r.headlines.length > 0;
+    }
+    case "goals": {
+      const g = study.goals;
+      return g.rows.length + g.insights.length + g.roadmap.length > 0 || g.report !== null;
+    }
+    case "design":
+    case "results":
+      return Boolean(study[phase].lead.trim()) || study[phase].blocks.length > 0;
+  }
+}
+
+/**
+ * The rules a per-field schema cannot express. `file` is the file name without
+ * ".json"; a leading underscore marks the template, which is never published.
+ */
+export function caseStudyIssues(study: CaseStudy, file: string): { where: string; what: string }[] {
+  const issues: { where: string; what: string }[] = [];
+  const expected = file.replace(/^_/, "");
+  if (study.slug !== expected) {
+    issues.push({
+      where: "slug",
+      what: `The slug is "${study.slug}" but the file is ${file}.json. They must match, because the slug is the page's URL. Rename one of them.`,
+    });
+  }
+  const prefix = `/case-studies/${study.slug}/`;
+  for (const image of caseStudyImages(study)) {
+    if (!image.src.startsWith(prefix)) {
+      issues.push({
+        where: `image "${image.src}"`,
+        what: `Pictures for this case study must live under "${prefix}". Move the file, or fix the path.`,
+      });
+    }
+  }
+  (["design", "results"] as const).forEach((phase) => {
+    study[phase].blocks.forEach((block, i) => {
+      if (block.type !== "table") return;
+      block.rows.forEach((row, j) => {
+        if (row.cells.length !== block.columns.length) {
+          issues.push({
+            where: `${phase}.blocks[${i}].rows[${j}]`,
+            what: `"${row.label}" has ${row.cells.length} cells but the table has ${block.columns.length} columns. Give it one cell per column.`,
+          });
+        }
+      });
+    });
+  });
+  return issues;
+}

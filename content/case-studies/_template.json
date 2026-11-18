@@ -1,0 +1,327 @@
+{
+  "slug": "template",
+  "title": "Project title",
+  "slugLine": "Descriptive slug line: one sentence saying what the project is and who it is for.",
+  "tags": [
+    "Kind of work",
+    "Team size"
+  ],
+  "hero": {
+    "image": null,
+    "figure": null
+  },
+  "role": {
+    "title": "Role title",
+    "sprint": "Sprint time",
+    "summary": "Role summary: one or two sentences on what you owned.",
+    "moves": [
+      "Designed data archiving system, **reducing archival overhead by 30%**",
+      "Conducted 6 case studies on competitors to extract competitive moats and product strategic insights **that would improve performance by 6%**"
+    ]
+  },
+  "demo": {
+    "href": null
+  },
+  "timeline": {
+    "research": "Week 1",
+    "goals": "Week 2",
+    "design": "Weeks 3–4",
+    "results": "Week 5"
+  },
+  "research": {
+    "problem": "State the problem in one or two sentences. Wrap the words that matter in ==double equals== to highlight them, or in **double asterisks** for bold.",
+    "stakeholders": [
+      {
+        "kind": "Customer",
+        "name": "Customer 1",
+        "note": "Who they are"
+      },
+      {
+        "kind": "Customer",
+        "name": "Customer 2"
+      },
+      {
+        "kind": "Supplier",
+        "name": "Supplier"
+      },
+      {
+        "kind": "Middleman",
+        "name": "Middleman"
+      },
+      {
+        "kind": "Competitor",
+        "name": "Competitor"
+      }
+    ],
+    "painPoints": [
+      {
+        "label": "Pain point 1",
+        "detail": "What hurts, and for whom."
+      },
+      {
+        "label": "Pain point 2",
+        "detail": "What hurts, and for whom."
+      },
+      {
+        "label": "Pain point 3",
+        "detail": "What hurts, and for whom."
+      }
+    ],
+    "headlines": [
+      {
+        "figure": "00%",
+        "headline": "a research headline with a figure",
+        "source": "Source",
+        "date": "Mon 2026",
+        "url": "https://example.com"
+      },
+      {
+        "headline": "A research headline without a figure",
+        "source": "Source",
+        "date": "Mon 2026"
+      },
+      {
+        "headline": "A third research headline",
+        "source": "Source"
+      },
+      {
+        "figure": "0K",
+        "headline": "a fourth, to show the row scrolling",
+        "source": "Source"
+      }
+    ]
+  },
+  "goals": {
+    "rows": [
+      {
+        "goal": "Goal 1",
+        "target": "Target",
+        "kpi": "KPI"
+      },
+      {
+        "goal": "Goal 2",
+        "target": "Target",
+        "kpi": "KPI"
+      },
+      {
+        "goal": "Goal 3",
+        "target": "Target",
+        "kpi": "KPI"
+      }
+    ],
+    "insights": [
+      {
+        "insight": "Insight 1",
+        "evidence": "Supporting evidence"
+      },
+      {
+        "insight": "Insight 2",
+        "evidence": "Supporting evidence"
+      },
+      {
+        "insight": "Insight 3",
+        "evidence": "Supporting evidence"
+      },
+      {
+        "insight": "Insight 4",
+        "evidence": "Supporting evidence"
+      }
+    ],
+    "report": {
+      "href": null
+    },
+    "roadmap": [
+      {
+        "when": "Now",
+        "what": "First milestone"
+      },
+      {
+        "when": "Next",
+        "what": "Second milestone"
+      },
+      {
+        "when": "Later",
+        "what": "Third milestone"
+      }
+    ]
+  },
+  "design": {
+    "lead": "One paragraph on what was designed and why it takes the shape it does.",
+    "blocks": [
+      {
+        "type": "steps",
+        "title": "How it works",
+        "items": [
+          {
+            "title": "Step one",
+            "body": "What happens first"
+          },
+          {
+            "title": "Step two",
+            "body": "What happens next"
+          },
+          {
+            "title": "Step three",
+            "body": "What happens last"
+          }
+        ]
+      },
+      {
+        "type": "exchange",
+        "title": "Visual value proposition",
+        "left": {
+          "name": "One side",
+          "sub": "Who they are",
+          "listLabel": "They get",
+          "items": [
+            "A benefit",
+            "Another benefit"
+          ]
+        },
+        "hub": {
+          "name": "The product",
+          "sub": "What it is",
+          "listLabel": "What it does",
+          "items": [
+            "A capability",
+            "Another capability"
+          ]
+        },
+        "right": {
+          "name": "Other side",
+          "sub": "Who they are",
+          "listLabel": "They get",
+          "items": [
+            "A benefit",
+            "Another benefit"
+          ]
+        },
+        "flows": {
+          "leftToHub": "what they give",
+          "hubToRight": "what it passes on",
+          "rightToHub": "what they pay",
+          "hubToLeft": "what comes back"
+        },
+        "caption": "The promise in one line."
+      },
+      {
+        "type": "statement",
+        "title": "Positioning",
+        "clauses": [
+          {
+            "label": "For",
+            "text": "the target customer"
+          },
+          {
+            "label": "Who",
+            "text": "has this need,"
+          },
+          {
+            "label": "It is a",
+            "text": "product category"
+          },
+          {
+            "label": "That",
+            "text": "delivers this benefit."
+          }
+        ]
+      },
+      {
+        "type": "list",
+        "title": "A short list",
+        "items": [
+          "First point",
+          "Second point"
+        ]
+      }
+    ]
+  },
+  "results": {
+    "lead": "One sentence on where the work ended up.",
+    "blocks": [
+      {
+        "type": "sizing",
+        "title": "Market sizing",
+        "rings": [
+          {
+            "name": "TAM",
+            "value": "$0B",
+            "label": "Total addressable market",
+            "note": "How it was worked out."
+          },
+          {
+            "name": "SAM",
+            "value": "$0M",
+            "label": "Serviceable addressable market",
+            "note": "How it was worked out."
+          },
+          {
+            "name": "SOM",
+            "value": "$0M",
+            "label": "Serviceable obtainable market",
+            "note": "How it was worked out."
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "title": "A comparison",
+        "rowHeader": "Feature",
+        "columns": [
+          {
+            "label": "This project",
+            "highlight": true
+          },
+          {
+            "label": "Alternative A"
+          },
+          {
+            "label": "Alternative B"
+          }
+        ],
+        "rows": [
+          {
+            "label": "First feature",
+            "cells": [
+              "yes",
+              "partial",
+              "no"
+            ]
+          },
+          {
+            "label": "Second feature",
+            "cells": [
+              "yes",
+              "no",
+              "yes"
+            ]
+          }
+        ],
+        "note": "A cell of yes, partial or no is drawn as a mark. Anything else is shown as text."
+      },
+      {
+        "type": "bars",
+        "title": "Shares of a whole",
+        "lead": "What the whole is.",
+        "items": [
+          {
+            "label": "Largest share",
+            "value": "$0",
+            "share": 60
+          },
+          {
+            "label": "Second share",
+            "value": "$0",
+            "share": 25
+          },
+          {
+            "label": "Held back",
+            "value": "$0",
+            "share": 15,
+            "muted": true
+          }
+        ]
+      }
+    ]
+  }
+}

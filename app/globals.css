@@ -1710,8 +1710,1937 @@
       border: 1px solid CanvasText;
     }
   }
+
+  /* ========================================================================
+     Case study page: /projects/<slug>
+
+     The template drawn from content/case-studies/<slug>.json: a framed hero,
+     the role, a sprint timeline, then four phases on alternating green and
+     brown pages, with the navigation pane riding in a rail on the right.
+     ======================================================================== */
+  .cs {
+    /* A stronger ease-out than --ease-druid, for small UI answers. */
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    padding-bottom: 24px;
+  }
+  .cs ::selection {
+    background: var(--color-gold-light);
+    color: var(--color-walnut);
+  }
+  .cs strong {
+    font-weight: 700;
+  }
+  /* A wider measure than the portfolio: this page carries a rail beside its content. */
+  .cs .druid-container {
+    width: min(100% - 96px, 1400px);
+  }
+
+  /* Hero: one framed slide, the title on the scrim along its foot. --------- */
+  .cs-hero {
+    padding-top: 108px;
+  }
+  .cs .cs-hero__face {
+    display: grid;
+    align-items: end;
+    aspect-ratio: auto;
+    min-height: clamp(360px, 35vw, 480px);
+    isolation: isolate;
+    --focus: var(--color-gold-light);
+  }
+  .cs-hero__ground {
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--color-white) 5%, transparent) 0 1px,
+        transparent 1px 14px
+      ),
+      radial-gradient(46% 95% at 84% 34%, color-mix(in srgb, var(--color-mauve-index) 96%, transparent), transparent 72%),
+      radial-gradient(42% 80% at 56% 0%, color-mix(in srgb, var(--color-green-deep) 78%, transparent), transparent 70%),
+      radial-gradient(50% 75% at 0% 100%, color-mix(in srgb, var(--color-green-dark) 92%, transparent), transparent 70%),
+      linear-gradient(150deg, var(--color-brown-rich), var(--color-espresso) 70%);
+  }
+  .cs-hero__img {
+    object-fit: cover;
+  }
+  /* Quiet gold rings behind the figure. Decorative. */
+  .cs-hero__rings {
+    position: absolute;
+    top: 50%;
+    right: clamp(-150px, -6vw, -40px);
+    width: clamp(420px, 52vw, 700px);
+    aspect-ratio: 1 / 1;
+    translate: 0 -46%;
+    color: var(--color-gold-light);
+    opacity: 0.3;
+    pointer-events: none;
+  }
+  .cs-hero__figure {
+    position: absolute;
+    top: clamp(28px, 3.4vw, 48px);
+    right: clamp(28px, 9%, 136px);
+    width: clamp(190px, 23%, 300px);
+    perspective: var(--perspective);
+    pointer-events: none;
+  }
+  .cs-hero__figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+    transform: rotateY(-20deg) rotateX(9deg) rotateZ(5deg);
+    transform-origin: 50% 20%;
+    filter: drop-shadow(26px 30px 34px color-mix(in srgb, black 55%, transparent));
+  }
+  .cs-hero__text {
+    position: relative;
+    z-index: 2;
+    padding: 32px 36px 34px;
+    max-width: 860px;
+  }
+  .cs .cs-hero__title {
+    margin: 0 0 12px;
+    font-weight: 700;
+    font-size: clamp(46px, 6.4vw, 88px);
+    line-height: 1.02;
+    letter-spacing: -0.028em;
+    color: var(--color-white);
+    text-shadow: 0 2px 6px color-mix(in srgb, black 30%, transparent);
+  }
+  .cs .cs-hero__slug {
+    margin: 0;
+    max-width: 50ch;
+    font-size: clamp(17px, 1.5vw, 21px);
+    line-height: 1.45;
+    color: var(--color-white);
+    text-wrap: pretty;
+  }
+  /* The entrance, once on load: the title arrives first, then the line that
+     explains it, while the figure glides forward through the scene. */
+  .cs-hero__title,
+  .cs-hero__slug {
+    animation: cs-rise 800ms var(--ease-out) both;
+  }
+  .cs-hero__slug {
+    animation-delay: 120ms;
+  }
+  .cs-hero__figure img {
+    animation: cs-glide 1300ms var(--ease-out) 80ms both;
+  }
+  .cs-hero__rings {
+    animation: cs-rings 1600ms var(--ease-out) both;
+  }
+
+  /* Layout: the main column, and a rail that holds the demo link and the
+     navigation pane. The rail sits between the role and the timeline in the
+     document, which is also where it lands once the columns stack. */
+  .cs-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 280px;
+    column-gap: 40px;
+    align-items: start;
+    margin-top: 56px;
+  }
+  .cs-layout > * {
+    grid-column: 1;
+    min-width: 0;
+  }
+  .cs-layout > .cs-rail {
+    grid-column: 2;
+    grid-row: 1 / span 12;
+    align-self: stretch;
+  }
+  .cs-rail__stick {
+    position: sticky;
+    top: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .cs .cs-rail .pf-demo {
+    background-color: var(--glass-card);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    backdrop-filter: blur(20px) saturate(140%);
+  }
+
+  /* A labelled slot for content still to come. */
+  .cs-ph {
+    padding: 16px 18px;
+    border: 1.5px dashed currentColor;
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--color-white) 18%, transparent);
+  }
+  :root[data-theme="dark"] .cs-ph {
+    background: color-mix(in srgb, var(--color-white) 5%, transparent);
+  }
+  .cs .cs-ph p {
+    margin: 0;
+    font-family: var(--font-note);
+    font-size: 17px;
+    line-height: 1.45;
+  }
+  .cs .cs-ph p + p {
+    margin-top: 6px;
+  }
+
+  /* Role ------------------------------------------------------------------- */
+  .cs-role {
+    padding: 32px 36px 30px;
+    margin-bottom: 48px;
+    scroll-margin-top: 100px;
+  }
+  .cs-role__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 20px;
+    margin-bottom: 14px;
+  }
+  .cs .cs-role__title {
+    margin: 0;
+  }
+  .cs .cs-role__sprint {
+    margin: 0;
+    color: var(--text-soft);
+  }
+  .cs-role .pf-skills {
+    margin-bottom: 18px;
+  }
+  .cs .cs-role__summary {
+    margin: 0;
+  }
+  .cs-moves {
+    list-style: none;
+    margin: 20px 0 0;
+    padding: 0;
+    border-top: 1px solid color-mix(in srgb, currentColor 16%, transparent);
+  }
+  .cs-move {
+    display: grid;
+    grid-template-columns: 22px minmax(0, 1fr);
+    gap: 14px;
+    align-items: start;
+    padding: 14px 0;
+    border-bottom: 1px solid color-mix(in srgb, currentColor 16%, transparent);
+    font-size: 17px;
+    line-height: 1.5;
+  }
+  .cs-move svg {
+    width: 22px;
+    height: 22px;
+    margin-top: 2px;
+    color: var(--meter);
+  }
+
+  /* The numbered gold disc: one marker for a phase everywhere it appears. */
+  .cs-disc {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(
+      115deg,
+      var(--color-gold-light) 0%,
+      var(--color-gold-glint) 46%,
+      var(--color-gold-light) 68%,
+      var(--color-gold-base) 100%
+    );
+    color: var(--color-walnut);
+    font-family: var(--font-heading);
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1;
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, var(--color-white) 65%, transparent),
+      inset 0 -2px 0 color-mix(in srgb, var(--color-gold-shadow) 45%, transparent),
+      0 3px 8px color-mix(in srgb, var(--color-espresso) 22%, transparent);
+  }
+  .cs-disc--sm {
+    width: 24px;
+    height: 24px;
+    font-size: 13px;
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, var(--color-white) 65%, transparent),
+      inset 0 -1px 0 color-mix(in srgb, var(--color-gold-shadow) 45%, transparent);
+  }
+
+  /* Navigation pane --------------------------------------------------------- */
+  .cs-nav {
+    padding: 18px 12px 12px;
+  }
+  .cs .cs-nav__title {
+    margin: 0 10px 8px;
+    color: var(--text-soft);
+  }
+  .cs-nav ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .cs .cs-nav__link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    padding: 6px 10px;
+    border-radius: 10px;
+    color: var(--text-strong);
+    font-size: 16px;
+    line-height: 1.25;
+    text-decoration: none;
+    transition: background-color 160ms ease;
+  }
+  /* The mark for where the reader is: a bar, as well as the heavier weight. */
+  .cs-nav__link::before {
+    content: "";
+    position: absolute;
+    left: -12px;
+    top: 9px;
+    bottom: 9px;
+    width: 4px;
+    border-radius: 0 4px 4px 0;
+    background: var(--meter);
+    transform: scaleY(0);
+    transition: transform 240ms var(--ease-out);
+  }
+  .cs-nav__link[aria-current="location"] {
+    font-weight: 700;
+  }
+  .cs-nav__link[aria-current="location"]::before {
+    transform: scaleY(1);
+  }
+  .cs-nav__dot {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 24px;
+    height: 24px;
+  }
+  .cs-nav__dot::after {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 1.5px solid currentColor;
+  }
+  .cs-nav__sub {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 280ms var(--ease-out);
+  }
+  .cs-nav__sub[data-open="true"] {
+    grid-template-rows: 1fr;
+  }
+  .cs-nav__sub > ol {
+    min-height: 0;
+    overflow: hidden;
+    visibility: hidden;
+    transition: visibility 0s linear 280ms;
+  }
+  .cs-nav__sub[data-open="true"] > ol {
+    visibility: visible;
+    transition-delay: 0s;
+  }
+  .cs .cs-nav__link--sub {
+    min-height: 36px;
+    padding-left: 44px;
+    font-size: 15px;
+    color: var(--text-soft);
+  }
+  .cs .cs-nav__link--sub[aria-current="location"] {
+    color: var(--text-strong);
+  }
+
+  /* Sprint timeline: four stops, each a way into its phase. ----------------- */
+  .cs-timeline {
+    margin-bottom: 72px;
+    scroll-margin-top: 100px;
+  }
+  .cs .cs-timeline__title {
+    margin: 0 0 4px;
+  }
+  .cs .cs-timeline__hint {
+    margin: 0;
+    color: var(--text-soft);
+  }
+  .cs-stops {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 18px;
+    list-style: none;
+    margin: 22px 0 0;
+    padding: 0;
+  }
+  .cs-stops > li {
+    position: relative;
+  }
+  /* The link between one stop and the next, drawn in the gap. */
+  .cs-stops > li + li::before {
+    content: "";
+    position: absolute;
+    top: 34px;
+    left: -18px;
+    width: 18px;
+    height: 2px;
+    background: color-mix(in srgb, currentColor 30%, transparent);
+  }
+  .cs .cs-stop {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    height: 100%;
+    min-height: 148px;
+    padding: 18px 18px 14px;
+    border-radius: 18px;
+    color: var(--text-strong);
+    text-decoration: none;
+    transition:
+      transform 220ms var(--ease-out),
+      box-shadow 220ms ease;
+  }
+  .cs-stop__name {
+    font-family: var(--font-heading);
+    font-size: clamp(17px, 1.5vw, 20px);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+  .cs-stop__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: auto;
+    min-height: 24px;
+    color: var(--text-soft);
+  }
+  .cs-stop__foot svg {
+    width: 20px;
+    height: 20px;
+    margin-left: auto;
+    transition: transform 220ms var(--ease-out);
+  }
+  .cs-stop:active {
+    transform: scale(0.97);
+  }
+
+  /* A phase: one rounded page, green or brown. ------------------------------ */
+  .cs-phase {
+    position: relative;
+    margin-bottom: 40px;
+    padding: 44px 44px 48px;
+    border: 1px solid var(--glass-line);
+    border-radius: 28px;
+    box-shadow:
+      inset 1px 1px 0 color-mix(in srgb, var(--color-white) 18%, transparent),
+      0 16px 40px var(--glass-shadow);
+    scroll-margin-top: 100px;
+  }
+  .cs-block {
+    scroll-margin-top: 110px;
+  }
+  .cs-block + .cs-block {
+    margin-top: 52px;
+  }
+  .cs .cs-h3 {
+    margin: 0 0 14px;
+  }
+  .cs .cs-lead {
+    margin: 0;
+    max-width: 60ch;
+    font-size: clamp(18px, 1.6vw, 21px);
+    line-height: 1.5;
+    text-wrap: pretty;
+  }
+  .cs .cs-note {
+    margin: 14px 0 0;
+    max-width: 78ch;
+    font-family: var(--font-note);
+    font-size: 16px;
+    line-height: 1.45;
+    color: var(--soft);
+  }
+
+  /* The section tag: a tab that runs in from the page's left edge and fades
+     out to the right. The wash is the text colour, so it holds on any ground. */
+  .cs-tag {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: fit-content;
+    min-width: min(100%, 380px);
+    margin: 0 0 32px -44px;
+    padding: 12px 64px 12px 44px;
+    border-radius: 0 999px 999px 0;
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, currentColor 22%, transparent) 0%,
+      color-mix(in srgb, currentColor 10%, transparent) 55%,
+      transparent 100%
+    );
+  }
+  .cs .cs-tag__title {
+    margin: 0;
+    font-size: clamp(24px, 2.6vw, 32px);
+    line-height: 1.15;
+  }
+  .cs-tag--sub {
+    padding-block: 9px;
+    margin-bottom: 24px;
+  }
+  .cs .cs-tag--sub .cs-tag__title {
+    font-size: clamp(20px, 2vw, 25px);
+  }
+  /* Inside a column the tag has no edge to run in from. */
+  .cs-tag--inset {
+    margin-left: 0;
+    padding-left: 20px;
+    border-radius: 12px 999px 999px 12px;
+  }
+
+  /* Research: problem, stakeholders, pain points, headlines. ---------------- */
+  .cs .cs-problem {
+    margin: 0;
+    max-width: 30em;
+    font-family: var(--font-heading);
+    font-size: clamp(22px, 2.5vw, 32px);
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+    text-wrap: pretty;
+  }
+  /* The highlighter. It draws across once the words scroll into view. */
+  .cs mark {
+    margin: 0 -0.06em;
+    padding: 0.03em 0.16em 0.06em;
+    border-radius: 0.2em;
+    color: var(--color-walnut);
+    background: linear-gradient(var(--color-gold-light), var(--color-gold-light)) 0 0 / 100% 100% no-repeat;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    transition:
+      background-size 720ms var(--ease-out) calc(var(--i, 0) * 180ms),
+      color 240ms ease calc(var(--i, 0) * 180ms + 120ms);
+  }
+  .cs[data-draw-ready] [data-draw=""] mark {
+    color: inherit;
+    background-size: 0% 100%;
+  }
+
+  .cs-stake {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+  }
+  .cs-stake li {
+    padding: 14px 16px 16px;
+    border-left: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+    margin-left: -1px;
+  }
+  .cs-stake__kind {
+    display: block;
+    font-family: var(--font-note);
+    font-size: 16px;
+    line-height: 1.3;
+    color: var(--soft);
+  }
+  .cs-stake__name {
+    display: block;
+    margin-top: 4px;
+    font-family: var(--font-heading);
+    font-size: 18px;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+  }
+  .cs-stake__note {
+    display: block;
+    margin-top: 4px;
+    font-size: 15px;
+    line-height: 1.4;
+    color: var(--soft);
+  }
+
+  .cs-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .cs-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    min-height: 44px;
+    padding: 8px 16px 8px 14px;
+    border: 1.5px solid color-mix(in srgb, currentColor 45%, transparent);
+    border-radius: 999px;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 16px;
+    line-height: 1.2;
+    cursor: pointer;
+    transition:
+      background-color 160ms ease,
+      border-color 160ms ease,
+      color 160ms ease,
+      transform 160ms var(--ease-out);
+  }
+  .cs-chip__mark {
+    flex: none;
+    width: 9px;
+    height: 9px;
+    border: 1.5px solid currentColor;
+    border-radius: 50%;
+    transition: background-color 160ms ease;
+  }
+  .cs-chip[aria-selected="true"] {
+    border-color: var(--color-gold-light);
+    background: var(--color-gold-light);
+    color: var(--color-walnut);
+  }
+  .cs-chip[aria-selected="true"] .cs-chip__mark {
+    background: currentColor;
+  }
+  .cs-chip:active {
+    transform: scale(0.97);
+  }
+  .cs-pain {
+    margin-top: 14px;
+    padding: 20px 24px;
+    border-radius: 16px;
+    background: color-mix(in srgb, currentColor 7%, transparent);
+  }
+  .cs .cs-pain p {
+    margin: 0;
+    max-width: 64ch;
+  }
+  /* A pointer's choice crossfades; an arrow key's just changes. */
+  .cs-pain[data-swap="soft"] p {
+    animation: cs-swap 220ms var(--ease-out) both;
+  }
+
+  /* Research headlines: cream clippings in a row that scrolls sideways. */
+  .cs-heads {
+    display: grid;
+    grid-template-columns: 52px minmax(0, 1fr) 52px;
+    gap: 6px;
+    align-items: stretch;
+  }
+  .cs-heads__btn {
+    display: grid;
+    place-items: center;
+    margin-block: 16px 30px;
+    padding: 0;
+    border: 1.5px solid color-mix(in srgb, currentColor 40%, transparent);
+    border-radius: 14px;
+    background: color-mix(in srgb, currentColor 6%, transparent);
+    color: inherit;
+    cursor: pointer;
+    transition:
+      background-color 160ms ease,
+      opacity 160ms ease,
+      transform 160ms var(--ease-out);
+  }
+  .cs-heads__btn svg {
+    width: 22px;
+    height: 22px;
+  }
+  .cs-heads__btn[aria-disabled="true"] {
+    opacity: 0.35;
+    cursor: default;
+  }
+  .cs-heads__btn:not([aria-disabled="true"]):active {
+    transform: scale(0.95);
+  }
+  .cs-heads__view {
+    position: relative;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 8px;
+    scrollbar-width: none;
+    padding: 16px 20px 30px 8px;
+    border-radius: 14px;
+  }
+  .cs-heads__view::-webkit-scrollbar {
+    display: none;
+  }
+  .cs-heads__track {
+    display: flex;
+    gap: 24px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .cs-clip {
+    flex: 0 0 min(292px, 80%);
+    scroll-snap-align: start;
+  }
+  .cs-clip__card {
+    height: 100%;
+    transition: transform 300ms var(--ease-druid);
+  }
+  .cs-clip__card::before {
+    transition: transform 300ms var(--ease-druid);
+  }
+  /* The cream Content Card face: framed, with a fine canvas weave. */
+  .cs-face {
+    position: relative;
+    z-index: 1;
+    border: 3px solid transparent;
+    border-radius: 20px;
+    /* The weave is two hairline grids laid over the cream, inside the frame. */
+    background:
+      repeating-linear-gradient(0deg, color-mix(in srgb, var(--color-walnut) 7%, transparent) 0 1px, transparent 1px 3px)
+        padding-box,
+      repeating-linear-gradient(90deg, color-mix(in srgb, var(--color-walnut) 7%, transparent) 0 1px, transparent 1px 3px)
+        padding-box,
+      linear-gradient(var(--color-cream), var(--color-cream)) padding-box,
+      var(--frame-gradient) border-box;
+    color: var(--color-walnut);
+    box-shadow:
+      inset 1px 1px 0 color-mix(in srgb, var(--color-white) 55%, transparent),
+      inset -1px -1px 0 color-mix(in srgb, var(--color-frame-shadow) 18%, transparent);
+    --focus: var(--color-mauve-ink);
+    --link: var(--color-mauve-ink);
+    --soft: var(--color-mauve-ink);
+  }
+  .cs-clip__face {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    height: 100%;
+    min-height: 236px;
+    padding: 22px 22px 14px;
+  }
+  .cs .cs-clip__headline {
+    margin: 0;
+    font-size: 19px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    text-wrap: pretty;
+  }
+  .cs .cs-clip__headline.is-lead {
+    font-size: 21px;
+    line-height: 1.25;
+  }
+  .cs-clip__fig {
+    display: block;
+    margin-bottom: 8px;
+    font-size: clamp(34px, 3.2vw, 42px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--color-mauve-ink);
+  }
+  .cs .cs-clip__src {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 12px;
+    margin: auto 0 0;
+    font-family: var(--font-note);
+    font-size: 16px;
+    line-height: 1.3;
+    color: var(--color-mauve-ink);
+  }
+  .cs .cs-clip__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    color: var(--color-mauve-ink);
+    text-decoration-thickness: 1.5px;
+  }
+  /* The link is the whole card, so the card may lift. */
+  .cs-clip__link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 17px;
+  }
+  .cs-clip__link svg {
+    width: 14px;
+    height: 14px;
+    transition: transform 200ms var(--ease-out);
+  }
+  .cs-clip__date {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* Goals: the table and the insights side by side, then the roadmap. ------- */
+  .cs-goals {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: 40px 44px;
+    align-items: start;
+  }
+  .cs-goals > :only-child {
+    grid-column: 1 / -1;
+  }
+  /* Positioned, so the visually hidden words in its cells scroll with it
+     instead of escaping and widening the page. */
+  .cs-table-wrap {
+    position: relative;
+    overflow-x: auto;
+    border-radius: 12px;
+  }
+  .cs-table {
+    width: 100%;
+    min-width: calc(var(--cols, 0) * 92px + 190px);
+    border-collapse: collapse;
+    font-size: 16px;
+    line-height: 1.4;
+    overflow-wrap: normal;
+  }
+  .cs-table th,
+  .cs-table td {
+    padding: 12px 14px;
+    text-align: left;
+    vertical-align: top;
+    font-weight: 400;
+    border-bottom: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+  }
+  .cs-table tbody tr:last-child > * {
+    border-bottom: 0;
+  }
+  .cs-table th + th,
+  .cs-table td {
+    border-left: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+  }
+  .cs-table thead th {
+    vertical-align: bottom;
+    font-family: var(--font-heading);
+    font-size: 17px;
+    line-height: 1.2;
+    border-bottom: 1.5px solid currentColor;
+  }
+  .cs-table tbody th {
+    font-weight: 700;
+  }
+  .cs-table__sub {
+    display: block;
+    margin-top: 3px;
+    font-family: var(--font-note);
+    font-size: 15px;
+    line-height: 1.2;
+    color: var(--soft);
+  }
+  .cs-table .is-highlight {
+    background: color-mix(in srgb, currentColor 9%, transparent);
+  }
+  .cs-table thead .is-highlight {
+    font-weight: 700;
+  }
+  .cs-table .is-mark {
+    text-align: center;
+    vertical-align: middle;
+  }
+  .cs-table--numeric td,
+  .cs-table--numeric thead th + th {
+    text-align: right;
+    white-space: nowrap;
+  }
+  .cs-table--goals thead th {
+    font-size: clamp(19px, 1.8vw, 22px);
+  }
+  .cs-mark {
+    display: inline-grid;
+    vertical-align: middle;
+  }
+  .cs-mark svg {
+    width: 16px;
+    height: 16px;
+  }
+  .cs-mark--no {
+    opacity: 0.6;
+  }
+  .cs-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 22px;
+    list-style: none;
+    margin: 14px 0 0;
+    padding: 0;
+    font-family: var(--font-note);
+    font-size: 16px;
+    line-height: 1.4;
+    color: var(--soft);
+  }
+  .cs-legend li {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .cs-legend .cs-mark {
+    color: var(--color-white);
+  }
+
+  .cs-insights {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .cs-insights li + li {
+    margin-top: 22px;
+  }
+  .cs .cs-insight__title {
+    margin: 0 0 6px;
+    font-size: clamp(19px, 1.8vw, 23px);
+    line-height: 1.22;
+    letter-spacing: -0.012em;
+  }
+  .cs .cs-insight__evidence {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--soft);
+  }
+  .cs-report {
+    margin-top: 28px;
+  }
+
+  /* The roadmap: a line that draws, then its stops landing in order. */
+  .cs-road {
+    position: relative;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    gap: 20px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .cs-road::before {
+    content: "";
+    position: absolute;
+    top: 37px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: color-mix(in srgb, currentColor 32%, transparent);
+    transform-origin: 0 50%;
+    transition: transform 1100ms var(--ease-out);
+  }
+  .cs-road li {
+    position: relative;
+    display: grid;
+    grid-template-rows: 24px 28px auto;
+    align-items: center;
+  }
+  .cs-road__when {
+    font-family: var(--font-note);
+    font-size: 18px;
+    line-height: 1.2;
+    color: var(--color-gold-light);
+  }
+  .cs-road__node {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--color-gold-light);
+    box-shadow: 0 0 0 5px var(--page-brown);
+    transition:
+      opacity 300ms ease calc(var(--i, 0) * 150ms + 200ms),
+      transform 500ms var(--ease-out) calc(var(--i, 0) * 150ms + 200ms);
+  }
+  .cs .cs-road__what {
+    margin: 8px 0 0;
+    font-size: 16px;
+    line-height: 1.4;
+    max-width: 22ch;
+  }
+  .cs[data-draw-ready] .cs-road[data-draw=""]::before {
+    transform: scaleX(0);
+  }
+  /* Only the line and the stops draw in: the words read from the start. */
+  .cs[data-draw-ready] .cs-road[data-draw=""] .cs-road__node {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+
+  /* Exhibits: the figures a design or results phase is built from. ---------- */
+  .cs-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(168px, 1fr));
+    gap: 28px 24px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .cs-steps li {
+    position: relative;
+  }
+  .cs .cs-step__title {
+    margin: 12px 0 4px;
+    font-size: 20px;
+    line-height: 1.2;
+  }
+  .cs .cs-step__body {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  /* The exchange: two cream cards, a dark hub between them, and four flows. */
+  .cs-xchg {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(86px, 0.42fr) minmax(0, 1fr) minmax(86px, 0.42fr) minmax(0, 1fr);
+    align-items: stretch;
+    padding: 0 10px 12px 0;
+  }
+  .cs-party {
+    height: 100%;
+  }
+  .cs-party__face {
+    height: 100%;
+    padding: 18px 18px 20px;
+  }
+  .cs-party--hub .cs-party__face {
+    position: relative;
+    z-index: 1;
+    border: 3px solid transparent;
+    border-radius: 20px;
+    background:
+      linear-gradient(var(--color-espresso), var(--color-espresso)) padding-box,
+      var(--frame-gradient) border-box;
+    color: var(--color-white);
+    --soft: var(--color-green-sage);
+  }
+  .cs .cs-party__name {
+    margin: 0;
+    font-size: 21px;
+    line-height: 1.2;
+    font-weight: 700;
+  }
+  .cs-party--hub .cs-party__name {
+    color: var(--color-gold-light);
+  }
+  .cs .cs-party__sub {
+    margin: 4px 0 0;
+    font-size: 15px;
+    line-height: 1.35;
+    color: var(--soft);
+  }
+  .cs .cs-party__label {
+    margin: 16px 0 6px;
+    font-family: var(--font-note);
+    font-size: 16px;
+    line-height: 1.3;
+    color: var(--soft);
+  }
+  .cs-party ul {
+    margin: 0;
+    padding: 0 0 0 18px;
+    list-style: disc;
+    font-size: 16px;
+    line-height: 1.45;
+  }
+  .cs-party li + li {
+    margin-top: 4px;
+  }
+  .cs-lane {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 44px;
+    padding-inline: 12px;
+  }
+  .cs .cs-flow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    max-width: none;
+    font-family: var(--font-note);
+    font-size: 16px;
+    line-height: 1.15;
+    text-align: center;
+  }
+  .cs-flow__line {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: currentColor;
+    transform-origin: 0 50%;
+    transition: transform 600ms var(--ease-out) calc(var(--i, 0) * 260ms);
+  }
+  .cs-flow__line::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 0;
+    width: 9px;
+    height: 9px;
+    border-top: 2px solid currentColor;
+    border-right: 2px solid currentColor;
+    translate: 0 -50%;
+    rotate: 45deg;
+  }
+  /* A flow that runs back keeps its line and moves the arrowhead to the
+     other end, so both directions draw out from where they start. */
+  .cs-flow--back {
+    --dir: reverse;
+  }
+  .cs-flow--back .cs-flow__line {
+    transform-origin: 100% 50%;
+  }
+  .cs-flow--back .cs-flow__line::after {
+    right: auto;
+    left: 0;
+    rotate: -135deg;
+  }
+  /* The light that runs each flow once, in the order the exchange happens. */
+  .cs-flow__track {
+    position: absolute;
+    inset: -3px 0;
+    overflow: hidden;
+  }
+  .cs-flow__track i {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 30%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, transparent, var(--color-gold-light) 55%, var(--color-gold-glint));
+    transform: translateX(-110%);
+  }
+  .cs-flow--back .cs-flow__track i {
+    background: linear-gradient(270deg, transparent, var(--color-gold-light) 55%, var(--color-gold-glint));
+  }
+  .cs[data-draw-ready] .cs-xchg[data-draw=""] .cs-flow__line {
+    transform: scaleX(0);
+  }
+  .cs-xchg[data-draw="in"] .cs-flow__track i {
+    animation: cs-pulse 900ms cubic-bezier(0.45, 0, 0.3, 1) calc(var(--i, 0) * 620ms + 500ms) 1 var(--dir, normal)
+      both;
+  }
+  .cs .cs-xchg__caption {
+    margin: 20px 0 0;
+    max-width: none;
+    padding: 14px 20px;
+    border-radius: 14px;
+    background: var(--color-espresso);
+    color: var(--color-white);
+    font-family: var(--font-heading);
+    font-size: clamp(17px, 1.6vw, 20px);
+    line-height: 1.3;
+    text-align: center;
+    text-wrap: balance;
+  }
+
+  .cs-stmt {
+    display: grid;
+    grid-template-columns: minmax(96px, max-content) minmax(0, 1fr);
+    margin: 0;
+    border-bottom: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  }
+  .cs-stmt dt,
+  .cs-stmt dd {
+    padding: 13px 0;
+    border-top: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  }
+  .cs-stmt dt {
+    padding-right: 28px;
+    font-family: var(--font-note);
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--soft);
+  }
+  .cs-stmt dd {
+    margin: 0;
+    max-width: 46em;
+    font-family: var(--font-heading);
+    font-size: clamp(17px, 1.6vw, 21px);
+    line-height: 1.4;
+    letter-spacing: -0.008em;
+  }
+
+  .cs-points {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 12px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .cs-points li {
+    padding: 9px 16px;
+    border: 1.5px solid color-mix(in srgb, currentColor 40%, transparent);
+    border-radius: 12px;
+    font-size: 17px;
+    line-height: 1.3;
+  }
+
+  .cs-figure {
+    width: fit-content;
+    max-width: min(100%, 620px);
+    margin: 0;
+  }
+  .cs-figure__face {
+    padding: 10px;
+  }
+  .cs-figure__face img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+  }
+  .cs-figure figcaption {
+    margin-top: 18px;
+    font-family: var(--font-note);
+    font-size: 16px;
+    line-height: 1.4;
+    color: var(--soft);
+  }
+
+  /* Market sizing: nested rings, widest first, all resting on one floor. */
+  .cs-sizing {
+    display: grid;
+    grid-template-columns: minmax(220px, 0.78fr) minmax(0, 1.22fr);
+    gap: 28px 48px;
+    align-items: center;
+  }
+  .cs-sizing__rings {
+    display: block;
+    width: 100%;
+    max-width: 340px;
+    height: auto;
+    margin-inline: auto;
+    overflow: visible;
+    font-family: var(--font-heading);
+  }
+  .cs-ring {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    transition:
+      transform 800ms var(--ease-out) calc(var(--i, 0) * 130ms),
+      opacity 400ms ease calc(var(--i, 0) * 130ms);
+  }
+  .cs-ring--0 {
+    fill: var(--color-mauve-soft);
+  }
+  .cs-ring--1 {
+    fill: var(--color-gold-light);
+  }
+  .cs-ring--2 {
+    fill: var(--color-green-sage);
+  }
+  .cs-ring__name {
+    fill: var(--color-walnut);
+    font-size: 17px;
+    font-weight: 700;
+  }
+  .cs-ring__value {
+    fill: var(--color-walnut);
+    font-size: 13.5px;
+  }
+  .cs[data-draw-ready] .cs-sizing[data-draw=""] .cs-ring {
+    opacity: 0;
+    transform: scale(0.86);
+  }
+  .cs-sizing__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .cs-sizing__list li {
+    display: grid;
+    grid-template-columns: 14px minmax(0, 1fr);
+    gap: 0 14px;
+    padding: 14px 0;
+    border-top: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+  }
+  .cs-sizing__list li:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+  .cs-sizing__swatch {
+    width: 14px;
+    height: 14px;
+    margin-top: 9px;
+    border-radius: 50%;
+  }
+  .cs-sizing__swatch--0 {
+    background: var(--color-mauve-soft);
+  }
+  .cs-sizing__swatch--1 {
+    background: var(--color-gold-light);
+  }
+  .cs-sizing__swatch--2 {
+    background: var(--color-green-sage);
+  }
+  .cs-sizing__value {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: clamp(22px, 2.3vw, 30px);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+  .cs-sizing__label {
+    display: block;
+    font-family: var(--font-note);
+    font-size: 16px;
+    line-height: 1.35;
+    color: var(--soft);
+  }
+  .cs .cs-sizing__note {
+    margin: 6px 0 0;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .cs-bars {
+    list-style: none;
+    margin: 16px 0 0;
+    padding: 0;
+    font-size: 16px;
+    line-height: 1.35;
+  }
+  .cs-bars li {
+    display: grid;
+    grid-template-columns: minmax(150px, 1.15fr) minmax(70px, 1.3fr) 72px 44px;
+    gap: 4px 16px;
+    align-items: center;
+    padding: 9px 0;
+    border-top: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+  }
+  .cs-bars__track {
+    display: block;
+    height: 12px;
+  }
+  .cs-bars__fill {
+    display: block;
+    width: calc(var(--len) * 1%);
+    min-width: 4px;
+    height: 100%;
+    border-radius: 6px;
+    background: var(--color-gold-light);
+    transform-origin: 0 50%;
+    transition: transform 900ms var(--ease-out) calc(var(--i, 0) * 70ms);
+  }
+  .cs-bars .is-muted .cs-bars__fill {
+    background: color-mix(in srgb, currentColor 45%, transparent);
+  }
+  .cs[data-draw-ready] .cs-bars[data-draw=""] .cs-bars__fill {
+    transform: scaleX(0);
+  }
+  .cs-bars__value {
+    text-align: right;
+    font-weight: 700;
+  }
+  .cs-bars__share {
+    text-align: right;
+    color: var(--soft);
+  }
+
+  /* The way out, under the last phase. */
+  .cs-foot {
+    padding-block: 16px 72px;
+  }
+  .cs .cs-end__contact {
+    margin-top: 10px;
+  }
+  .cs-end {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px 40px;
+    padding: 28px 32px;
+  }
+  .cs .cs-end h2 {
+    margin: 0 0 4px;
+    font-size: clamp(22px, 2.2vw, 28px);
+  }
+  .cs .cs-end p {
+    margin: 0;
+    color: var(--text-soft);
+  }
+  .cs-end__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .cs .druid-button:active {
+    transform: scale(0.97);
+  }
+
+  /* Case-study cards on the portfolio page. One cream Content Card per
+     project, its picture on the hero's dark ground at the right. */
+  .cs-cards {
+    display: grid;
+    gap: 40px;
+    list-style: none;
+    margin: 0;
+    padding: 0 12px 16px 0;
+  }
+  .cs-card {
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    border-radius: 20px;
+    transition: transform 300ms var(--ease-druid);
+  }
+  .cs-card::before {
+    transition: transform 300ms var(--ease-druid);
+  }
+  .cs-card__face {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+    min-height: 380px;
+    overflow: hidden;
+  }
+  .cs-card__body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 32px 36px 30px;
+  }
+  .cs-card__body .pf-skills {
+    margin-bottom: 4px;
+  }
+  .druid-root .cs-card__title {
+    margin: 0;
+    font-size: clamp(40px, 4.4vw, 60px);
+    font-weight: 700;
+    line-height: 1.02;
+    letter-spacing: -0.028em;
+  }
+  /* The link is the whole face. It sits outside the cream, so its ring is
+     drawn on the page's ground in the page's focus colour. */
+  .druid-root .cs-card__link {
+    position: relative;
+    z-index: 1;
+    display: block;
+    border-radius: 20px;
+    color: inherit;
+    text-decoration: none;
+  }
+  .druid-root .cs-card__slug {
+    margin: 0;
+    max-width: 44ch;
+    font-size: clamp(17px, 1.4vw, 20px);
+    line-height: 1.5;
+    text-wrap: pretty;
+  }
+  .druid-root .cs-card__meta {
+    margin: 0;
+    color: var(--color-mauve-ink);
+  }
+  .cs-card__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: auto;
+    padding-top: 12px;
+    font-family: var(--font-heading);
+    font-size: 18px;
+    line-height: 1.2;
+    color: var(--color-mauve-ink);
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 0.22em;
+  }
+  .cs-card__cta svg {
+    width: 20px;
+    height: 20px;
+    transition: transform 220ms var(--ease-out);
+  }
+  .cs-card__media {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    margin: 10px 10px 10px 0;
+    border-radius: 12px;
+    min-height: 300px;
+  }
+  .cs-card__rings {
+    position: absolute;
+    top: 52%;
+    left: 50%;
+    width: 120%;
+    aspect-ratio: 1 / 1;
+    translate: -50% -50%;
+    color: var(--color-gold-light);
+    opacity: 0.28;
+  }
+  .cs-card__figure {
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    width: min(48%, 236px);
+    translate: -50% 0;
+    perspective: var(--perspective);
+  }
+  .cs-card__figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+    transform: rotateY(-18deg) rotateX(8deg) rotateZ(5deg);
+    transform-origin: 50% 20%;
+    filter: drop-shadow(18px 22px 26px color-mix(in srgb, black 55%, transparent));
+    transition: transform 600ms var(--ease-out);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .cs-card:hover .cs-card__cta {
+      text-decoration-thickness: 2.5px;
+    }
+  }
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .cs-card:hover,
+    .cs-card:focus-within {
+      transform: perspective(1200px) translateZ(24px);
+    }
+    .cs-card:hover::before,
+    .cs-card:focus-within::before {
+      transform: translate(11px, 15px);
+    }
+    .cs-card:active {
+      transform: perspective(1200px) translateZ(10px);
+      transition-duration: 120ms;
+    }
+    .cs-card:hover .cs-card__figure img {
+      transform: translateY(-16px) rotateY(-11deg) rotateX(5deg) rotateZ(3deg);
+    }
+    .cs-card:hover .cs-card__cta svg {
+      transform: translateX(4px);
+    }
+  }
+  @media (max-width: 959px) {
+    .cs-card__face {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .cs-card__media {
+      order: -1;
+      min-height: 0;
+      height: clamp(240px, 52vw, 340px);
+      margin: 10px 10px 0;
+    }
+  }
+  @media (max-width: 639px) {
+    .cs-cards {
+      padding-right: 8px;
+    }
+    .cs-card__body {
+      padding: 22px 20px 24px;
+    }
+    .cs-card__figure {
+      width: 52%;
+      top: 20px;
+    }
+  }
+
+  /* The Index on a project page lists pages, and ends with the way home. */
+  .druid-index a[aria-current="page"]::before {
+    content: "•";
+    display: inline-block;
+    margin-inline-end: 10px;
+    color: var(--color-gold-glint);
+  }
+  .druid-root .druid-index .pf-dock__home {
+    margin: 22px 0 0;
+    padding-top: 14px;
+    border-top: 1px solid color-mix(in srgb, var(--color-gold-light) 35%, transparent);
+  }
+  .druid-root .druid-index .pf-dock__home a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-family: var(--font-note);
+    font-size: 19px;
+    font-weight: 400;
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 0.22em;
+  }
+
+  /* Hover answers, on fine pointers only. */
+  @media (hover: hover) and (pointer: fine) {
+    .cs-nav__link:hover {
+      background-color: var(--glass-card);
+    }
+    .cs-chip:not([aria-selected="true"]):hover,
+    .cs-heads__btn:not([aria-disabled="true"]):hover {
+      background-color: color-mix(in srgb, currentColor 13%, transparent);
+    }
+    .cs-clip__link:hover svg {
+      transform: translate(2px, -2px);
+    }
+  }
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .cs-stop:hover {
+      transform: translateY(-3px);
+      box-shadow:
+        inset 1px 1px 0 var(--glass-hi),
+        0 16px 36px var(--glass-shadow);
+    }
+    .cs-stop:hover .cs-stop__foot svg {
+      transform: translateY(3px);
+    }
+    .cs-stop:active {
+      transform: scale(0.97);
+    }
+    /* Only a card that goes somewhere lifts, and its hatch falls further. */
+    .cs-clip__card.is-link:hover,
+    .cs-clip__card.is-link:focus-within {
+      transform: perspective(1200px) translateZ(24px);
+    }
+    .cs-clip__card.is-link:hover::before,
+    .cs-clip__card.is-link:focus-within::before {
+      transform: translate(11px, 15px);
+    }
+    /* Hovering the exchange runs its four flows again. */
+    .cs-xchg[data-draw]:hover .cs-flow__track i {
+      animation: cs-pulse-again 900ms cubic-bezier(0.45, 0, 0.3, 1) calc(var(--i, 0) * 620ms) 1 var(--dir, normal)
+        both;
+    }
+  }
+
+  @media (max-width: 1279px) {
+    .cs-goals {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (max-width: 959px) {
+    .cs .druid-container {
+      width: min(100% - 64px, 1400px);
+    }
+    .cs-layout {
+      grid-template-columns: minmax(0, 1fr);
+      margin-top: 44px;
+    }
+    .cs-layout > .cs-rail {
+      grid-column: 1;
+      grid-row: auto;
+      margin-bottom: 48px;
+    }
+    .cs-rail__stick {
+      position: static;
+    }
+    .cs-role {
+      margin-bottom: 20px;
+    }
+    /* Stacked, the pane sits just above the timeline, so it names the
+       phases only and leaves their parts to the page itself. */
+    .cs-nav__sub {
+      display: none;
+    }
+    .cs-xchg {
+      grid-template-columns: minmax(0, 1fr);
+      padding-right: 10px;
+    }
+    .cs-lane {
+      flex-direction: row;
+      gap: 12px;
+      padding: 18px 0 22px;
+    }
+    .cs .cs-flow {
+      flex: 1 1 0;
+      flex-direction: row;
+      justify-content: center;
+      gap: 6px;
+      min-height: 64px;
+    }
+    /* The label breaks between words, never inside one. */
+    .cs-flow > span:first-child {
+      overflow-wrap: normal;
+    }
+    /* Stacked, the flows run down and up: the same lines, turned a quarter. */
+    .cs-flow__line,
+    .cs-flow--back .cs-flow__line {
+      flex: none;
+      width: 52px;
+      rotate: 90deg;
+      transform-origin: 50% 50%;
+    }
+    .cs-sizing {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (max-width: 639px) {
+    .cs .druid-container {
+      width: calc(100% - 32px);
+    }
+    .cs-hero {
+      padding-top: 148px;
+    }
+    .cs .cs-hero__face {
+      min-height: 460px;
+    }
+    .cs-hero__text {
+      padding: 22px 20px 24px;
+    }
+    /* On a phone the figure runs down behind the scrim, under the title. */
+    .cs-hero__figure {
+      top: 24px;
+      right: 13%;
+      width: 56%;
+    }
+    .cs-hero__rings {
+      top: 34%;
+      right: -34%;
+      width: 130%;
+    }
+    .cs-role {
+      padding: 24px 20px;
+    }
+    .cs-move {
+      gap: 10px;
+      font-size: 16px;
+    }
+    .cs-timeline {
+      margin-bottom: 48px;
+    }
+    .cs-stops {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .cs-stops > li + li::before {
+      display: none;
+    }
+    .cs .cs-stop {
+      min-height: 128px;
+      padding: 14px 14px 12px;
+    }
+    .cs-phase {
+      padding: 26px 18px 30px;
+      border-radius: 22px;
+      margin-bottom: 24px;
+    }
+    .cs-tag {
+      margin-left: -18px;
+      padding: 10px 36px 10px 18px;
+      margin-bottom: 24px;
+    }
+    .cs-tag--inset {
+      margin-left: 0;
+    }
+    .cs-block + .cs-block {
+      margin-top: 40px;
+    }
+    /* On a phone the clippings take the full width, with the buttons under them. */
+    .cs-heads {
+      grid-template-columns: 1fr 1fr;
+      gap: 0 10px;
+    }
+    .cs-heads__view {
+      grid-column: 1 / -1;
+      grid-row: 1;
+      margin-inline: -8px;
+    }
+    .cs-heads__btn {
+      grid-row: 2;
+      min-height: 44px;
+      margin-block: 0;
+    }
+    .cs-pain {
+      padding: 16px 18px;
+    }
+    /* Three columns do not fit a phone: each goal becomes its own block,
+       with its target and KPI labelled underneath. The roles in the markup
+       keep it a table to a screen reader. */
+    .cs-table--goals,
+    .cs-table--goals tbody,
+    .cs-table--goals tr,
+    .cs-table--goals th,
+    .cs-table--goals td {
+      display: block;
+    }
+    .cs-table--goals thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+    .cs-table--goals tr {
+      padding: 14px 0;
+      border-bottom: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+    }
+    .cs-table--goals tbody tr:first-child {
+      padding-top: 0;
+    }
+    .cs-table--goals tbody tr:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+    .cs-table--goals tbody th,
+    .cs-table--goals td {
+      padding: 0;
+      border: 0;
+    }
+    .cs-table--goals tbody th {
+      margin-bottom: 6px;
+      font-size: 18px;
+    }
+    .cs-table--goals td {
+      display: grid;
+      grid-template-columns: 58px minmax(0, 1fr);
+      gap: 12px;
+      padding-block: 3px;
+    }
+    .cs-table--goals td::before {
+      content: attr(data-label);
+      font-family: var(--font-note);
+      color: var(--soft);
+    }
+    .cs-road {
+      grid-auto-flow: row;
+      gap: 0;
+      padding-left: 4px;
+    }
+    .cs-road::before {
+      top: 14px;
+      bottom: 34px;
+      left: 10px;
+      right: auto;
+      width: 2px;
+      height: auto;
+      transform-origin: 50% 0;
+    }
+    .cs-road li {
+      grid-template-columns: 14px minmax(0, 1fr);
+      grid-template-rows: auto auto;
+      gap: 0 18px;
+      padding: 8px 0 14px;
+    }
+    .cs-road__node {
+      grid-row: 1;
+      grid-column: 1;
+    }
+    .cs-road__when {
+      grid-row: 1;
+      grid-column: 2;
+    }
+    .cs .cs-road__what {
+      grid-column: 2;
+      margin-top: 2px;
+      max-width: none;
+    }
+    .cs[data-draw-ready] .cs-road[data-draw=""]::before {
+      transform: scaleY(0);
+    }
+    .cs-stmt {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .cs-stmt dt {
+      padding-bottom: 0;
+    }
+    .cs-stmt dd {
+      padding-top: 2px;
+      border-top: 0;
+    }
+    .cs-bars li {
+      grid-template-columns: minmax(0, 1fr) auto auto;
+    }
+    .cs-bars__track {
+      grid-column: 1 / -1;
+      grid-row: 2;
+    }
+    .cs-end {
+      padding: 24px 20px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cs-clip__card,
+    .cs-stop {
+      transform: none !important;
+    }
+    .cs-flow__track {
+      display: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .cs-face,
+    .cs-party--hub .cs-party__face {
+      border-color: CanvasText;
+    }
+    .cs-disc,
+    .cs-chip[aria-selected="true"] {
+      forced-color-adjust: none;
+    }
+    .cs mark {
+      background: Mark;
+      color: MarkText;
+    }
+  }
 }
 
+@keyframes cs-rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+@keyframes cs-glide {
+  from {
+    opacity: 0;
+    transform: translate3d(36px, 96px, -240px) rotateY(-38deg) rotateX(20deg) rotateZ(10deg);
+  }
+  to {
+    opacity: 1;
+    transform: rotateY(-20deg) rotateX(9deg) rotateZ(5deg);
+  }
+}
+@keyframes cs-rings {
+  from {
+    opacity: 0;
+    scale: 0.9;
+  }
+  to {
+    opacity: 0.3;
+    scale: 1;
+  }
+}
+@keyframes cs-swap {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+    filter: blur(3px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+@keyframes cs-pulse {
+  from {
+    transform: translateX(-110%);
+  }
+  to {
+    transform: translateX(345%);
+  }
+}
+/* The same travel under a second name, so a hover can restart it. */
+@keyframes cs-pulse-again {
+  from {
+    transform: translateX(-110%);
+  }
+  to {
+    transform: translateX(345%);
+  }
+}
 @keyframes pf-bob {
   0%,
   100% {
