@@ -1,0 +1,475 @@
+{
+  "slug": "everplate",
+  "order": 2,
+  "title": "Everplate",
+  "slugLine": "Meals tuned to your health data: an adaptive nutrition platform that turns wearable data into a meal plan and delivers the meals.",
+  "tags": [
+    "Financial modeling",
+    "Business model",
+    "Team of three"
+  ],
+  "hero": {
+    "image": null,
+    "figure": null
+  },
+  "role": {
+    "title": "Financial Analyst",
+    "sprint": "August–December 2025",
+    "summary": "Everplate is a startup that uses AI to build meal plans tailored to each person. I was their financial analyst. I built the spreadsheets that predict how money comes in and goes out, worked out what the company is worth, and put together a fundraising plan that gets it to break-even in about two years.",
+    "moves": [
+      "Modeled predictive, data-driven cash-flow and valuation documents.",
+      "Built and validated a funding strategy projected to enable the company to **break even within eight quarters**.",
+      "Conducted market-sizing and positioning studies to **inform and validate three-year financial models and projections**."
+    ]
+  },
+  "demo": {
+    "href": "https://everplate.me"
+  },
+  "timeline": {
+    "research": "",
+    "goals": "",
+    "design": "",
+    "results": ""
+  },
+  "research": {
+    "problem": "==Even health-conscious people== still guess their meals: **wearables track the body but don’t say what to eat**, and food delivery optimizes logistics, not health.",
+    "stakeholders": [
+      {
+        "kind": "Customer",
+        "name": "Tech-forward wellness users",
+        "note": "Persona: Alex Chen, 29, a tech professional in San Francisco"
+      },
+      {
+        "kind": "Partner",
+        "name": "Local meal providers and delivery platforms",
+        "note": "Deliver a weekly bundle of meals that match the plan"
+      },
+      {
+        "kind": "Partner",
+        "name": "Nutritionists and dietitians",
+        "note": "Validate the AI-generated plans and coach Concierge members"
+      },
+      {
+        "kind": "Partner",
+        "name": "Health insurers and employers",
+        "note": "Everplate as an employee benefit"
+      },
+      {
+        "kind": "Competitor",
+        "name": "Health-data trackers",
+        "note": "Levels, WHOOP, Eight Sleep, Apple Watch, Oura"
+      },
+      {
+        "kind": "Competitor",
+        "name": "Meal services",
+        "note": "Factor, HelloFresh, Blue Apron, Territory Foods"
+      },
+      {
+        "kind": "Competitor",
+        "name": "Tracking and coaching apps",
+        "note": "MyFitnessPal, Noom, Cronometer"
+      }
+    ],
+    "painPoints": [
+      {
+        "label": "Data that never reaches the plate",
+        "detail": "He tracks sleep, HRV, readiness and workouts, but the data doesn’t translate into meals."
+      },
+      {
+        "label": "Inconsistent eating",
+        "detail": "A busy schedule means inconsistent eating and constant meal decisions."
+      },
+      {
+        "label": "Delivery that misses the goal",
+        "detail": "He orders delivery four to six times a week, but healthy delivery seldom matches his goals."
+      },
+      {
+        "label": "A processed diet",
+        "detail": "57% of the calories Americans eat come from ultra-processed foods, 90% of Americans don’t eat enough vegetables, 42% are obese and 1 in 10 has diabetes."
+      }
+    ],
+    "headlines": []
+  },
+  "goals": {
+    "rows": [
+      {
+        "goal": "Break even",
+        "target": "April 2028, at about 2,100 subscribers",
+        "kpi": "Subscribers"
+      },
+      {
+        "goal": "Grow recurring revenue",
+        "target": "$8.93M by the end of year 3",
+        "kpi": "Annual recurring revenue"
+      },
+      {
+        "goal": "Expand gross margin",
+        "target": "From 31% to 45% over three years",
+        "kpi": "Gross margin"
+      },
+      {
+        "goal": "Acquire efficiently",
+        "target": "A blended CAC of $220, recovered in 2.5 months on the Meals plan",
+        "kpi": "Payback period and LTV:CAC"
+      }
+    ],
+    "insights": [
+      {
+        "insight": "No one closes the loop",
+        "evidence": "Trackers like WHOOP and Oura give deep health insights but don’t turn them into meals. Meal services like Factor and HelloFresh personalize by taste, not health. No dominant player takes multi-sensor health data to real meals."
+      },
+      {
+        "insight": "The technology is ready",
+        "evidence": "Wearables, smart scales and connected health devices are widely adopted, and food-delivery infrastructure and APIs are mainstream and reliable."
+      },
+      {
+        "insight": "Early adopters already pay",
+        "evidence": "They already pay for health apps and food services, and interest in metabolic health, longevity and biohacking is rising. Urban users in their 30s and 40s will pay $200–$300 a month for a done-for-you, data-aligned diet."
+      },
+      {
+        "insight": "Retention drives the model",
+        "evidence": "Small increases in churn significantly cut LTV and lengthen payback, so habit-building features such as coaching, streaks and rewards sustain engagement."
+      }
+    ],
+    "report": {
+      "href": null
+    },
+    "roadmap": [
+      {
+        "when": "2026",
+        "what": "$250K seed for 15–20% equity; 620 users"
+      },
+      {
+        "when": "2027",
+        "what": "$400K Series A for 10%; 1,642 users"
+      },
+      {
+        "when": "2028",
+        "what": "$600K Series B for 10%; break-even in April"
+      },
+      {
+        "when": "End of 2028",
+        "what": "3,293 users and $8.93M in annual recurring revenue"
+      }
+    ]
+  },
+  "design": {
+    "lead": "Everplate connects to a user’s wearables, has AI and nutritionists turn the data into a meal plan, and has local partners deliver the meals. As the body and its activity change, so do the meals.",
+    "blocks": [
+      {
+        "type": "steps",
+        "title": "How it works",
+        "items": [
+          {
+            "title": "Connect",
+            "body": "Everplate connects to the user’s health devices: wearables, sleep, smart scales and other vitals."
+          },
+          {
+            "title": "Translate",
+            "body": "Weekly metrics become concrete nutrition targets: calories, macros, fiber, sodium and timing."
+          },
+          {
+            "title": "Personalize",
+            "body": "Templates designed by nutritionists turn the targets into personalized meal plans, not one-size-fits-all diets."
+          },
+          {
+            "title": "Partner and deliver",
+            "body": "Local meal providers and delivery platforms send a weekly bundle of meals that match the plan."
+          },
+          {
+            "title": "Adapt",
+            "body": "As the data and feedback change, Everplate adapts the meals week by week: a living, responsive diet."
+          }
+        ]
+      },
+      {
+        "type": "figure",
+        "title": "The app",
+        "image": {
+          "src": "/case-studies/everplate/app-screen.webp",
+          "alt": "A phone held in a hand showing the Everplate app: a note that the weekly meal plan was updated because the user is working out more, then five meals from Monday to Friday, each with its benefit, such as high protein or fiber rich.",
+          "width": 680,
+          "height": 770
+        },
+        "caption": "Concept screen: the week’s plan, updated from recent health metrics."
+      },
+      {
+        "type": "table",
+        "title": "Subscription tiers",
+        "rowHeader": "Metric",
+        "columns": [
+          {
+            "label": "Basic",
+            "sub": "$29 a month"
+          },
+          {
+            "label": "Meals",
+            "sub": "$239 a month",
+            "highlight": true
+          },
+          {
+            "label": "Concierge",
+            "sub": "$449 a month"
+          }
+        ],
+        "rows": [
+          {
+            "label": "What you get",
+            "cells": [
+              "An adaptive nutrition plan and grocery lists",
+              "The plan plus about 10–12 tailored prepared meals a week, via partners",
+              "Meals plus dietitian coaching and deeper tuning"
+            ]
+          },
+          {
+            "label": "Gross margin",
+            "cells": [
+              "~85% (software)",
+              "~35% (food and logistics)",
+              "~40% (mixed)"
+            ]
+          },
+          {
+            "label": "Contribution a month",
+            "cells": [
+              "$25",
+              "$87",
+              "$180"
+            ]
+          },
+          {
+            "label": "Blended CAC",
+            "cells": [
+              "$220",
+              "$220",
+              "$220"
+            ]
+          },
+          {
+            "label": "Payback period",
+            "cells": [
+              "~9 months",
+              "2.5 months",
+              "1.2 months"
+            ]
+          },
+          {
+            "label": "3-year LTV (net)",
+            "cells": [
+              "~$900",
+              "~$3,100",
+              "~$6,400"
+            ]
+          },
+          {
+            "label": "LTV:CAC",
+            "cells": [
+              "4:1",
+              "14:1",
+              "29:1"
+            ]
+          }
+        ],
+        "note": "Basic is the low-friction way in. The model upsells users to the Meals plan, which recovers acquisition costs in under 90 days and returns more than 10× the marketing spend."
+      },
+      {
+        "type": "list",
+        "title": "Other revenue streams",
+        "items": [
+          "Referral fees from delivery platforms",
+          "Wholesale margin from meal-prep partners",
+          "Partnerships with health insurers and employers, as an employee benefit"
+        ]
+      }
+    ]
+  },
+  "results": {
+    "lead": "The base case ==breaks even in April 2028== at about 2,100 subscribers and ends year 3 with $8.93M in annual recurring revenue.",
+    "blocks": [
+      {
+        "type": "sizing",
+        "title": "Market sizing",
+        "rings": [
+          {
+            "name": "TAM",
+            "value": "$110B",
+            "label": "Personalized nutrition market",
+            "note": "Growing with longevity and metabolic-health trends."
+          },
+          {
+            "name": "SAM",
+            "value": "$25B",
+            "label": "Digital nutrition subscriptions",
+            "note": "Everplate’s clear, digital-first point of entry."
+          },
+          {
+            "name": "SOM",
+            "value": "$1.5B",
+            "label": "Early-adopter beachhead",
+            "note": "Tech-forward wellness users who pay for personalized plans, wearables and health apps."
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "title": "Growth expectations",
+        "rowHeader": "Base case",
+        "numeric": true,
+        "columns": [
+          {
+            "label": "2026"
+          },
+          {
+            "label": "2027"
+          },
+          {
+            "label": "2028",
+            "highlight": true
+          }
+        ],
+        "rows": [
+          {
+            "label": "Users",
+            "cells": [
+              "620",
+              "1,642",
+              "3,293"
+            ]
+          },
+          {
+            "label": "Revenue",
+            "cells": [
+              "$1.00M",
+              "$3.03M",
+              "$6.74M"
+            ]
+          },
+          {
+            "label": "Gross margin",
+            "cells": [
+              "31%",
+              "42%",
+              "45%"
+            ]
+          },
+          {
+            "label": "EBITDA",
+            "cells": [
+              "($547K)",
+              "($340K)",
+              "$164K"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "title": "Scenarios in year 3",
+        "rowHeader": "Metric",
+        "numeric": true,
+        "columns": [
+          {
+            "label": "Conservative",
+            "sub": "20% lower growth"
+          },
+          {
+            "label": "Base",
+            "sub": "Standard growth",
+            "highlight": true
+          },
+          {
+            "label": "Optimistic",
+            "sub": "20% higher growth"
+          }
+        ],
+        "rows": [
+          {
+            "label": "Subscribers (2028)",
+            "cells": [
+              "~2,600",
+              "3,293",
+              "~3,950"
+            ]
+          },
+          {
+            "label": "2028 revenue",
+            "cells": [
+              "$5.40M",
+              "$6.74M",
+              "$8.10M"
+            ]
+          },
+          {
+            "label": "Gross margin",
+            "cells": [
+              "42%",
+              "45%",
+              "48%"
+            ]
+          },
+          {
+            "label": "2028 EBITDA",
+            "cells": [
+              "($450K)",
+              "$164K",
+              "$950K"
+            ]
+          },
+          {
+            "label": "Cash runway",
+            "cells": [
+              "Needs an additional bridge",
+              "April 2028",
+              "Late 2027"
+            ]
+          }
+        ],
+        "note": "In the conservative case, cutting marketing spend stretches the runway to match the slower growth. The optimistic case assumes the viral coefficient rises from 1.1 to 1.3, lowering effective CAC and lifting EBITDA margins near 12%."
+      },
+      {
+        "type": "bars",
+        "title": "Use of funds",
+        "items": [
+          {
+            "label": "Engineering",
+            "value": "45%",
+            "share": 45
+          },
+          {
+            "label": "Customer acquisition",
+            "value": "25%",
+            "share": 25
+          },
+          {
+            "label": "Partnerships",
+            "value": "20%",
+            "share": 20
+          },
+          {
+            "label": "G&A",
+            "value": "10%",
+            "share": 10
+          }
+        ]
+      },
+      {
+        "type": "list",
+        "title": "Financing beyond equity",
+        "items": [
+          "A $500K business loan at 8.5% a year in years 1–2",
+          "A $200K business loan at 6% in year 3",
+          "A hybrid capital stack: a convertible note or SAFE first, then a priced equity round after traction, to balance dilution against growth"
+        ]
+      },
+      {
+        "type": "list",
+        "title": "Risks and mitigations",
+        "items": [
+          "Volatile acquisition costs: shift to referral- and partner-led acquisition",
+          "Delays in data integrations: roll integrations out in phases",
+          "Retention falling once the novelty wears off: coaching, streaks and rewards that build habits"
+        ]
+      }
+    ]
+  }
+}
