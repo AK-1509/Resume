@@ -5,16 +5,14 @@
  *
  * Targets the features most likely to differ between engines rather than
  * re-running everything: web fonts, the fixed gradient canvas, color-mix()
- * and backdrop-filter on the glass, the `inert` attribute on off-drum
- * headlines, slides behind the front, the page not showing and closed rows,
- * 3D transforms on the stack, wheel over the stack scrolling the page, CSS animation
- * play-state on the headline timer, the grid-template-rows disclosure, the
- * hover-opened Index dock with aria-current, and the native modal <dialog>.
+ * and backdrop-filter on the glass, the theme switch, a project page's Content
+ * Cards, the hover-opened Index dock with aria-current, and the native modal
+ * <dialog>.
  */
 import { chromium, firefox, webkit, type Browser, type Page } from "@playwright/test";
 import { mkdirSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { experienceHeadline, headlines, movableRole, projectHeadline, roles, type Role } from "./fixtures";
+import { laterProject, projects } from "./fixtures";
 
 const BASE = process.argv[2] ?? "http://localhost:3000";
 const OUT = resolve(import.meta.dirname, "..", "..", ".screenshots");
@@ -39,38 +37,6 @@ async function settle(page: Page) {
     await page.waitForTimeout(120);
   }
 }
-
-const roleState = (page: Page, role: Role) =>
-  page.evaluate((id) => {
-    const section = document.getElementById(id)!;
-    return {
-      projects: section.querySelector(".pf-page--projects")?.getAttribute("data-state") ?? null,
-      experience: section.querySelector(".pf-page--experience")?.getAttribute("data-state") ?? null,
-      count: section.querySelector(".pf-count")?.textContent?.trim() ?? "",
-      front: section.querySelector(".pf-detail__title")?.textContent?.trim() ?? "",
-    };
-  }, role.id);
-
-/**
- * Wait for every CSS transition inside a role section to finish. The away page
- * hides on a delayed visibility transition, and engines start it at slightly
- * different times, so a fixed wait races it.
- */
-const transitionsDone = (page: Page, role: Role) =>
-  page
-    .waitForFunction(
-      (id) =>
-        document
-          .getElementById(id)!
-          .getAnimations({ subtree: true })
-          .every((a) => !(a instanceof CSSTransition) || a.playState === "finished"),
-      role.id,
-      { timeout: 3000 },
-    )
-    .catch(() => undefined);
-
-const heroCount = (page: Page) =>
-  page.evaluate(() => /(\d+) of/.exec(document.querySelector(".pf-hero__count")?.textContent ?? "")?.[1] ?? "");
 
 async function fresh(page: Page) {
   await page.goto(`${BASE}/`, { waitUntil: "networkidle" });
@@ -137,182 +103,23 @@ async function run(name: string, browser: Browser) {
   await toggle.click();
   await page.waitForTimeout(300);
 
-  // --- Headline drum -------------------------------------------------------
-  await page.getByRole("button", { name: "Pause headlines" }).click();
-  await page.waitForTimeout(200);
-  const play = await page.evaluate(
-    () => getComputedStyle(document.querySelector(".pf-seg.is-active .pf-seg__fill")!).animationPlayState,
-  );
-  check("Pause stops the timer animation", play === "paused", play);
-
-  const before = await heroCount(page);
-  await page.getByRole("button", { name: "Next headline" }).click();
-  await page.waitForTimeout(400);
-  const after = await heroCount(page);
-  check("Next headline advances", Number(after) === (Number(before) % headlines.length) + 1, `${before} → ${after}`);
-  await page.getByRole("button", { name: "Previous headline" }).click();
-  await page.waitForTimeout(400);
-  check("Previous headline goes back", (await heroCount(page)) === before);
-
-  // inert must keep off-drum headlines out of focus, not just out of sight.
-  const drumInert = await page.evaluate(() => {
-    const hidden = document.querySelector(".pf-line[inert] a") as HTMLElement | null;
-    hidden?.focus();
-    return { tried: Boolean(hidden), took: hidden !== null && document.activeElement === hidden };
+  // --- Projects: one link per entry, each opening its page ----------------
+  const first = projects[0];
+  await page.locator(`#${first.anchor} a`).click();
+  await page.waitForURL(`**${first.href}`, { timeout: 10_000 }).catch(() => undefined);
+  const project = await page.evaluate(() => {
+    // The card's cream face is painted in background layers built with
+    // color-mix(), so it is the image, not the colour, that must resolve.
+    const face = document.querySelector(".cs-sheet .cs-face");
+    return {
+      h1: document.querySelector("h1")?.textContent?.trim() ?? "",
+      card: face ? getComputedStyle(face).backgroundImage : "",
+      overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    };
   });
-  check("inert headline refuses focus", drumInert.tried && !drumInert.took);
-
-  // --- Hero → project ------------------------------------------------------
-  const ph = projectHeadline();
-  await page.getByRole("button", { name: `Headline ${ph.position}:` }).click();
-  await page.waitForTimeout(300);
-  await page.getByRole("link", { name: ph.cta }).click();
-  await settle(page);
-  const opened = await roleState(page, ph.role);
-  check(
-    `"${ph.cta}" brings it to the front`,
-    opened.projects === "here" && opened.front === ph.title && opened.count.startsWith(`${ph.slideIndex + 1} of`),
-    `${opened.front} (${opened.count})`,
-  );
-
-  // --- Hero → experience row ----------------------------------------------
-  const eh = experienceHeadline();
-  await fresh(page);
-  await page.getByRole("button", { name: "Pause headlines" }).click();
-  await page.getByRole("button", { name: `Headline ${eh.position}:` }).click();
-  await page.waitForTimeout(300);
-  await page.getByRole("link", { name: eh.cta }).click();
-  await settle(page);
-  await transitionsDone(page, eh.role);
-  const rowId = eh.href.slice(1);
-  const landed = await page.evaluate((id) => {
-    const li = document.getElementById(id)!;
-    const body = li.querySelector(".pf-xp__body") as HTMLElement | null;
-    const r = li.getBoundingClientRect();
-    return {
-      expanded: li.querySelector(".pf-xp__toggle")?.getAttribute("aria-expanded"),
-      bodyHeight: body ? body.getBoundingClientRect().height : 0,
-      inView: r.top >= 0 && r.top < window.innerHeight - 60,
-    };
-  }, rowId);
-  const es = await roleState(page, eh.role);
-  check(`"${eh.cta}" turns to the experience page`, es.experience === "here", `${es.experience}`);
-  check("and opens its row, in view", landed.expanded === "true" && landed.bodyHeight > 0 && landed.inView, JSON.stringify(landed));
-
-  // --- Role carousel -------------------------------------------------------
-  // Reload so every role starts on its projects page at the first slide.
-  await fresh(page);
-  const role = movableRole();
-  const section = page.locator(`section#${role.id}`);
-  await section.locator(".pf-stage").scrollIntoViewIfNeeded();
-  await page.waitForTimeout(300);
-  const start = await roleState(page, role);
-  await section.getByRole("button", { name: "Next project" }).click();
-  await page.waitForTimeout(500);
-  const moved = await roleState(page, role);
-  check(`${role.label}: Next moves the stack`, moved.front !== start.front && moved.count !== start.count, `${start.count} → ${moved.count}`);
-
-  await section.getByRole("button", { name: "Previous project" }).focus();
-  await page.keyboard.press("ArrowRight");
-  await page.waitForTimeout(500);
-  const arrowed = await roleState(page, role);
-  check("ArrowRight on the region moves the stack", arrowed.count !== moved.count, `${moved.count} → ${arrowed.count}`);
-  await page.keyboard.press("ArrowLeft");
-  await page.keyboard.press("ArrowLeft");
-  await page.waitForTimeout(500);
-  check("ArrowLeft moves it back", (await roleState(page, role)).count === start.count);
-
-  const stage = await page.evaluate((id) => {
-    const s = document.getElementById(id)!;
-    const behind = s.querySelector(".pf-slot.is-d1") as HTMLElement | null;
-    const slots = [...s.querySelectorAll(".pf-slot")];
-    return {
-      behindTransform: behind ? getComputedStyle(behind).transform : "none",
-      inertSupported: "inert" in HTMLElement.prototype,
-      inertBehind: slots.filter((x) => !x.classList.contains("is-active") && (x as HTMLElement).inert).length,
-      slots: slots.length,
-    };
-  }, role.id);
-  check("slides behind the front are 3D-transformed", stage.behindTransform !== "none", stage.behindTransform.slice(0, 40));
-  check(
-    "the engine supports inert, and every slide behind is inert",
-    stage.inertSupported && stage.inertBehind === stage.slots - 1,
-    `${stage.inertBehind}/${stage.slots - 1}`,
-  );
-
-  // The stack moves only by its buttons and keys: a wheel over the pictures
-  // must scroll the page and leave the stack where it is, in every engine.
-  await section.locator(".pf-stage").scrollIntoViewIfNeeded();
-  await page.waitForTimeout(300);
-  const beforeWheel = await roleState(page, role);
-  const scrollBefore = await page.evaluate(() => window.scrollY);
-  const box = await section.locator(".pf-stage").boundingBox();
-  if (box) {
-    const top = Math.max(box.y, 0);
-    const bottom = Math.min(box.y + box.height, 900);
-    await page.mouse.move(box.x + box.width / 2, (top + bottom) / 2);
-    await page.mouse.wheel(0, 240);
-    await page.waitForTimeout(800);
-  }
-  const wheeled = await roleState(page, role);
-  const scrollAfter = await page.evaluate(() => window.scrollY);
-  check(
-    "wheel over the stack scrolls the page, not the stack",
-    wheeled.count === beforeWheel.count && scrollAfter > scrollBefore,
-    `stack ${beforeWheel.count} → ${wheeled.count}, page ${Math.round(scrollBefore)} → ${Math.round(scrollAfter)}`,
-  );
-
-  // --- Pager and disclosure ------------------------------------------------
-  await section.getByRole("button", { name: "Experience and education" }).click();
-  // The track scrolls sideways to the other page; wait for it to arrive.
-  await page
-    .waitForFunction(
-      (id) => document.querySelector(`#${id} .pf-page--experience`)?.getAttribute("data-state") === "here",
-      role.id,
-      { timeout: 3000 },
-    )
-    .catch(() => null);
-  await transitionsDone(page, role);
-  const paged = await page.evaluate((id) => {
-    const s = document.getElementById(id)!;
-    const away = s.querySelector(".pf-page[data-state='away']") as HTMLElement | null;
-    const button = away?.querySelector("button, a") as HTMLElement | null;
-    button?.focus();
-    return {
-      experience: s.querySelector(".pf-page--experience")?.getAttribute("data-state"),
-      awayOpacity: away ? Number(getComputedStyle(away).opacity) : 1,
-      awayBodyInert: Boolean(away?.querySelector(".pf-page__body")?.hasAttribute("inert")),
-      awayTookFocus: button !== null && document.activeElement === button,
-      focus: document.activeElement?.textContent?.trim(),
-    };
-  }, role.id);
-  check("the bottom button turns to the experience page", paged.experience === "here");
-  check(
-    "the away page is a dimmed sliver whose content refuses focus",
-    paged.awayOpacity < 1 && paged.awayBodyInert && !paged.awayTookFocus,
-    `opacity ${paged.awayOpacity}`,
-  );
-
-  const first = section.locator(".pf-xp > li").first();
-  const toggleRow = first.locator(".pf-xp__toggle");
-  const bodyHeight = () => first.locator(".pf-xp__body").evaluate((b) => b.getBoundingClientRect().height);
-  const closedHeight = await bodyHeight();
-  await toggleRow.click();
-  await page.waitForTimeout(600);
-  const openHeight = await bodyHeight();
-  check(
-    "a row opens: aria-expanded and the grid-rows transition",
-    (await toggleRow.getAttribute("aria-expanded")) === "true" && closedHeight < 1 && openHeight > 20,
-    `${Math.round(closedHeight)}px → ${Math.round(openHeight)}px`,
-  );
-  await toggleRow.click();
-  await page.waitForTimeout(600);
-  check("and closes again", (await toggleRow.getAttribute("aria-expanded")) === "false" && (await bodyHeight()) < 1);
-
-  await section.getByRole("button", { name: "Projects", exact: true }).click();
-  await page.waitForTimeout(100);
-  await transitionsDone(page, role);
-  check("the switch turns back to the projects page", (await roleState(page, role)).projects === "here");
+  check("a project entry opens its page", project.h1 === first.title, project.h1);
+  check("its Content Card paints its layers", project.card !== "" && project.card !== "none", project.card.slice(0, 40));
+  check("no horizontal overflow on the project page", project.overflow <= 0, `${project.overflow}px`);
 
   // --- Index dock ----------------------------------------------------------
   await fresh(page);
@@ -330,14 +137,14 @@ async function run(name: string, browser: Browser) {
   check("the Index dock starts closed", await dockBecomes(false));
   await page.locator(".pf-dock__tab").hover();
   check("hovering the tab opens it", await dockBecomes(true));
-  const last = roles[roles.length - 1];
-  await page.locator(".pf-dock__panel").getByRole("link", { name: last.label }).click();
+  const last = laterProject();
+  await page.locator(".pf-dock__panel").getByRole("link", { name: last.title }).click();
   // WebKit can take a moment to start the smooth scroll, so a still scrollY
   // is not proof it has finished: wait for the mark itself, then read it.
   await page
     .waitForFunction(
       (href) => document.querySelector(".druid-index a[aria-current='location']")?.getAttribute("href") === href,
-      `#${last.id}`,
+      `#${last.anchor}`,
       { timeout: 3000 },
     )
     .catch(() => undefined);
@@ -346,7 +153,7 @@ async function run(name: string, browser: Browser) {
   const current = await page.evaluate(() =>
     [...document.querySelectorAll(".druid-index a[aria-current='location']")].map((a) => a.getAttribute("href")),
   );
-  check("a link scrolls there and moves aria-current", current.length === 1 && current[0] === `#${last.id}`, current.join(", "));
+  check("a link scrolls to its entry and moves aria-current", current.length === 1 && current[0] === `#${last.anchor}`, current.join(", "));
   check("the dock closes once the pointer leaves", await dockBecomes(false));
 
   // --- Export dialog -------------------------------------------------------

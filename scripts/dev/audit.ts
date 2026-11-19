@@ -117,9 +117,8 @@ async function focusRings(page: Page) {
     if (!info.hasRing) ringless.push(`${info.tag} "${info.label}"`);
   }
 
-  // The headline drum can roll while tabbing, so more controls may be reached
-  // than were counted. What matters is that none of the counted ones were
-  // missed.
+  // More controls may be reached than were counted (a card opening on focus,
+  // for one). What matters is that none of the counted ones were missed.
   const missed = expected.filter((k) => !seen.has(k));
   if (missed.length) console.log(`        never reached: ${missed.join(" | ")}`);
 
@@ -159,14 +158,6 @@ async function main() {
 
       const applied = await page.evaluate(() => document.documentElement.dataset.theme);
       check(`theme follows the OS preference`, applied === theme, `applied ${applied}`);
-
-      // Stop the headline drum so axe measures one settled frame rather than
-      // a line mid-roll. A project page (/projects/<slug>) has no drum.
-      const pause = page.getByRole("button", { name: "Pause headlines" });
-      if (await pause.count()) {
-        await pause.click();
-        await page.waitForTimeout(1000);
-      }
 
       const results = await new AxeBuilder({ page })
         .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])

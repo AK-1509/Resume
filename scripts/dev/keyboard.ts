@@ -1,7 +1,7 @@
 /**
  * DEV ONLY — keyboard-only walkthrough of the page: the theme switch, the
- * hero headline drum, each role's project carousel and experience pager, the
- * docked role index and the export dialog's front door.
+ * skip link and the projects, the docked Index, the phone menu and the export
+ * dialog's front door.
  *
  * Usage: npx tsx scripts/dev/keyboard.ts [baseUrl]
  *
@@ -9,16 +9,7 @@
  * The export flow itself is covered by keyboard-export.ts.
  */
 import { chromium, type Page } from "@playwright/test";
-import {
-  experienceHeadline,
-  experienceOnlyRole,
-  headlines,
-  movableRole,
-  projectHeadline,
-  roles,
-  type Headline,
-  type Role,
-} from "./fixtures";
+import { laterProject, projects, type Project } from "./fixtures";
 
 const BASE = process.argv[2] ?? "http://localhost:3000";
 
@@ -33,19 +24,7 @@ function check(label: string, ok: boolean, detail = "") {
   console.log(`  ${ok ? "PASS" : "FAIL"}  ${label}${detail ? ` — ${detail}` : ""}`);
 }
 
-/** Wait until a role's given page is the one in view (the track scrolls there). */
-async function arrive(page: Page, role: Role, kind: "projects" | "experience") {
-  await page
-    .waitForFunction(
-      ([id, k]) => document.querySelector(`#${id} .pf-page--${k}`)?.getAttribute("data-state") === "here",
-      [role.id, kind] as const,
-      { timeout: 3000 },
-    )
-    .catch(() => null);
-  await page.waitForTimeout(200);
-}
-
-/** Wait for the dock's card to finish showing or hiding (it fades over 420ms). */
+/** Wait for the dock's card to finish showing or hiding. */
 async function dockSettles(page: Page, visible: boolean) {
   await page
     .waitForFunction(
@@ -82,13 +61,10 @@ const active = (page: Page) =>
       tag: el.tagName.toLowerCase(),
       role: el.getAttribute("role"),
       name,
+      href: el.getAttribute("href"),
       section: el.closest("section")?.id ?? null,
       inDock: Boolean(el.closest(".pf-dock")),
-      inStage: Boolean(el.closest(".pf-stage")),
-      inFrontSlot: Boolean(el.closest(".pf-slot.is-active")),
-      inAwayPage: Boolean(el.closest(".pf-page[data-state='away']")),
-      inClosedRow: Boolean(el.closest(".pf-xp__body[data-open='false']")),
-      inInert: Boolean(el.closest("[inert]")),
+      inHeader: Boolean(el.closest("header")),
     };
   });
 
@@ -114,51 +90,6 @@ async function tabTo(
 
 const named = (needle: string) => (el: Focused) => el.name.startsWith(needle);
 
-const heroCount = (page: Page) =>
-  page.evaluate(() => {
-    const m = /(\d+) of (\d+)/.exec(document.querySelector(".pf-hero__count")?.textContent ?? "");
-    return m ? Number(m[1]) : 0;
-  });
-
-/** Everything a check needs to know about one role section, in one read. */
-const roleState = (page: Page, role: Role) =>
-  page.evaluate((id) => {
-    const section = document.getElementById(id)!;
-    // No named helpers in here: tsx's keepNames would inject `__name`.
-    const [projects, experience] = ["projects", "experience"].map((kind) => {
-      const el = section.querySelector(`.pf-page--${kind}`);
-      return el
-        ? {
-            state: el.getAttribute("data-state"),
-            // The page out of view stays visible as a dimmed sliver; it is
-            // its content that goes inert.
-            inert: Boolean(el.querySelector(".pf-page__body")?.hasAttribute("inert")),
-            hidden: el.getAttribute("aria-hidden") === "true",
-          }
-        : null;
-    });
-    const slots = [...section.querySelectorAll(".pf-slot")];
-    return {
-      projects,
-      experience,
-      count: section.querySelector(".pf-count")?.textContent?.trim() ?? "",
-      front: section.querySelector(".pf-detail__title")?.textContent?.trim() ?? "",
-      slots: slots.length,
-      inertBehind: slots.filter((s) => !s.classList.contains("is-active") && s.hasAttribute("inert")).length,
-      frontInert: Boolean(section.querySelector(".pf-slot.is-active[inert]")),
-      switches: [...section.querySelectorAll(".pf-page__foot button")].map((b) => b.textContent?.trim() ?? ""),
-      rows: [...section.querySelectorAll(".pf-xp > li")].map((li) => {
-        const body = li.querySelector(".pf-xp__body");
-        return {
-          id: li.id,
-          expanded: li.querySelector(".pf-xp__toggle")?.getAttribute("aria-expanded") ?? null,
-          open: body?.getAttribute("data-open") === "true",
-          bodyInert: Boolean(body?.hasAttribute("inert")),
-        };
-      }),
-    };
-  }, role.id);
-
 const currentIndexItems = (page: Page) =>
   page.evaluate(() =>
     [...document.querySelectorAll(".druid-index a[aria-current='location']")].map(
@@ -180,27 +111,6 @@ async function fresh(page: Page) {
   await page.waitForTimeout(300);
 }
 
-/** Pause the drum from the keyboard, so it cannot roll on under a check. */
-async function pauseDrum(page: Page) {
-  const reached = await tabTo(page, named("Pause headlines"));
-  if (reached) await page.keyboard.press("Enter");
-  await page.waitForTimeout(200);
-  return reached;
-}
-
-/** Open the docked index from the keyboard and follow one role's link. */
-async function viaIndex(page: Page, role: Role) {
-  const tab = await tabTo(page, (el) => el.tag === "button" && el.name.endsWith("Index") && el.inDock);
-  await page.keyboard.press("Enter");
-  await page.waitForTimeout(300);
-  // Opening the dock focuses its first link, which may already be the one.
-  const isLink = (el: Focused | null) => el?.tag === "a" && el.name === role.label;
-  const link = isLink(await active(page)) || (await tabTo(page, isLink, { limit: roles.length + 1 }));
-  await page.keyboard.press("Enter");
-  await settle(page);
-  return tab && link;
-}
-
 async function theme(page: Page) {
   console.log("\n  Theme switch\n");
   await fresh(page);
@@ -208,10 +118,7 @@ async function theme(page: Page) {
   const reached = await tabTo(page, (el) => el.role === "switch");
   check("switch reachable by Tab", reached);
   const el = await active(page);
-  check(
-    'named "Dark mode", inside the banner',
-    el?.name === "Dark mode" && (await page.evaluate(() => Boolean(document.activeElement?.closest("header")))),
-  );
+  check('named "Dark mode", inside the banner', el?.name === "Dark mode" && Boolean(el?.inHeader));
   const before = await page.evaluate(() => ({
     checked: document.activeElement?.getAttribute("aria-checked"),
     bg: getComputedStyle(document.documentElement).backgroundColor,
@@ -244,264 +151,38 @@ async function theme(page: Page) {
   check("Enter switches back to light", light === "light");
 }
 
-async function drum(page: Page) {
-  console.log("\n  Hero headline drum\n");
+async function projectList(page: Page) {
+  console.log("\n  Skip link and the projects\n");
   await fresh(page);
-  const n = headlines.length;
 
-  check("Pause reachable by Tab", await pauseDrum(page));
-  const paused = await page.evaluate(() => ({
-    pressed: document.activeElement?.getAttribute("aria-pressed"),
-    label: document.activeElement?.textContent?.trim(),
-    play: getComputedStyle(document.querySelector(".pf-seg.is-active .pf-seg__fill")!).animationPlayState,
-  }));
-  check(
-    "Enter pauses: aria-pressed and the label flip",
-    paused.pressed === "true" && paused.label === "Resume headlines",
-    `${paused.pressed}, "${paused.label}"`,
-  );
-  check("the timer animation is paused", paused.play === "paused", paused.play);
-
-  const start = await heroCount(page);
-  await page.waitForTimeout(1500);
-  check("the drum holds while paused", (await heroCount(page)) === start, `${start} → ${await heroCount(page)}`);
-
-  check("Next reachable by Tab", await tabTo(page, named("Next headline"), { limit: 3 }));
-  await page.keyboard.press("Enter");
-  await page.waitForTimeout(400);
-  const afterNext = await heroCount(page);
-  check("Enter on Next advances one headline", afterNext === (start % n) + 1, `${start} → ${afterNext}`);
-
-  const view = await page.evaluate(() => ({
-    live: [...document.querySelectorAll(".pf-line")].filter((l) => !l.hasAttribute("inert")).length,
-    seg: document.querySelector(".pf-seg[aria-current='true']")?.getAttribute("aria-label") ?? "",
-    cta: document.querySelector(".pf-hero__controls a")?.textContent?.trim() ?? "",
-  }));
-  const shown = headlines[afterNext - 1];
-  check("only the headline on the drum is outside inert", view.live === 1, `${view.live} live`);
-  check("its segment carries aria-current", view.seg.startsWith(`Headline ${afterNext}:`), view.seg);
-  check("the call to action names it", view.cta === shown.cta, view.cta);
-
-  check("Previous reachable by Shift+Tab", await tabTo(page, named("Previous headline"), { back: true, limit: 3 }));
-  await page.keyboard.press("Enter");
-  await page.waitForTimeout(400);
-  check("Enter on Previous goes back", (await heroCount(page)) === start);
-}
-
-/** Jump the drum to a headline through its segment, then follow its call to action. */
-async function follow(page: Page, h: Headline) {
-  await fresh(page);
-  await pauseDrum(page);
-  const seg = await tabTo(page, named(`Headline ${h.position}:`), { back: true, limit: headlines.length + 6 });
-  await page.keyboard.press("Enter");
-  await page.waitForTimeout(400);
-  check(`segment "Headline ${h.position}" reachable and jumps there`, seg && (await heroCount(page)) === h.position);
-
-  check(`"${h.cta}" reachable by Tab`, await tabTo(page, named(h.cta), { limit: headlines.length + 6 }));
+  await page.keyboard.press("Tab");
+  check('"Skip to the projects" is the first Tab stop', (await active(page))?.name === "Skip to the projects");
   await page.keyboard.press("Enter");
   await settle(page);
-  check("it lands on its target", (await page.evaluate(() => location.hash)) === h.href, h.href);
-}
+  check("Enter lands on #projects", (await page.evaluate(() => location.hash)) === "#projects");
 
-async function projectCta(page: Page) {
-  const h = projectHeadline();
-  console.log(`\n  Hero → project: ${h.title}\n`);
-  await follow(page, h);
-
-  const s = await roleState(page, h.role);
-  const n = h.role.projects.length;
-  check("the projects page is showing", s.projects?.state === "here" && !s.projects.inert);
+  const first = projects[0];
   check(
-    `"${h.title}" is now the front project of ${h.role.label}`,
-    s.front === h.title && s.count === `${h.slideIndex + 1} of ${n}`,
-    `${s.front} (${s.count})`,
-  );
-  check("every slide behind it is inert", s.inertBehind === s.slots - 1 && !s.frontInert, `${s.inertBehind}/${s.slots - 1}`);
-
-  // The fragment moves the sequential focus starting point, so the next Tab
-  // continues inside the section rather than back in the hero.
-  check(
-    "the next Tab continues inside that section",
-    await tabTo(page, (el) => el.section === h.role.id, { limit: 2 }),
+    `the next Tab stops reach the first project, "${first.title}"`,
+    await tabTo(page, (el) => el.tag === "a" && el.href === first.href, { limit: 3 }),
     (await active(page))?.name.slice(0, 40) ?? "",
   );
-}
-
-async function experienceCta(page: Page) {
-  const h = experienceHeadline();
-  console.log(`\n  Hero → experience row: ${h.title}\n`);
-  await follow(page, h);
-
-  const s = await roleState(page, h.role);
-  const row = s.rows.find((r) => r.id === h.href.slice(1));
-  check("the experience page is showing", s.experience?.state === "here" && !s.experience.inert);
-  if (s.projects) {
-    check(
-      "the projects page is away, inert and hidden",
-      s.projects.state === "away" && s.projects.inert && s.projects.hidden,
-    );
-  }
-  check("its row is expanded and open", row?.expanded === "true" && row.open && !row.bodyInert, JSON.stringify(row));
-  const top = await page.evaluate((id) => document.getElementById(id)!.getBoundingClientRect().top, h.href.slice(1));
-  check("the row is in view", top >= 0 && top < 900 - 80, `${Math.round(top)}px`);
-
-  const next = await tabTo(page, (el) => el.section === h.role.id, { limit: 2 });
-  const el = await active(page);
-  check("the next Tab continues inside that section", next && !el?.inAwayPage, el?.name.slice(0, 40) ?? "");
-}
-
-async function carousel(page: Page, role: Role) {
-  console.log(`\n  ${role.label}: project carousel\n`);
-  await fresh(page);
-  check("reached through the Index", await viaIndex(page, role));
-  const n = role.projects.length;
-  const titles = role.projects.map((p) => p.title);
-
-  const inSection = (el: Focused) => el.section === role.id;
-  check("Next reachable by Tab", await tabTo(page, (el) => inSection(el) && el.name === "Next project", { limit: 6 }));
-  let s = await roleState(page, role);
-  check("starts on the first project", s.count === `1 of ${n}` && s.front === titles[0], s.count);
-
-  await page.keyboard.press("Enter");
-  await page.waitForTimeout(400);
-  s = await roleState(page, role);
-  check("Enter on Next brings the second project forward", s.front === titles[1 % n] && s.count === `2 of ${n}`, s.count);
-
+  // One link per entry: Tab moves from one project straight to the next.
   check(
-    "Previous reachable by Shift+Tab",
-    await tabTo(page, (el) => inSection(el) && el.name === "Previous project", { back: true, limit: 3 }),
+    `one Tab on is the second project, "${projects[1].title}"`,
+    await tabTo(page, (el) => el.tag === "a" && el.href === projects[1].href, { limit: 1 }),
   );
   await page.keyboard.press("Enter");
-  await page.waitForTimeout(400);
-  check("Enter on Previous goes back", (await roleState(page, role)).front === titles[0]);
-
-  await page.keyboard.press("ArrowRight");
-  await page.waitForTimeout(400);
-  check("ArrowRight on the region advances", (await roleState(page, role)).front === titles[1 % n]);
-
-  await page.keyboard.press("ArrowLeft");
-  await page.keyboard.press("ArrowLeft");
-  await page.waitForTimeout(400);
-  s = await roleState(page, role);
-  check("ArrowLeft past the first wraps to the last", s.front === titles[n - 1] && s.count === `${n} of ${n}`, s.count);
-  await page.keyboard.press("ArrowRight");
-  await page.waitForTimeout(400);
-  s = await roleState(page, role);
-  check("ArrowRight past the last wraps to the first", s.front === titles[0]);
-  check("only the front slide is outside inert", s.inertBehind === n - 1 && !s.frontInert, `${s.inertBehind}/${n - 1} inert`);
-
-  // Tab through the projects page: nothing behind the front slide may take
-  // focus, and nothing on the experience page while it is away.
-  const strays: string[] = [];
-  let reachedSwitch = false;
-  for (let i = 0; i < 40; i++) {
-    await page.keyboard.press("Tab");
-    const el = await active(page);
-    if (!el || el.section !== role.id) break;
-    if ((el.inStage && !el.inFrontSlot) || el.inInert || el.inAwayPage) strays.push(el.name.slice(0, 30));
-    if (el.name.startsWith("Experience and education")) {
-      reachedSwitch = true;
-      break;
-    }
-  }
-  check("Tab never reaches a slide behind the front or the away page", strays.length === 0, strays.slice(0, 3).join(", "));
-  check('Tab reaches "Experience and education"', reachedSwitch);
-}
-
-async function pager(page: Page, role: Role) {
-  console.log(`\n  ${role.label}: pager and experience list\n`);
-  // Continues from carousel(): focus is on the "Experience and education" switch.
-  await page.keyboard.press("Enter");
-  await arrive(page, role, "experience");
-  let s = await roleState(page, role);
-  let el = await active(page);
-  check("Enter turns to the experience page", s.experience?.state === "here" && !s.experience.inert);
-  check(
-    "the projects page goes away, inert and hidden",
-    s.projects?.state === "away" && s.projects.inert && s.projects.hidden,
-  );
-  check(
-    'focus moves to its "Experience and education" heading',
-    el?.tag === "h3" && el.name === "Experience and education",
-    `${el?.tag} "${el?.name}"`,
-  );
-
-  const first = role.rows[0];
-  check(`first row "${first.title}" reachable by Tab`, await tabTo(page, (x) => x.name.startsWith(first.title), { limit: 3 }));
-  let row = (await roleState(page, role)).rows[0];
-  check("closed: aria-expanded=false and its body inert", row.expanded === "false" && !row.open && row.bodyInert);
-
-  await page.keyboard.press("Enter");
-  await page.waitForTimeout(400);
-  row = (await roleState(page, role)).rows[0];
-  check("Enter opens it", row.expanded === "true" && row.open && !row.bodyInert);
-  await page.keyboard.press("Space");
-  await page.waitForTimeout(400);
-  row = (await roleState(page, role)).rows[0];
-  check("Space closes it again", row.expanded === "false" && !row.open && row.bodyInert);
-
-  // Every row is closed now; Tab must walk the toggles only, then the switch.
-  const strays: string[] = [];
-  let toggles = 1;
-  let reachedSwitch = false;
-  for (let i = 0; i < 40; i++) {
-    await page.keyboard.press("Tab");
-    el = await active(page);
-    if (!el || el.section !== role.id) break;
-    if (el.inClosedRow || el.inAwayPage || el.inInert) strays.push(el.name.slice(0, 30));
-    if (el.name.startsWith("Projects")) {
-      reachedSwitch = true;
-      break;
-    }
-    toggles++;
-  }
-  check("Tab never enters a closed row or the away page", strays.length === 0, strays.slice(0, 3).join(", "));
-  check('Tab walks the rows to "Projects"', reachedSwitch, `${toggles} stop(s) on the way`);
-
-  await page.keyboard.press("Enter");
-  await arrive(page, role, "projects");
-  s = await roleState(page, role);
-  el = await active(page);
-  check("Enter turns back to the projects page", s.projects?.state === "here" && s.experience?.state === "away");
-  check('focus moves to its "Projects" heading', el?.tag === "h3" && el.name === "Projects", `${el?.tag} "${el?.name}"`);
-}
-
-async function experienceOnly(page: Page) {
-  const role = experienceOnlyRole();
-  if (!role) {
-    console.log("\n  SKIP  every role has projects; the experience-only layout is not exercised");
-    return;
-  }
-  console.log(`\n  ${role.label}: no projects\n`);
-  await fresh(page);
-  check("reached through the Index", await viaIndex(page, role));
-  const s = await roleState(page, role);
-  check("only the experience page exists, and it is showing", !s.projects && s.experience?.state === "here" && !s.experience.inert);
-  check("no page switch is offered", s.switches.length === 0, s.switches.join(", "));
-  check(
-    "Tab reaches its first row",
-    await tabTo(page, (el) => el.section === role.id && el.name.startsWith(role.rows[0].title), { limit: 4 }),
-  );
+  await page.waitForURL(`**${projects[1].href}`, { timeout: 5000 }).catch(() => null);
+  const landed = await page.evaluate(() => ({ path: location.pathname, h1: document.querySelector("h1")?.textContent?.trim() }));
+  check("Enter opens its page", landed.path === projects[1].href && landed.h1 === projects[1].title, `${landed.path}, "${landed.h1}"`);
 }
 
 async function index(page: Page) {
-  console.log("\n  Skip link and docked Index\n");
+  console.log("\n  Docked Index\n");
   await fresh(page);
 
-  check("no role is current at the very top", (await currentIndexItems(page)).length === 0);
-
-  await page.keyboard.press("Tab");
-  check('"Skip to the roles" is the first Tab stop', (await active(page))?.name === "Skip to the roles");
-  await page.keyboard.press("Enter");
-  await settle(page);
-  check("Enter lands on #roles", (await page.evaluate(() => location.hash)) === "#roles");
-  check(
-    "the next Tab continues in the first role",
-    await tabTo(page, (el) => el.section === roles[0].id, { limit: 2 }),
-    (await active(page))?.name.slice(0, 40) ?? "",
-  );
-
-  await fresh(page);
+  check("no project is current at the very top", (await currentIndexItems(page)).length === 0);
   check(
     "the Index tab is reachable by Tab",
     await tabTo(page, (el) => el.tag === "button" && el.name.endsWith("Index") && el.inDock),
@@ -514,7 +195,7 @@ async function index(page: Page) {
   d = await dock(page);
   let el = await active(page);
   check("Enter opens it", d.expanded === "true" && d.visible);
-  check("and focuses the first role link", el?.tag === "a" && el.name === roles[0].label, el?.name ?? "");
+  check("and focuses the first project link", el?.tag === "a" && el.name === projects[0].title, el?.name ?? "");
 
   await page.keyboard.press("Escape");
   await dockSettles(page, false);
@@ -524,43 +205,70 @@ async function index(page: Page) {
   check("and returns focus to the tab", el?.tag === "button" && el.name.endsWith("Index"), el?.name ?? "");
 
   await page.keyboard.press("Enter");
-  await page.waitForTimeout(400);
+  await page.waitForTimeout(300);
   await page.keyboard.press("Shift+Tab");
   await page.keyboard.press("Shift+Tab");
   await dockSettles(page, false);
   d = await dock(page);
   check("focus leaving the dock closes it", d.open === "false" && !d.visible, `focus on "${(await active(page))?.name}"`);
 
-  const target = roles[roles.length - 1];
+  const target: Project = laterProject();
   // Focus is on the control before the dock; one Tab is the dock's tab again.
   await page.keyboard.press("Tab");
-  check(`"${target.label}" reachable through the reopened dock`, await viaIndexFromTab(page, target));
+  const onTab = (await active(page))?.name.endsWith("Index");
+  await page.keyboard.press("Enter");
+  await page.waitForTimeout(300);
+  const isLink = (x: Focused | null) => x?.tag === "a" && x.name === target.title;
+  const reached = isLink(await active(page)) || (await tabTo(page, isLink, { limit: projects.length + 1 }));
+  check(`"${target.title}" reachable through the reopened dock`, Boolean(onTab) && reached);
+  await page.keyboard.press("Enter");
+  await settle(page);
+
   const after = await currentIndexItems(page);
-  check('Enter scrolls there and marks it aria-current="location"', after.length === 1 && after[0] === `#${target.id}`, after.join(", "));
+  check('Enter scrolls to its entry and marks it aria-current="location"', after.length === 1 && after[0] === `#${target.anchor}`, after.join(", "));
   check("the dock closes behind it", (await dock(page)).open === "false");
   const land = await page.evaluate((id) => {
     const s = document.getElementById(id)!;
     return { top: s.getBoundingClientRect().top, margin: parseFloat(getComputedStyle(s).scrollMarginTop) || 0 };
-  }, target.id);
-  check("the section lands at its scroll margin", Math.abs(land.top - land.margin) <= 4, `${Math.round(land.top)}px, margin ${land.margin}px`);
-
-  check('"Back to the top" is the next Tab stop', await tabTo(page, (x) => x.name === "Back to the top", { limit: 2 }));
-  await page.keyboard.press("Enter");
-  await settle(page);
-  check("Enter returns to the top, no role current", (await page.evaluate(() => location.hash)) === "#top" && (await currentIndexItems(page)).length === 0);
+  }, target.anchor);
+  check("the entry lands at its scroll margin", Math.abs(land.top - land.margin) <= 4, `${Math.round(land.top)}px, margin ${land.margin}px`);
+  check(
+    "the next Tab is that project's link",
+    await tabTo(page, (x) => x.tag === "a" && x.href === target.href, { limit: 2 }),
+    (await active(page))?.name.slice(0, 40) ?? "",
+  );
 }
 
-/** With focus on the dock's tab: open it, walk to a role's link and follow it. */
-async function viaIndexFromTab(page: Page, role: Role) {
-  const onTab = (await active(page))?.name.endsWith("Index");
+async function phoneMenu(page: Page) {
+  console.log("\n  Phone menu (390 wide)\n");
+  await page.setViewportSize({ width: 390, height: 844 });
+  await fresh(page);
+
+  const linksShown = () =>
+    page.evaluate(() => getComputedStyle(document.querySelector(".pf-nav")!).display !== "none");
+  check("the site links are folded away", !(await linksShown()));
+  check("the menu button is reachable by Tab", await tabTo(page, (el) => el.tag === "button" && el.name === "Menu"));
+  check("closed: aria-expanded=false", (await page.evaluate(() => document.activeElement?.getAttribute("aria-expanded"))) === "false");
+
   await page.keyboard.press("Enter");
-  await page.waitForTimeout(300);
-  // Opening the dock focuses its first link, which may already be the one.
-  const isLink = (el: Focused | null) => el?.tag === "a" && el.name === role.label;
-  const link = isLink(await active(page)) || (await tabTo(page, isLink, { limit: roles.length + 1 }));
+  await page.waitForTimeout(200);
+  check("Enter opens the links", await linksShown());
+  check("and reports aria-expanded=true", (await page.evaluate(() => document.activeElement?.getAttribute("aria-expanded"))) === "true");
+
+  await page.keyboard.press("Escape");
+  await page.waitForTimeout(200);
+  const el = await active(page);
+  check("Escape folds them away again", !(await linksShown()));
+  check("and keeps focus on the menu button", el?.name === "Menu", el?.name ?? "");
+
+  await page.keyboard.press("Enter");
+  await page.waitForTimeout(200);
+  check('Tab reaches "Projects" in the open menu', await tabTo(page, (x) => x.tag === "a" && x.name === "Projects" && x.inHeader, { back: true, limit: 6 }));
   await page.keyboard.press("Enter");
   await settle(page);
-  return Boolean(onTab) && link;
+  check("following it closes the menu and lands on #projects", !(await linksShown()) && (await page.evaluate(() => location.hash)) === "#projects");
+
+  await page.setViewportSize({ width: 1440, height: 900 });
 }
 
 async function exportDoor(page: Page) {
@@ -598,14 +306,9 @@ async function main() {
   page.on("pageerror", (e) => errors.push(e.message));
 
   await theme(page);
-  await drum(page);
-  await projectCta(page);
-  await experienceCta(page);
-  const role = movableRole();
-  await carousel(page, role);
-  await pager(page, role);
-  await experienceOnly(page);
+  await projectList(page);
   await index(page);
+  await phoneMenu(page);
   await exportDoor(page);
 
   console.log("");

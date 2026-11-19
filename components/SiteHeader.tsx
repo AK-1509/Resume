@@ -21,12 +21,12 @@ import { ExportButton } from "./ExportButton";
 export function SiteHeader({
   name,
   variant = "home",
-  caseStudies = true,
+  projects = true,
 }: {
   name: string;
   variant?: "home" | "case";
-  /** Whether the portfolio has a case-studies section to link to. */
-  caseStudies?: boolean;
+  /** Whether the portfolio has a projects section to link to. */
+  projects?: boolean;
 }) {
   const home = variant === "home";
   const [open, setOpen] = useState(false);
@@ -45,8 +45,8 @@ export function SiteHeader({
 
   return (
     <>
-      <a className="druid-skip druid-button" href={home ? "#roles" : "#case"}>
-        {home ? "Skip to the roles" : "Skip to the project"}
+      <a className="druid-skip druid-button" href={home ? (projects ? "#projects" : "#contact") : "#case"}>
+        {home ? (projects ? "Skip to the projects" : "Skip to contact") : "Skip to the project"}
       </a>
       <div className="pf-header-wrap">
         <header className="pf-header">
@@ -81,14 +81,12 @@ export function SiteHeader({
               >
                 {home ? (
                   <>
-                    <a href="#roles">Roles</a>
-                    {caseStudies && <a href="#case-studies">Case studies</a>}
+                    {projects && <a href="#projects">Projects</a>}
                     <a href="#contact">Contact</a>
                   </>
                 ) : (
                   <>
-                    <Link href="/#roles">Roles</Link>
-                    <Link href="/#case-studies">Case studies</Link>
+                    <Link href="/#projects">Projects</Link>
                     <Link href="/#contact">Contact</Link>
                   </>
                 )}

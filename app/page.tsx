@@ -1,24 +1,21 @@
 import { SiteHeader } from "@/components/SiteHeader";
-import { Portfolio } from "@/components/Portfolio";
+import { Hero } from "@/components/Hero";
 import { IndexDock } from "@/components/IndexDock";
 import { LanguagesCard } from "@/components/LanguagesCard";
 import { LiquidBackground } from "@/components/LiquidBackground";
 import { ExportHost } from "@/components/ExportHost";
-import { CaseStudyCards } from "@/components/case/CaseStudyCards";
+import { CaseStudyCards, projectAnchor } from "@/components/case/CaseStudyCards";
 import { caseStudies } from "@/lib/case-studies";
 import { resume } from "@/lib/resume";
-import { headlineViews, portfolio, roleViews } from "@/lib/portfolio";
+import { portfolio } from "@/lib/portfolio";
 
 /**
- * The portfolio, on a glassy gradient canvas: the hero with rotating
- * headlines, then one section per role — each a two-page pager of side
- * projects and experience — then contact and languages. The role index is
- * docked on the right edge.
+ * The portfolio, on a glassy gradient canvas: the hero on the first screen,
+ * then the projects (one entry per project page), then contact and
+ * languages. The Index is docked on the right edge and jumps to any project.
  */
 export default function Home() {
   const { profile, languages } = resume;
-  const roles = roleViews();
-  const lines = Object.fromEntries(portfolio.headlines.map((h) => [h.experienceId, h.line]));
   const studies = caseStudies().map(({ slug, title, slugLine, tags, hero, role }) => ({
     slug,
     title,
@@ -35,20 +32,20 @@ export default function Home() {
           <LiquidBackground />
         </div>
 
-        <SiteHeader name={profile.name} caseStudies={studies.length > 0} />
-        {roles.length > 0 && (
-          <IndexDock label="Browse by role" items={roles.map((r) => ({ id: r.id, label: r.label }))} />
+        <SiteHeader name={profile.name} projects={studies.length > 0} />
+        {studies.length > 0 && (
+          <IndexDock
+            label="Browse projects"
+            items={studies.map((s) => ({ id: projectAnchor(s.slug), label: s.title }))}
+          />
         )}
 
         <main>
-          <Portfolio
-            profile={profile}
-            hero={portfolio.hero}
-            headlines={headlineViews()}
-            roles={roles}
-            lines={lines}
-            skills={resume.skills}
-            demos={portfolio.demos}
+          <Hero
+            name={profile.name}
+            role={portfolio.hero.role}
+            sub={portfolio.hero.sub}
+            credentials={portfolio.hero.credentials}
           />
           <CaseStudyCards studies={studies} />
         </main>
