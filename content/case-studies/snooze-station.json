@@ -1,0 +1,393 @@
+{
+  "slug": "snooze-station",
+  "order": 4,
+  "title": "Snooze Station",
+  "slugLine": "A Belkin device that fits in the palm of a hand and gives travelers quality sleep anywhere, with natural light, calming sounds and MagSafe charging.",
+  "tags": [
+    "Product design",
+    "Prototyping",
+    "Team of four"
+  ],
+  "hero": {
+    "image": {
+      "src": "/case-studies/snooze-station/bedside-night.webp",
+      "alt": "Snooze Station on a wooden nightstand in a dark bedroom, its base glowing warm amber, with a phone docked on it showing a clock and a calendar.",
+      "width": 2820,
+      "height": 1280
+    },
+    "figure": null
+  },
+  "role": {
+    "title": "Product Manager",
+    "sprint": "",
+    "summary": "",
+    "moves": []
+  },
+  "demo": null,
+  "timeline": {
+    "research": "",
+    "goals": "",
+    "design": "",
+    "results": ""
+  },
+  "research": {
+    "problem": "While traveling, we lose ==our ideal conditions for restorative sleep==: **an unfamiliar room disrupts the natural circadian rhythm and sleep schedule**.",
+    "stakeholders": [
+      {
+        "kind": "Customer",
+        "name": "Frequent travelers",
+        "note": "Persona: Max, 30, who travels often for work and leisure"
+      },
+      {
+        "kind": "Client",
+        "name": "Belkin",
+        "note": "The Belkin & Wellness brief"
+      },
+      {
+        "kind": "Competitor",
+        "name": "Sleep audio and light devices",
+        "note": "Lullabar, Jabees PEACE, Hatch Restore"
+      }
+    ],
+    "painPoints": [
+      {
+        "label": "Harsh light",
+        "detail": "Harsh overhead lighting in an unfamiliar room."
+      },
+      {
+        "label": "Noise outside",
+        "detail": "Loud sound from outside the room."
+      },
+      {
+        "label": "A broken wind-down",
+        "detail": "They cannot sleep comfortably because their wind-down routine is disrupted the moment they leave home."
+      },
+      {
+        "label": "Jet lag",
+        "detail": "Travel and jet lag disrupt the environmental cues that regulate the circadian rhythm."
+      },
+      {
+        "label": "Screens and blue light",
+        "detail": "LED screens and blue light throw off the circadian rhythm."
+      }
+    ],
+    "headlines": [
+      {
+        "figure": "3 in 4",
+        "headline": "people do not sleep well while on business travel",
+        "source": "BCD Travel, The Jakarta Post, Travel PR News"
+      },
+      {
+        "figure": "44%",
+        "headline": "blame poor sleep on the unfamiliar environment",
+        "source": "BCD Travel, The Jakarta Post, Travel PR News"
+      },
+      {
+        "figure": "54%",
+        "headline": "say poor sleep costs them their performance",
+        "source": "BCD Travel, The Jakarta Post, Travel PR News"
+      }
+    ]
+  },
+  "goals": {
+    "rows": [],
+    "insights": [
+      {
+        "insight": "Light sets the body clock",
+        "evidence": "The body has a natural clock calibrated by the wavelengths of light it is exposed to. Overexposure to blue light disrupts it, while warm amber or orange light can recalibrate it."
+      },
+      {
+        "insight": "Sleep comes when pressure and timing agree",
+        "evidence": "Sleep begins when sleep pressure and circadian timing favor it; wakefulness begins when sleep pressure falls and circadian alerting signals rise."
+      },
+      {
+        "insight": "Relaxing tells the body it is time",
+        "evidence": "Lying down in bed and clearing one’s head of thoughts tells the body to enter a sleepy state."
+      }
+    ],
+    "report": {
+      "href": null
+    },
+    "roadmap": []
+  },
+  "design": {
+    "lead": "Snooze Station recreates the ideal conditions for restorative sleep with a Belkin product: light, sound and charging in one object that keeps the wind-down routine consistent across any room and time zone.",
+    "blocks": [
+      {
+        "type": "table",
+        "title": "Features and benefits",
+        "rowHeader": "Feature",
+        "columns": [
+          {
+            "label": "What it does"
+          },
+          {
+            "label": "Why it helps"
+          }
+        ],
+        "rows": [
+          {
+            "label": "Adaptive light",
+            "cells": [
+              "Warm amber for winding down, red for the middle of the night, and a slow warm ramp in the morning instead of an alarm that jolts you",
+              "Smooths the move between wakefulness and sleep by simulating the wavelengths of natural light"
+            ]
+          },
+          {
+            "label": "Bluetooth speaker",
+            "cells": [
+              "Plays sounds from a wellness or streaming app: white noise, calming sounds and alarms",
+              "A consistent sleep environment without headphones or earbuds"
+            ]
+          },
+          {
+            "label": "Multi-device charging",
+            "cells": [
+              "The phone charges on the MagSafe plate at an angle; earbuds and other devices charge on the base",
+              "Keeps the nightstand setup simple and cable-free"
+            ]
+          },
+          {
+            "label": "Portable form",
+            "cells": [
+              "The charging pad folds flat, and at 4\" × 1.9\" it fits in a palm and packs easily in a bag",
+              "Sets up quickly in any room"
+            ]
+          },
+          {
+            "label": "Simple controls",
+            "cells": [
+              "Buttons on the device adjust light brightness and sound volume",
+              "No need to reach for the phone"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "figure",
+        "title": "Lighting modes",
+        "image": {
+          "src": "/case-studies/snooze-station/lighting-modes.webp",
+          "alt": "Snooze Station shown twice side by side: glowing warm amber on a black table in a pale room, and glowing red in the dark.",
+          "width": 1200,
+          "height": 800
+        }
+      },
+      {
+        "type": "figure",
+        "title": "Charging",
+        "image": {
+          "src": "/case-studies/snooze-station/charging.webp",
+          "alt": "Snooze Station with a phone on its tilted MagSafe plate and an earbuds case charging on its base, the base glowing warm.",
+          "width": 1200,
+          "height": 800
+        }
+      },
+      {
+        "type": "figure",
+        "title": "Color variants",
+        "image": {
+          "src": "/case-studies/snooze-station/color-variants.webp",
+          "alt": "Five Snooze Stations on a black side table, in orange, charcoal, cream, light blue and lavender, each with its base glowing.",
+          "width": 1200,
+          "height": 800
+        }
+      },
+      {
+        "type": "steps",
+        "title": "The wind-down routine",
+        "items": [
+          {
+            "title": "Settle the room",
+            "body": "Make the environment feel safe and comfortable, from 9:15 PM (15 min)."
+          },
+          {
+            "title": "Sleep aid",
+            "body": "Take a sleep aid or a drink (10 min)."
+          },
+          {
+            "title": "End of day",
+            "body": "Take care of end-of-day logistics (30 min)."
+          },
+          {
+            "title": "Lie down",
+            "body": "Lie down or recline (2 hr 15 min)."
+          },
+          {
+            "title": "Wind down",
+            "body": "Wind down with relaxing activities, with Snooze Station."
+          },
+          {
+            "title": "Close eyes",
+            "body": "Close eyes (30 min)."
+          },
+          {
+            "title": "Fall asleep",
+            "body": "Fall asleep, around midnight (15 min)."
+          }
+        ]
+      },
+      {
+        "type": "steps",
+        "title": "A night with Snooze Station",
+        "items": [
+          {
+            "title": "Arrive",
+            "body": "Set it on the hotel bedside table."
+          },
+          {
+            "title": "Dock and choose a sound",
+            "body": "Dock the phone and pick a soundscape, such as Deep Sleep, in the companion app; it plays over Bluetooth."
+          },
+          {
+            "title": "Wind down",
+            "body": "The room darkens and the warm light comes on."
+          },
+          {
+            "title": "Wake up",
+            "body": "The light changes over for the morning."
+          },
+          {
+            "title": "Pack up",
+            "body": "Turn it off, unplug it and stow the portable puck in a carry-on."
+          }
+        ]
+      },
+      {
+        "type": "figure",
+        "title": "Companion app",
+        "image": {
+          "src": "/case-studies/snooze-station/companion-app.webp",
+          "alt": "Seven companion app screens: a sleep time schedule, a wind-down routine that dims the lights, fades in a sleep sound and reminds you to dock your phone, light scenes named Candle, Sunset, Reading and Night, and a sounds screen.",
+          "width": 1600,
+          "height": 422
+        }
+      },
+      {
+        "type": "steps",
+        "title": "Iterations",
+        "items": [
+          {
+            "title": "Low fidelity",
+            "body": "Card and paper models of the dock and the puck."
+          },
+          {
+            "title": "Mid fidelity",
+            "body": "3D-printed parts of the shell and the puck."
+          },
+          {
+            "title": "High fidelity",
+            "body": "Finished models in the color variants."
+          }
+        ]
+      },
+      {
+        "type": "figure",
+        "title": "From the workbench",
+        "image": {
+          "src": "/case-studies/snooze-station/iterations.webp",
+          "alt": "A workbench covered with 3D-printed white parts of the Snooze Station shell and puck, an earlier wood-colored model, pliers and screwdrivers.",
+          "width": 800,
+          "height": 1067
+        }
+      }
+    ]
+  },
+  "results": {
+    "lead": "The final prototype sizes ==a $750M serviceable market==: 15 million frequent US travelers at a $50 average price, aiming for 1% of it in three years.",
+    "blocks": [
+      {
+        "type": "sizing",
+        "title": "Market sizing",
+        "rings": [
+          {
+            "name": "TAM",
+            "value": "$2.7B",
+            "label": "Total addressable market",
+            "note": "Global sleep tech devices, 2026."
+          },
+          {
+            "name": "SAM",
+            "value": "$750M",
+            "label": "Serviceable available market",
+            "note": "15M US frequent travelers × a $50 average selling price."
+          },
+          {
+            "name": "SOM",
+            "value": "$7.5M",
+            "label": "Serviceable obtainable market",
+            "note": "1% of the SAM over three years."
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "title": "How it compares",
+        "rowHeader": "Feature",
+        "columns": [
+          {
+            "label": "Snooze Station",
+            "highlight": true
+          },
+          {
+            "label": "Lullabar"
+          },
+          {
+            "label": "Jabees PEACE"
+          },
+          {
+            "label": "Hatch Restore"
+          }
+        ],
+        "rows": [
+          {
+            "label": "Simple physical controls",
+            "cells": [
+              "yes",
+              "yes",
+              "yes",
+              "yes"
+            ]
+          },
+          {
+            "label": "Sleep-focused speaker",
+            "cells": [
+              "yes",
+              "yes",
+              "yes",
+              "yes"
+            ]
+          },
+          {
+            "label": "Portable and travel-friendly",
+            "cells": [
+              "yes",
+              "yes",
+              "yes",
+              "no"
+            ]
+          },
+          {
+            "label": "Adaptive or ambient light",
+            "cells": [
+              "yes",
+              "no",
+              "no",
+              "yes"
+            ]
+          },
+          {
+            "label": "Priced under $100",
+            "cells": [
+              "yes",
+              "",
+              "",
+              ""
+            ]
+          }
+        ],
+        "note": "The team marked price for Snooze Station only."
+      }
+    ]
+  }
+}
