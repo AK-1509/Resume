@@ -726,6 +726,188 @@
     min-height: 44px;
   }
 
+  /* Case studies: a ledger on a brown band, the one contrasting ground on the
+     page. One row per company, read across: the company and the kind of
+     work, the summary, the figure the work turned on. No cards: the band is
+     the container and hairlines divide the rows. ----------------------------- */
+  .pf-block.cs-index {
+    padding-block: 104px 120px;
+  }
+  .cs-index__intro {
+    max-width: 640px;
+  }
+  .druid-root .cs-index__lead {
+    margin: 16px 0 0;
+    max-width: 52ch;
+    color: var(--soft);
+  }
+  .cs-index__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  }
+  .cs-index__item {
+    border-bottom: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+    scroll-margin-top: 100px;
+  }
+  .druid-root .cs-row {
+    --row-pad: 20px;
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.25fr) minmax(0, 0.75fr) 24px;
+    align-items: center;
+    gap: 12px 40px;
+    margin-inline: calc(var(--row-pad) * -1);
+    padding: 28px var(--row-pad);
+    border-radius: 14px;
+    color: inherit;
+    text-decoration: none;
+    transition:
+      background-color 200ms ease,
+      transform 160ms var(--ease-druid);
+  }
+  .cs-row__name {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+  }
+  .druid-root .cs-row__title {
+    margin: 0;
+    font-size: clamp(24px, 2.4vw, 32px);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+  /* The underline that draws under the company's name on hover and focus. */
+  .cs-row__title-text {
+    background: linear-gradient(var(--color-gold-light), var(--color-gold-light)) 0 100% / 0 2px no-repeat;
+    transition: background-size 240ms var(--ease-druid);
+  }
+  .cs-row__kind,
+  .cs-row__label {
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--soft);
+  }
+  /* A tag never breaks inside itself ("Go-to-market"); the line breaks
+     between tags instead. */
+  .cs-row__tag {
+    white-space: nowrap;
+  }
+  .cs-row__slug {
+    font-size: 17px;
+    line-height: 1.5;
+    color: color-mix(in srgb, currentColor 86%, transparent);
+    text-wrap: pretty;
+  }
+  .cs-row__figure {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .cs-row__value {
+    font-family: var(--font-heading);
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--color-gold-light);
+  }
+  /* Placed by column, so a row without a figure keeps its arrow at the end. */
+  .cs-row__arrow {
+    grid-column: 4;
+    grid-row: 1;
+    width: 22px;
+    height: 22px;
+    justify-self: end;
+    color: var(--color-gold-light);
+    transition: transform 200ms var(--ease-druid);
+  }
+  .cs-row:focus-visible .cs-row__title-text {
+    background-size: 100% 2px;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .druid-root .cs-row:hover {
+      background-color: color-mix(in srgb, var(--color-white) 6%, transparent);
+    }
+    .cs-row:hover .cs-row__title-text {
+      background-size: 100% 2px;
+    }
+  }
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .cs-row:hover .cs-row__arrow {
+      transform: translateX(4px);
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .druid-root .cs-row:active {
+      transform: scale(0.99);
+      transition-duration: 120ms;
+    }
+  }
+  /* Narrower: the summary drops under the name and the figure. */
+  @media (max-width: 1079px) {
+    .druid-root .cs-row {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 0.75fr) 24px;
+      gap: 10px 32px;
+    }
+    .cs-row__name {
+      grid-column: 1;
+      grid-row: 1;
+    }
+    .cs-row__figure {
+      grid-column: 2;
+      grid-row: 1;
+    }
+    .cs-row__arrow {
+      grid-column: 3;
+      grid-row: 1;
+    }
+    .cs-row__slug {
+      grid-column: 1 / 3;
+      grid-row: 2;
+    }
+  }
+  /* A phone: one column, the figure set inline under the summary. */
+  @media (max-width: 639px) {
+    .pf-block.cs-index {
+      padding-block: 64px 80px;
+    }
+    .druid-root .cs-row {
+      --row-pad: 16px;
+      grid-template-columns: minmax(0, 1fr) 22px;
+      gap: 10px 16px;
+      padding-block: 22px;
+    }
+    .cs-row__name {
+      grid-column: 1;
+      grid-row: 1;
+    }
+    .cs-row__arrow {
+      grid-column: 2;
+      grid-row: 1;
+      align-self: start;
+      margin-top: 6px;
+    }
+    .cs-row__slug {
+      grid-column: 1 / -1;
+      grid-row: 2;
+      font-size: 16px;
+    }
+    .cs-row__figure {
+      grid-column: 1 / -1;
+      grid-row: 3;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 4px 10px;
+    }
+    .cs-row__value {
+      font-size: 20px;
+    }
+  }
+
   /* A row of gold tags. */
   .pf-skills {
     display: flex;
@@ -2621,6 +2803,39 @@
     display: inline-block;
     margin-inline-end: 10px;
     color: var(--color-gold-glint);
+  }
+  /* Index groups: the projects, then the case studies, each under a small
+     heading, the second set off by a rule. The card scrolls on its own when
+     both lists outgrow a short screen. */
+  .pf-dock__panel {
+    max-height: calc(100svh - 136px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .pf-dock__group + .pf-dock__group {
+    margin-top: 22px;
+    padding-top: 16px;
+    border-top: 1px solid color-mix(in srgb, var(--color-gold-light) 35%, transparent);
+  }
+  .druid-root .druid-index .pf-dock__group-title {
+    margin: 0 0 12px auto;
+    font-family: var(--font-heading);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: 0.01em;
+    color: var(--color-gold-glint);
+  }
+  .pf-dock__group li + li {
+    margin-top: 12px;
+  }
+  .druid-root .druid-index .pf-dock__group a {
+    font-size: clamp(20px, 1.7vw, 22px);
+  }
+  @media (max-width: 639px) {
+    .pf-dock__panel {
+      max-height: calc(100svh - 180px);
+    }
   }
   .druid-root .druid-index .pf-dock__home {
     margin: 22px 0 0;

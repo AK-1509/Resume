@@ -466,11 +466,29 @@ const optionalLink = z
   .url({ error: "a link must be an absolute URL including the scheme (e.g. https://example.com), or null." })
   .nullable();
 
+/** The two kinds of page: work built (a project) and work analysed for a
+ *  company (a case study). Each has its own section on the portfolio. */
+export const CASE_CATEGORIES = ["project", "case-study"] as const;
+export type CaseCategory = (typeof CASE_CATEGORIES)[number];
+
 export const CaseStudySchema = z.object({
   /** The URL segment, and the file name without ".json". */
   slug: slug("case study slug"),
+  /** Which portfolio section lists it. Defaults to a project. */
+  category: z.enum(CASE_CATEGORIES).default("project"),
   /** Position in the Index, lowest first. Ties fall back to the title. */
   order: z.number().optional(),
+  /**
+   * One figure that sums the work up, shown beside it in the Case Studies
+   * list (e.g. "8,560" / "pairs a year to break even"). It must be a figure
+   * the page itself states.
+   */
+  keyFigure: z
+    .object({
+      value: z.string().min(1, { error: "a key figure needs its value." }),
+      label: z.string().min(1, { error: "a key figure needs a label saying what it counts." }),
+    })
+    .optional(),
   title: z.string().min(1, { error: "a case study needs a title." }),
   /** The descriptive line under the title, on the hero. */
   slugLine: z.string().min(1, { error: "a case study needs a slugLine: one sentence saying what the project is." }),

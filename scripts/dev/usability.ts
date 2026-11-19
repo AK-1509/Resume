@@ -9,7 +9,7 @@
 import { chromium, devices, type Browser, type Page } from "@playwright/test";
 import { mkdirSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { laterProject, projects } from "./fixtures";
+import { caseStudies, laterCaseStudy, laterProject, projects } from "./fixtures";
 
 const BASE = process.argv[2] ?? "http://localhost:3000";
 const OUT = resolve(import.meta.dirname, "..", "..", ".screenshots");
@@ -116,6 +116,37 @@ async function task3(page: Page) {
   );
 }
 
+/** 3b — Reach a case study through the Index, open it, and find the next one. Target: no hunting. */
+async function task3b(page: Page) {
+  const target = laterCaseStudy();
+  if (!target) return;
+  const started = Date.now();
+  await fresh(page);
+
+  await page.locator(".pf-dock__tab").click();
+  await page.locator(".pf-dock__panel").getByRole("link", { name: target.title }).click();
+  await settle(page);
+  const current = await page.evaluate(
+    () => document.querySelector(".druid-index a[aria-current='location']")?.getAttribute("href") ?? "",
+  );
+  const rowInView = await visible(page, `#${target.anchor}`);
+  await page.getByRole("link", { name: target.title, exact: true }).and(page.locator(".cs-row")).click();
+  await page.waitForURL(`**${target.href}`, { timeout: 10_000 }).catch(() => null);
+  const h1 = await heading(page);
+  const i = caseStudies.indexOf(target);
+  const next = caseStudies[(i + 1) % caseStudies.length];
+  const nextLink = await page.getByRole("link", { name: `Next case study: ${next.title}` }).count();
+
+  record(
+    "3b. Reach a case study through the Index",
+    current === `#${target.anchor}` && rowInView === 1 && h1 === target.title && nextLink === 1,
+    started,
+    `3 clicks; Index marks ${current || "nothing"}, row ${rowInView === 1 ? "in view" : "NOT in view"}; landed on "${h1}"; "Next case study" ${
+      nextLink === 1 ? `leads to "${next.title}"` : "NOT found"
+    }`,
+  );
+}
+
 /** 4 — From one project to the next, then back to the portfolio. Target: no dead ends. */
 async function task4(page: Page) {
   const started = Date.now();
@@ -185,6 +216,7 @@ async function run(browser: Browser, name: string, mobile: boolean) {
   await task1(page);
   await task2(page);
   await task3(page);
+  await task3b(page);
   await task4(page);
   await task5(page);
   await fresh(page);

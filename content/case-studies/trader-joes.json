@@ -1,7 +1,12 @@
 {
   "slug": "trader-joes",
-  "order": 7,
-  "title": "Trader Joe’s Expo",
+  "category": "case-study",
+  "order": 9,
+  "keyFigure": {
+    "value": "$500K",
+    "label": "Expo revenue target, first quarter, 12 stores"
+  },
+  "title": "Trader Joe’s",
   "slugLine": "An Expo Counter and seating area that brings healthy, affordable hot food to Trader Joe’s stores.",
   "tags": [
     "Business strategy",

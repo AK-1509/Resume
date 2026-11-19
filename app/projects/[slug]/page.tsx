@@ -32,7 +32,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   return (
     <CaseStudyPage
       study={study}
-      all={caseStudies().map(({ slug, title }) => ({ slug, title }))}
+      all={caseStudies().map(({ slug, title, category }) => ({ slug, title, category }))}
       name={resume.profile.name}
       email={resume.profile.email}
     />

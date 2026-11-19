@@ -13,14 +13,29 @@ export type IndexItem = {
   href?: string;
   /** For page entries: this is the page being read. */
   current?: boolean;
+  /** A heading the entry is listed under, e.g. "Projects". Entries keep
+   *  their order; a new group starts wherever the heading changes. */
+  group?: string;
 };
+
+/** Runs of consecutive entries that share a group heading. */
+function grouped(items: IndexItem[]): { group?: string; items: IndexItem[] }[] {
+  const runs: { group?: string; items: IndexItem[] }[] = [];
+  for (const item of items) {
+    const last = runs[runs.length - 1];
+    if (last && last.group === item.group) last.items.push(item);
+    else runs.push({ group: item.group, items: [item] });
+  }
+  return runs;
+}
 
 /**
  * The Index, docked out of the way: a small mauve tab on the right edge
  * that opens into the full Index card.
  *
- * On the portfolio it lists the role sections of the page; on a project page
- * it lists the project pages and ends with the way home.
+ * On the portfolio it lists every entry on the page, the projects and then the
+ * case studies, each under its own heading; on a project or case-study page it
+ * lists the pages the same way and ends with the way home.
  *
  * A pointer opens it by hovering (pure CSS, see `.pf-dock`). The tab is also a
  * real button, so a tap or Enter opens it and moves focus to the first link;
@@ -109,34 +124,46 @@ export function IndexDock({
       </button>
       <nav id={panelId} className="druid-index pf-dock__panel" aria-label={label}>
         <p className="druid-caption">{label}</p>
-        <ol>
-          {items.map((item) => (
-            <li key={item.id}>
-              {item.href ? (
-                <Link
-                  href={item.href}
-                  aria-current={item.current ? "page" : undefined}
-                  onClick={() => setOpen(false)}
-                >
-                  <span className="druid-gold-text">{item.label}</span>
-                </Link>
-              ) : (
-                <a
-                  href={`#${item.id}`}
-                  aria-current={item.id === currentId ? "location" : undefined}
-                  onClick={(ev) => {
-                    // Drop focus as well, or `:focus-within` would hold the
-                    // card open over the section the link just scrolled to.
-                    ev.currentTarget.blur();
-                    setOpen(false);
-                  }}
-                >
-                  <span className="druid-gold-text">{item.label}</span>
-                </a>
+        {grouped(items).map((run, r) => {
+          const headingId = run.group ? `${panelId}-g${r}` : undefined;
+          return (
+            <div key={run.group ?? r} className="pf-dock__group">
+              {run.group && (
+                <p id={headingId} className="pf-dock__group-title">
+                  {run.group}
+                </p>
               )}
-            </li>
-          ))}
-        </ol>
+              <ol aria-labelledby={headingId}>
+                {run.items.map((item) => (
+                  <li key={item.id}>
+                    {item.href ? (
+                      <Link
+                        href={item.href}
+                        aria-current={item.current ? "page" : undefined}
+                        onClick={() => setOpen(false)}
+                      >
+                        <span className="druid-gold-text">{item.label}</span>
+                      </Link>
+                    ) : (
+                      <a
+                        href={`#${item.id}`}
+                        aria-current={item.id === currentId ? "location" : undefined}
+                        onClick={(ev) => {
+                          // Drop focus as well, or `:focus-within` would hold the
+                          // card open over the section the link just scrolled to.
+                          ev.currentTarget.blur();
+                          setOpen(false);
+                        }}
+                      >
+                        <span className="druid-gold-text">{item.label}</span>
+                      </a>
+                    )}
+                  </li>
+                ))}
+              </ol>
+            </div>
+          );
+        })}
         {home && (
           <p className="pf-dock__home">
             <Link href={home.href} onClick={() => setOpen(false)}>

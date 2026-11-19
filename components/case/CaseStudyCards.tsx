@@ -1,13 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
+import { entryAnchor } from "@/lib/anchors";
 import type { CaseStudy } from "@/lib/schema";
 
 export type CaseStudyCardData = Pick<CaseStudy, "slug" | "title" | "slugLine" | "tags" | "hero" | "role">;
 
 const RINGS = [70, 120, 170, 220, 270, 298];
-
-/** The id of a project's entry on the portfolio, which the Index scrolls to. */
-export const projectAnchor = (slug: string) => `project-${slug}`;
 
 /**
  * One project on the portfolio page, set straight on the canvas: its words
@@ -22,7 +20,7 @@ function Entry({ study }: { study: CaseStudyCardData }) {
   const meta = [study.role.title.trim(), study.role.sprint.trim()].filter(Boolean).join(" · ");
   const titleId = `${study.slug}-entry-title`;
   return (
-    <li id={projectAnchor(study.slug)} className="cs-entry-item">
+    <li id={entryAnchor("project", study.slug)} className="cs-entry-item">
       <Link className="cs-entry" href={`/projects/${study.slug}`} aria-labelledby={titleId}>
         <div className="cs-entry__text">
           {study.tags.length > 0 && (
@@ -82,7 +80,7 @@ function Entry({ study }: { study: CaseStudyCardData }) {
   );
 }
 
-/** The projects: the body of the portfolio, one entry per project page. */
+/** The projects: the work built, one large entry per project page. */
 export function CaseStudyCards({ studies }: { studies: CaseStudyCardData[] }) {
   if (studies.length === 0) return null;
   return (

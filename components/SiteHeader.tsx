@@ -22,11 +22,14 @@ export function SiteHeader({
   name,
   variant = "home",
   projects = true,
+  caseStudies = true,
 }: {
   name: string;
   variant?: "home" | "case";
   /** Whether the portfolio has a projects section to link to. */
   projects?: boolean;
+  /** Whether the portfolio has a case-studies section to link to. */
+  caseStudies?: boolean;
 }) {
   const home = variant === "home";
   const [open, setOpen] = useState(false);
@@ -82,11 +85,13 @@ export function SiteHeader({
                 {home ? (
                   <>
                     {projects && <a href="#projects">Projects</a>}
+                    {caseStudies && <a href="#case-studies">Case studies</a>}
                     <a href="#contact">Contact</a>
                   </>
                 ) : (
                   <>
                     <Link href="/#projects">Projects</Link>
+                    <Link href="/#case-studies">Case studies</Link>
                     <Link href="/#contact">Contact</Link>
                   </>
                 )}

@@ -1,0 +1,281 @@
+{
+  "slug": "orwin",
+  "category": "project",
+  "order": 5,
+  "title": "Orwin",
+  "slugLine": "An AI-native workflow for software teams that designs the solution, builds the architecture and reviews the code, all on one board.",
+  "tags": [
+    "Venture building",
+    "Business development",
+    "Team of three"
+  ],
+  "hero": {
+    "image": {
+      "src": "/case-studies/orwin/board-wide.webp",
+      "alt": "The Orwin board in dark mode: five columns from Backlog to Done, with cards such as a Stripe webhook story marked Passing in Done.",
+      "width": 2202,
+      "height": 880
+    },
+    "figure": null
+  },
+  "role": {
+    "title": "Head of Business Development",
+    "sprint": "",
+    "summary": "",
+    "moves": []
+  },
+  "demo": null,
+  "timeline": {
+    "research": "",
+    "goals": "",
+    "design": "",
+    "results": ""
+  },
+  "research": {
+    "problem": "As AI makes software development more accessible, the bottleneck is shifting from ==writing code== to **managing the product development process**: requirements, planning, design, development and validation still live in disconnected tools.",
+    "stakeholders": [
+      {
+        "kind": "Customer",
+        "name": "Tech leads and engineering managers",
+        "note": "And founders"
+      },
+      {
+        "kind": "Customer",
+        "name": "Teams of 5 to 500 developers",
+        "note": "Where a unified SDLC pitch resonates most"
+      },
+      {
+        "kind": "Partner",
+        "name": "Coding agents and editors",
+        "note": "Cursor, Claude Code, GitHub Copilot, VS Code"
+      },
+      {
+        "kind": "Competitor",
+        "name": "Incumbent SDLC suites",
+        "note": "Atlassian (Jira + Rovo), GitHub Copilot + Workspace"
+      },
+      {
+        "kind": "Competitor",
+        "name": "Dev-first project management",
+        "note": "Linear, ClickUp, Notion AI"
+      },
+      {
+        "kind": "Competitor",
+        "name": "Autonomous coding agents",
+        "note": "Devin, Cursor"
+      }
+    ],
+    "painPoints": [
+      {
+        "label": "Context drift",
+        "detail": "The agent changes one part of the system without seeing the full design and breaks behaviour elsewhere, in code nobody touched."
+      },
+      {
+        "label": "Fragmentation",
+        "detail": "New code ignores existing conventions and services, so logic lands in the wrong layer and duplicates what is already there."
+      },
+      {
+        "label": "Prompt churn",
+        "detail": "Without a written spec, developers correct the agent prompt after prompt, burning tokens and time, and none of that context is saved."
+      },
+      {
+        "label": "Negative hallucination",
+        "detail": "The agent silently leaves out a requirement or edge case and the code still passes its tests, because the tests check what was built, not what was asked for."
+      },
+      {
+        "label": "Security gaps",
+        "detail": "Hardcoded secrets, missing access checks and dependencies with known CVEs reach the codebase unscanned."
+      },
+      {
+        "label": "No reuse",
+        "detail": "Architecture and components from past projects are designed and built again instead of reused."
+      }
+    ],
+    "headlines": [
+      {
+        "figure": "45%",
+        "headline": "of AI-generated code had an OWASP Top 10 vulnerability",
+        "source": "Veracode, 2025 GenAI Code Security Report",
+        "date": "2025"
+      }
+    ]
+  },
+  "goals": {
+    "rows": [],
+    "insights": [
+      {
+        "insight": "The white space is real",
+        "evidence": "Pre-implementation analysis and requirements challenge are unclaimed by every competitor in 2026. They are the quality gate that currently lives nowhere, and that is the wedge."
+      },
+      {
+        "insight": "Atlassian is the most dangerous competitor",
+        "evidence": "Rovo Agents describe an agentic SDLC from PRD to Jira epic, a pitch nearly identical to Orwin’s. But Atlassian’s execution is slow and its UX is legacy."
+      },
+      {
+        "insight": "Copilot and Cursor are partners, not enemies",
+        "evidence": "Both need a context layer to feed their agents. Orwin’s MCP server turns them into its main distribution channel."
+      },
+      {
+        "insight": "The window is 12–18 months",
+        "evidence": "Linear has MCP, Atlassian has Rovo and GitHub has Agent HQ. Orwin needs to own the context-layer category before an incumbent captures that story."
+      }
+    ],
+    "report": {
+      "href": null
+    },
+    "roadmap": []
+  },
+  "design": {
+    "lead": "Requirements, stories, architecture, tests and pull-request reviews live on one board. Orwin drafts each artifact, reviews its own output and waits for approval before moving on, so it takes part at every step, never in another tab.",
+    "blocks": [
+      {
+        "type": "steps",
+        "title": "Eight steps on one card",
+        "items": [
+          {
+            "title": "Design",
+            "body": "Five design documents, Problem to Requirements, each run past an AI critic. You choose which findings apply."
+          },
+          {
+            "title": "Plan",
+            "body": "Epics and stories with acceptance criteria are proposed from the requirements, and you approve each one."
+          },
+          {
+            "title": "Architecture",
+            "body": "Services, data flow and the contract at each boundary are agreed once, and every story is built against them."
+          },
+          {
+            "title": "Board",
+            "body": "Moving a card starts the work: Testing drafts the test cases, In Review opens the pull request."
+          },
+          {
+            "title": "Build",
+            "body": "One command loads a story’s criteria, tests and design into Cursor, Claude Code or VS Code, and the approach is approved before any code is written."
+          },
+          {
+            "title": "Test",
+            "body": "Each test case becomes a happy-path, edge and error test, and insufficient coverage blocks the merge."
+          },
+          {
+            "title": "Review",
+            "body": "Opening the pull request runs about ten structured checks, acceptance criteria first, each finding citing a file and line."
+          },
+          {
+            "title": "Done",
+            "body": "One card carries the work from the first design document to the merged pull request, with a human approval at every gate."
+          }
+        ]
+      },
+      {
+        "type": "figure",
+        "title": "Design documents",
+        "image": {
+          "src": "/case-studies/orwin/design-docs.webp",
+          "alt": "Orwin’s design documents screen: the Solution Design document for a billing story, with an open review finding about the idempotency replay window and an applied one about signature checks.",
+          "width": 1002,
+          "height": 880
+        }
+      },
+      {
+        "type": "figure",
+        "title": "Pull-request review",
+        "image": {
+          "src": "/case-studies/orwin/review.webp",
+          "alt": "Orwin’s review screen for a pull request: acceptance criteria, security, tests and contracts resolved, a docs suggestion, and one blocking performance finding citing src/webhooks/stripe.ts line 42.",
+          "width": 1002,
+          "height": 880
+        }
+      }
+    ]
+  },
+  "results": {
+    "lead": "Orwin sizes ==a $5.5B serviceable market== of development teams with 5 to 500 developers, priced at about $100 a seat a month.",
+    "blocks": [
+      {
+        "type": "sizing",
+        "title": "Market sizing",
+        "rings": [
+          {
+            "name": "TAM",
+            "value": "$17.1B",
+            "label": "Total addressable market",
+            "note": "All global spend on project management software ($9.76B) plus AI developer tools ($7.37B)."
+          },
+          {
+            "name": "SAM",
+            "value": "$5.5B",
+            "label": "Serviceable addressable market",
+            "note": "Organizations with 5–500 developers, where Orwin’s unified SDLC pitch resonates most."
+          },
+          {
+            "name": "SOM",
+            "value": "$180M",
+            "label": "Serviceable obtainable market",
+            "note": "3.3% of the SAM, with MCP-native IDE integration as the wedge and a strong product-led growth motion."
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "title": "Pricing across the field",
+        "rowHeader": "Product",
+        "columns": [
+          {
+            "label": "Price"
+          }
+        ],
+        "rows": [
+          {
+            "label": "Orwin",
+            "cells": [
+              "About $100 a seat a month"
+            ]
+          },
+          {
+            "label": "Atlassian (Jira + Rovo)",
+            "cells": [
+              "$15.63–$18.73 a user a month, Premium"
+            ]
+          },
+          {
+            "label": "GitHub Copilot + Workspace",
+            "cells": [
+              "$10–$39 a month individual, $19 a user a month business"
+            ]
+          },
+          {
+            "label": "Linear",
+            "cells": [
+              "$8–$12 a user a month"
+            ]
+          },
+          {
+            "label": "ClickUp",
+            "cells": [
+              "$7 a user a month, plus $7–9 for its AI add-on"
+            ]
+          },
+          {
+            "label": "Notion AI",
+            "cells": [
+              "$15–20 a user a month"
+            ]
+          },
+          {
+            "label": "Devin 2.0",
+            "cells": [
+              "$20 a month, plus usage on team plans"
+            ]
+          },
+          {
+            "label": "Cursor",
+            "cells": [
+              "$20–$200 a month"
+            ]
+          }
+        ],
+        "note": "From the team’s competitive analysis, May 2026."
+      }
+    ]
+  }
+}

@@ -4,26 +4,38 @@ import { IndexDock } from "@/components/IndexDock";
 import { LanguagesCard } from "@/components/LanguagesCard";
 import { LiquidBackground } from "@/components/LiquidBackground";
 import { ExportHost } from "@/components/ExportHost";
-import { CaseStudyCards, projectAnchor } from "@/components/case/CaseStudyCards";
+import { CaseStudyCards } from "@/components/case/CaseStudyCards";
+import { CaseStudyIndex } from "@/components/case/CaseStudyIndex";
+import { CATEGORY_LABELS, entryAnchor } from "@/lib/anchors";
 import { caseStudies } from "@/lib/case-studies";
 import { resume } from "@/lib/resume";
 import { portfolio } from "@/lib/portfolio";
 
 /**
  * The portfolio, on a glassy gradient canvas: the hero on the first screen,
- * then the projects (one entry per project page), then contact and
- * languages. The Index is docked on the right edge and jumps to any project.
+ * then the projects (the work built, one large entry each), then the case
+ * studies (analysis for real companies, a ledger on a brown band), then
+ * contact and languages. The Index is docked on the right edge and jumps to
+ * any entry in either section.
  */
 export default function Home() {
   const { profile, languages } = resume;
-  const studies = caseStudies().map(({ slug, title, slugLine, tags, hero, role }) => ({
-    slug,
-    title,
-    slugLine,
-    tags,
-    hero,
-    role,
-  }));
+  const all = caseStudies();
+  const projects = all
+    .filter((s) => s.category === "project")
+    .map(({ slug, title, slugLine, tags, hero, role }) => ({ slug, title, slugLine, tags, hero, role }));
+  const studies = all
+    .filter((s) => s.category === "case-study")
+    .map(({ slug, title, slugLine, tags, keyFigure }) => ({ slug, title, slugLine, tags, keyFigure }));
+
+  const index = [
+    ...projects.map((s) => ({ id: entryAnchor("project", s.slug), label: s.title, group: CATEGORY_LABELS.project })),
+    ...studies.map((s) => ({
+      id: entryAnchor("case-study", s.slug),
+      label: s.title,
+      group: CATEGORY_LABELS["case-study"],
+    })),
+  ];
 
   return (
     <>
@@ -32,13 +44,8 @@ export default function Home() {
           <LiquidBackground />
         </div>
 
-        <SiteHeader name={profile.name} projects={studies.length > 0} />
-        {studies.length > 0 && (
-          <IndexDock
-            label="Browse projects"
-            items={studies.map((s) => ({ id: projectAnchor(s.slug), label: s.title }))}
-          />
-        )}
+        <SiteHeader name={profile.name} projects={projects.length > 0} caseStudies={studies.length > 0} />
+        {index.length > 0 && <IndexDock label="Browse the work" items={index} />}
 
         <main>
           <Hero
@@ -47,7 +54,8 @@ export default function Home() {
             sub={portfolio.hero.sub}
             credentials={portfolio.hero.credentials}
           />
-          <CaseStudyCards studies={studies} />
+          <CaseStudyCards studies={projects} />
+          <CaseStudyIndex studies={studies} />
         </main>
 
         <footer id="contact" className="druid-section pf-footer" aria-labelledby="contact-title">
