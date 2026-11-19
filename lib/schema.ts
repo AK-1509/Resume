@@ -476,12 +476,12 @@ export const ExhibitSchema = z.discriminatedUnion("type", [
     items: z.array(z.string().min(1)).min(1, { error: "a list exhibit needs at least one item." }),
     note: blockNote,
   }),
-  /** A picture in a Content Card frame. */
+  /** A picture in a Content Card frame. No caption: the block title names it
+   *  and the alt text describes it. */
   z.object({
     type: z.literal("figure"),
     title: blockTitle,
     image: CaseImageSchema,
-    caption: z.string().optional(),
   }),
   /** Nested market sizes, widest first (TAM, SAM, SOM). */
   z.object({
