@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import type { Exhibit, Party } from "@/lib/schema";
 
 /** A CSS custom property on an element, typed. */
@@ -58,15 +58,7 @@ function PartyCard({ party, hub = false }: { party: Party; hub?: boolean }) {
       )}
     </>
   );
-  return hub ? (
-    <div className="druid-card cs-party cs-party--hub">
-      <div className="cs-party__face">{body}</div>
-    </div>
-  ) : (
-    <div className="druid-card cs-party">
-      <div className="cs-face cs-party__face">{body}</div>
-    </div>
-  );
+  return <div className={`cs-party${hub ? " cs-party--hub" : ""}`}>{body}</div>;
 }
 
 function Flow({
@@ -296,10 +288,29 @@ function Bars({ block }: { block: Of<"bars"> }) {
 }
 
 /** One exhibit, under its title if it has one. `id` is the anchor the navigation pane links to. */
-export function ExhibitBlock({ block, id }: { block: Exhibit; id: string }) {
+/**
+ * A cream Content Card for a table, a chart or a diagram, so the exhibit
+ * reads as one object on the canvas. Text, lists and statements stay on the
+ * canvas itself. It never lifts: it is not a link.
+ */
+export function Sheet({ children }: { children: ReactNode }) {
   return (
-    <div id={id} className="cs-block">
-      {block.title && <h3 className="cs-h3">{block.title}</h3>}
+    <div className="druid-card cs-sheet">
+      <div className="cs-face cs-sheet__face">{children}</div>
+    </div>
+  );
+}
+
+/** The exhibits drawn as a table, a chart or a diagram, which sit on a Sheet. */
+const ON_SHEET = new Set<Exhibit["type"]>(["exchange", "sizing", "table", "bars"]);
+
+/**
+ * One exhibit, under its title if it has one. `id` is the anchor the
+ * navigation pane links to. A note under the exhibit stays on the canvas.
+ */
+export function ExhibitBlock({ block, id }: { block: Exhibit; id: string }) {
+  const body = (
+    <>
       {block.type === "steps" && <Steps block={block} />}
       {block.type === "exchange" && <Exchange block={block} />}
       {block.type === "statement" && <Statement block={block} />}
@@ -308,6 +319,12 @@ export function ExhibitBlock({ block, id }: { block: Exhibit; id: string }) {
       {block.type === "sizing" && <Sizing block={block} />}
       {block.type === "table" && <Table block={block} />}
       {block.type === "bars" && <Bars block={block} />}
+    </>
+  );
+  return (
+    <div id={id} className="cs-block">
+      {block.title && <h3 className="cs-h3">{block.title}</h3>}
+      {ON_SHEET.has(block.type) ? <Sheet>{body}</Sheet> : body}
       {"note" in block && block.note && <p className="cs-note">{block.note}</p>}
     </div>
   );

@@ -7,19 +7,19 @@ import { LiquidBackground } from "@/components/LiquidBackground";
 import { CASE_PHASES, CASE_PHASE_LABELS, phaseHasContent, type CasePhase, type CaseStudy } from "@/lib/schema";
 import { CaseNav, type NavSection } from "./CaseNav";
 import { DrawOnView } from "./DrawOnView";
-import { ExhibitBlock } from "./Exhibits";
+import { ExhibitBlock, Sheet } from "./Exhibits";
 import { HeadlineRail } from "./HeadlineRail";
 import { PainPoints } from "./PainPoints";
 import { rich } from "./rich";
 
 const ROOT_ID = "case-study";
 
-/** Green pages carry the relationships; brown pages carry the numbers. */
+/** The colour field behind each phase: green for the relationships, warm gold for the numbers. */
 const GROUND: Record<CasePhase, string> = {
-  research: "on-green",
-  goals: "on-brown",
-  design: "on-green",
-  results: "on-brown",
+  research: "cs-phase--green",
+  goals: "cs-phase--warm",
+  design: "cs-phase--green",
+  results: "cs-phase--warm",
 };
 
 function ArrowDown() {
@@ -120,27 +120,24 @@ function Tag({
 function Hero({ study }: { study: CaseStudy }) {
   const { image, figure } = study.hero;
   return (
-    <header className="druid-container cs-hero">
-      <div className="druid-card">
-        <div className="pf-slide__face cs-hero__face">
-          {image ? (
-            <Image
-              src={image.src}
-              alt={image.alt}
-              fill
-              priority
-              sizes="(min-width: 1376px) 1280px, 94vw"
-              className="cs-hero__img"
-            />
-          ) : (
-            <>
-              <div className="cs-hero__ground" aria-hidden="true" />
-              <svg className="cs-hero__rings" viewBox="0 0 600 600" fill="none" aria-hidden="true">
-                {[70, 120, 170, 220, 270, 298].map((r) => (
-                  <circle key={r} cx="300" cy="300" r={r} stroke="currentColor" strokeWidth="1" />
-                ))}
-              </svg>
-            </>
+    <header className={`cs-hero${image ? " cs-hero--image" : ""}`}>
+      {image && (
+        <div className="cs-hero__bleed">
+          <Image src={image.src} alt={image.alt} fill priority sizes="100vw" />
+        </div>
+      )}
+      <div className="druid-container cs-hero__inner">
+        <div className="cs-hero__text">
+          <h1 className="cs-hero__title">{study.title}</h1>
+          <p className="cs-hero__slug">{study.slugLine}</p>
+        </div>
+        <div className="cs-hero__art">
+          {!image && (
+            <svg className="cs-hero__rings" viewBox="0 0 600 600" fill="none" aria-hidden="true">
+              {[70, 120, 170, 220, 270, 298].map((r) => (
+                <circle key={r} cx="300" cy="300" r={r} stroke="currentColor" strokeWidth="1" />
+              ))}
+            </svg>
           )}
           {figure && (
             <div className="cs-hero__figure">
@@ -150,12 +147,16 @@ function Hero({ study }: { study: CaseStudy }) {
                 width={figure.width}
                 height={figure.height}
                 priority
-                sizes="(min-width: 640px) 300px, 46vw"
+                sizes="(min-width: 640px) 290px, 54vw"
               />
             </div>
           )}
           {!image && !figure && (
-            <div className="pf-slide__ph" role="img" aria-label={`Placeholder for the ${study.title} hero picture`}>
+            <div
+              className="cs-ph cs-hero__ph"
+              role="img"
+              aria-label={`Placeholder for the ${study.title} hero picture`}
+            >
               <svg
                 viewBox="0 0 48 48"
                 fill="none"
@@ -172,11 +173,6 @@ function Hero({ study }: { study: CaseStudy }) {
               <p>Hero picture placeholder</p>
             </div>
           )}
-          <div className="pf-slide__scrim" aria-hidden="true" />
-          <div className="cs-hero__text">
-            <h1 className="cs-hero__title">{study.title}</h1>
-            <p className="cs-hero__slug">{study.slugLine}</p>
-          </div>
         </div>
       </div>
     </header>
@@ -187,7 +183,7 @@ function Role({ study }: { study: CaseStudy }) {
   const { role, tags } = study;
   const empty = !role.title.trim() && !role.sprint.trim() && !role.summary.trim() && role.moves.length === 0;
   return (
-    <section id="overview" className="pf-glass-card cs-role" aria-labelledby="overview-title">
+    <section id="overview" className="cs-role" aria-labelledby="overview-title">
       <div className="cs-role__head">
         <h2 id="overview-title" className="cs-role__title">
           {role.title.trim() || "Role"}
@@ -286,40 +282,42 @@ function Goals({ study, number }: { study: CaseStudy; number: number }) {
             {CASE_PHASE_LABELS.goals}
           </Tag>
           {rows.length > 0 && (
-            <div className="cs-table-wrap">
-              {/* The roles are spelled out because a phone lays each row out as a
+            <Sheet>
+              <div className="cs-table-wrap">
+                {/* The roles are spelled out because a phone lays each row out as a
                   block, which would otherwise cost the table its semantics. */}
-              <table className="cs-table cs-table--goals" role="table" aria-label="Goals, targets and KPIs">
-                <thead role="rowgroup">
-                  <tr role="row">
-                    <th role="columnheader" scope="col">
-                      Goals
-                    </th>
-                    <th role="columnheader" scope="col">
-                      Targets
-                    </th>
-                    <th role="columnheader" scope="col">
-                      KPIs
-                    </th>
-                  </tr>
-                </thead>
-                <tbody role="rowgroup">
-                  {rows.map((row) => (
-                    <tr key={row.goal} role="row">
-                      <th role="rowheader" scope="row">
-                        {row.goal}
+                <table className="cs-table cs-table--goals" role="table" aria-label="Goals, targets and KPIs">
+                  <thead role="rowgroup">
+                    <tr role="row">
+                      <th role="columnheader" scope="col">
+                        Goals
                       </th>
-                      <td role="cell" data-label="Target">
-                        {row.target}
-                      </td>
-                      <td role="cell" data-label="KPI">
-                        {row.kpi}
-                      </td>
+                      <th role="columnheader" scope="col">
+                        Targets
+                      </th>
+                      <th role="columnheader" scope="col">
+                        KPIs
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody role="rowgroup">
+                    {rows.map((row) => (
+                      <tr key={row.goal} role="row">
+                        <th role="rowheader" scope="row">
+                          {row.goal}
+                        </th>
+                        <td role="cell" data-label="Target">
+                          {row.target}
+                        </td>
+                        <td role="cell" data-label="KPI">
+                          {row.kpi}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </Sheet>
           )}
         </div>
 
@@ -358,15 +356,17 @@ function Goals({ study, number }: { study: CaseStudy; number: number }) {
           <Tag level={3} variant="sub">
             Strategic roadmap
           </Tag>
-          <ol className="cs-road" data-draw="">
-            {roadmap.map((stop, i) => (
-              <li key={stop.when + stop.what} style={{ "--i": i } as CSSProperties}>
-                <span className="cs-road__when">{stop.when}</span>
-                <span className="cs-road__node" aria-hidden="true" />
-                <p className="cs-road__what">{stop.what}</p>
-              </li>
-            ))}
-          </ol>
+          <Sheet>
+            <ol className="cs-road" data-draw="">
+              {roadmap.map((stop, i) => (
+                <li key={stop.when + stop.what} style={{ "--i": i } as CSSProperties}>
+                  <span className="cs-road__when">{stop.when}</span>
+                  <span className="cs-road__node" aria-hidden="true" />
+                  <p className="cs-road__what">{stop.what}</p>
+                </li>
+              ))}
+            </ol>
+          </Sheet>
         </div>
       )}
     </section>
@@ -418,11 +418,13 @@ function partsOf(study: CaseStudy, phase: CasePhase): { id: string; label: strin
 /**
  * One project page, built from a case-study file.
  *
- * The page follows the template's wireframe: a framed hero with the title on
- * its scrim, the Index docked on the right edge, the role beside a rail that
- * holds the demo link and the navigation pane, a sprint timeline whose stops
- * jump to their phase, then the phases themselves on alternating green and
- * brown pages. A phase with nothing in it is left out of all three.
+ * The page follows the template's wireframe: the title and its picture, the
+ * Index docked on the right edge, the role beside a rail that holds the demo
+ * link and the navigation pane, a sprint timeline whose stops jump to their
+ * phase, then the phases themselves. Words sit straight on the canvas, and each
+ * phase takes its colour from a soft field behind it, green and warm gold in
+ * turn. Tables, charts and diagrams sit on cream Content Cards (`Sheet`). A
+ * phase with nothing in it is left out of the page, the timeline and the pane.
  */
 export function CaseStudyPage({
   study,
@@ -494,10 +496,10 @@ export function CaseStudyPage({
                   Sprint timeline
                 </h2>
                 <p className="druid-caption cs-timeline__hint">Each stop jumps to its part of the page.</p>
-                <ol className="cs-stops">
+                <ol className="cs-stops" style={{ "--n": phases.length } as CSSProperties}>
                   {phases.map((phase) => (
                     <li key={phase}>
-                      <a className="pf-glass-card cs-stop" href={`#${phase}`}>
+                      <a className="cs-stop" href={`#${phase}`}>
                         <span className="cs-disc" aria-hidden="true">
                           {numberOf(phase)}
                         </span>
@@ -519,13 +521,12 @@ export function CaseStudyPage({
             {phases.includes("goals") && <Goals study={study} number={numberOf("goals")} />}
             {phases.includes("design") && <ExhibitPhase study={study} phase="design" number={numberOf("design")} />}
             {phases.includes("results") && <ExhibitPhase study={study} phase="results" number={numberOf("results")} />}
-
           </div>
         </article>
       </main>
 
       <footer className="druid-container cs-foot" aria-labelledby="more-work-title">
-        <div className="pf-glass-card cs-end">
+        <div className="cs-end">
           <div>
             <h2 id="more-work-title">More work</h2>
             <p>Roles, projects and experience are on the main page.</p>
