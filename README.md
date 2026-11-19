@@ -1,6 +1,6 @@
 # Resume
 
-A project portfolio built on the Druid design system, set on a glassy gradient canvas. The hero fills the first screen: the name, the role line and the way into the work. Then come the **Projects**, one entry per project page at `/projects/<slug>`, each with its research, goals, design and results. A mauve Index is docked on the right edge and jumps to any project, and a mauve Languages card sits at the bottom right. The whole resume still exports as a one-page PDF.
+A project portfolio built on the Druid design system, set on a glassy gradient canvas. The hero fills the first screen: the name, the role line and the way into the work. Then come the **Projects**, the work built, one large entry each, and the **Case studies**, analysis and strategy for real companies, set as a ledger on a brown band with one row per company. Every entry has its own page at `/projects/<slug>`, with its research, goals, design and results. A mauve Index is docked on the right edge and jumps to any entry, the projects and the case studies under their own headings, and a mauve Languages card sits at the bottom right. The whole resume still exports as a one-page PDF.
 
 **Live:** <https://resume-phi-roan.vercel.app> · **Specimen:** <https://resume-phi-roan.vercel.app/specimen>
 
@@ -22,7 +22,7 @@ The skill transcribes verbatim — it will not fix a typo, rewrite a bullet, inv
 
 Images live in `public/gallery/<experience-id>/` and are referenced by path from the JSON.
 
-The hero's copy lives in [`content/portfolio.json`](content/portfolio.json), and each project is one file in [`content/case-studies/`](content/case-studies) (copy `_template.json` to add one). Both are edited directly and checked by `npm run validate`.
+The hero's copy lives in [`content/portfolio.json`](content/portfolio.json), and each project or case study is one file in [`content/case-studies/`](content/case-studies) (copy `_template.json` to add one; its `category` says which section it joins). Both are edited directly and checked by `npm run validate`.
 
 ## Commands
 

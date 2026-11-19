@@ -1,0 +1,74 @@
+{
+  "slug": "aerie",
+  "category": "case-study",
+  "order": 13,
+  "keyFigure": {
+    "value": "2 months",
+    "label": "of Instagram, March 1 to April 30"
+  },
+  "title": "Aerie",
+  "slugLine": "REAL Spring: an Instagram plan for March and April to make aerieREAL the loudest human story in fashion this spring.",
+  "tags": [
+    "Social media strategy",
+    "Instagram",
+    "Solo project"
+  ],
+  "hero": {
+    "image": null,
+    "figure": null
+  },
+  "role": {
+    "title": "",
+    "sprint": "",
+    "summary": "",
+    "moves": []
+  },
+  "demo": null,
+  "timeline": {
+    "research": "",
+    "goals": "",
+    "design": "",
+    "results": ""
+  },
+  "research": {
+    "problem": "",
+    "stakeholders": [
+      {
+        "kind": "Brand",
+        "name": "Aerie",
+        "note": "The aerieREAL campaign"
+      },
+      {
+        "kind": "Channel",
+        "name": "Instagram",
+        "note": "The season ahead, March to April"
+      }
+    ],
+    "painPoints": [],
+    "headlines": []
+  },
+  "goals": {
+    "rows": [],
+    "insights": [],
+    "report": null,
+    "roadmap": []
+  },
+  "design": {
+    "lead": "Here’s what the plan does across March and April to make aerieREAL the loudest human story in fashion this spring.",
+    "blocks": [
+      {
+        "type": "list",
+        "title": "The season ahead",
+        "items": [
+          "Runs March 1 to April 30",
+          "A beachwear shoot",
+          "Shot on film, never on AI"
+        ]
+      }
+    ]
+  },
+  "results": {
+    "lead": "",
+    "blocks": []
+  }
+}

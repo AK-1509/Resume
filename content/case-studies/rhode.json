@@ -1,6 +1,11 @@
 {
   "slug": "rhode",
-  "order": 11,
+  "category": "case-study",
+  "order": 12,
+  "keyFigure": {
+    "value": "70%",
+    "label": "of the month’s posts as carousels"
+  },
   "title": "Rhode",
   "slugLine": "A month of Instagram content for Rhode that promotes Rhode World and new launches and brings Justin Bieber into the brand.",
   "tags": [

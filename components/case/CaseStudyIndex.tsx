@@ -1,0 +1,92 @@
+import Link from "next/link";
+import { entryAnchor } from "@/lib/anchors";
+import type { CaseStudy } from "@/lib/schema";
+
+export type CaseStudyRowData = Pick<CaseStudy, "slug" | "title" | "slugLine" | "tags" | "keyFigure">;
+
+/** "Team of five" and "Solo project" say who did it, not what kind of work it was. */
+const isTeamTag = (tag: string) => /^(team of|solo)/i.test(tag);
+
+/**
+ * The case studies: analysis and strategy done for real companies. Where the
+ * projects are big entries with pictures, these are a ledger on a brown band,
+ * one row per company. Each row reads across: the company and the kind of
+ * work, the one-line summary, and the figure the work turned on.
+ *
+ * Each row is one link, named by the company, so it is one target with one
+ * focus ring. On a fine pointer the row warms, the name underlines and the
+ * arrow moves on; on press it gives a little.
+ */
+export function CaseStudyIndex({ studies }: { studies: CaseStudyRowData[] }) {
+  if (studies.length === 0) return null;
+  return (
+    <section
+      id="case-studies"
+      className="druid-section on-brown pf-block cs-index"
+      aria-labelledby="case-studies-title"
+    >
+      <div className="druid-container">
+        <div className="pf-block__head">
+          <div className="cs-index__intro">
+            <h2 id="case-studies-title" className="pf-block__title">
+              Case studies
+            </h2>
+            <p className="cs-index__lead">
+              Analysis and strategy for real companies, from pricing and valuation to launch plans and social media.
+            </p>
+          </div>
+          <a className="pf-back" href="#top">
+            Back to the top
+          </a>
+        </div>
+
+        <ul className="cs-index__list">
+          {studies.map((study) => {
+            const titleId = `${study.slug}-row-title`;
+            const kind = study.tags.filter((t) => !isTeamTag(t));
+            return (
+              <li key={study.slug} id={entryAnchor("case-study", study.slug)} className="cs-index__item">
+                <Link className="cs-row" href={`/projects/${study.slug}`} aria-labelledby={titleId}>
+                  <div className="cs-row__name">
+                    <h3 id={titleId} className="cs-row__title">
+                      <span className="cs-row__title-text">{study.title}</span>
+                    </h3>
+                    {kind.length > 0 && (
+                      <span className="cs-row__kind">
+                        {kind.map((tag, i) => (
+                          <span key={tag}>
+                            {i > 0 && " · "}
+                            <span className="cs-row__tag">{tag}</span>
+                          </span>
+                        ))}
+                      </span>
+                    )}
+                  </div>
+                  <span className="cs-row__slug">{study.slugLine}</span>
+                  {study.keyFigure && (
+                    <span className="cs-row__figure">
+                      <span className="cs-row__value">{study.keyFigure.value}</span>
+                      <span className="cs-row__label">{study.keyFigure.label}</span>
+                    </span>
+                  )}
+                  <svg
+                    className="cs-row__arrow"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M4 10h12M11 5l5 5-5 5" />
+                  </svg>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </section>
+  );
+}

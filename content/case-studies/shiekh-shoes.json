@@ -1,6 +1,11 @@
 {
   "slug": "shiekh-shoes",
-  "order": 9,
+  "category": "case-study",
+  "order": 11,
+  "keyFigure": {
+    "value": "8,560",
+    "label": "pairs a year to break even"
+  },
   "title": "Shiekh Shoes",
   "slugLine": "A break-even analysis of the Shiekh Shoes store at USC Village, with a campus-first plan to sell enough pairs sooner.",
   "tags": [

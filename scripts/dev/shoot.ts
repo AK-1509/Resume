@@ -47,7 +47,7 @@ async function main() {
 
       // One viewport-sized frame per section, so each can be read at its real
       // size rather than shrunk inside a full-page image.
-      for (const id of ["top", "projects", "contact"]) {
+      for (const id of ["top", "projects", "case-studies", "contact"]) {
         await page.evaluate((target) => {
           document.getElementById(target)?.scrollIntoView({ block: "start", behavior: "instant" });
         }, id);

@@ -1,6 +1,11 @@
 {
   "slug": "goodrx",
-  "order": 6,
+  "category": "case-study",
+  "order": 8,
+  "keyFigure": {
+    "value": "$83.5B",
+    "label": "global telehealth market, 2022"
+  },
   "title": "GoodRx",
   "slugLine": "A plan to grow GoodRx beyond prescription discounts with an in-house telehealth team and new revenue streams.",
   "tags": [

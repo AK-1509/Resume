@@ -1,0 +1,258 @@
+{
+  "slug": "sunfish",
+  "category": "project",
+  "order": 6,
+  "title": "Sunfish",
+  "slugLine": "A browser extension that shields artists’ images from AI training scrapers, wherever they post.",
+  "tags": [
+    "Problem research",
+    "Product direction"
+  ],
+  "hero": {
+    "image": null,
+    "figure": {
+      "src": "/case-studies/sunfish/mascot.webp",
+      "alt": "The Sunfish mascot: a round orange sunfish with red spots, drawn in profile.",
+      "width": 640,
+      "height": 805
+    }
+  },
+  "role": {
+    "title": "",
+    "sprint": "",
+    "summary": "",
+    "moves": []
+  },
+  "demo": {
+    "href": "https://sunfish-landing-page.vercel.app"
+  },
+  "timeline": {
+    "research": "",
+    "goals": "",
+    "design": "",
+    "results": ""
+  },
+  "research": {
+    "problem": "An artist has to ==publish to be hired==, and publishing is also **how the work enters a training set**: the art director browsing and the crawler collecting are served the same image.",
+    "stakeholders": [
+      {
+        "kind": "Customer",
+        "name": "Working artists",
+        "note": "Who publish portfolios, galleries and shop listings to win commissions"
+      },
+      {
+        "kind": "Persona",
+        "name": "Eddie, a graphic and front-end designer",
+        "note": "Seattle, 35–42, upskilling in the age of AI"
+      },
+      {
+        "kind": "Middleman",
+        "name": "Platforms",
+        "note": "Where the work is posted, and where the AI settings live"
+      },
+      {
+        "kind": "Competitor",
+        "name": "Glaze and Nightshade",
+        "note": "University of Chicago, run on each image before posting"
+      },
+      {
+        "kind": "Competitor",
+        "name": "Crawler blocking",
+        "note": "Cloudflare AI controls, for sites you run yourself"
+      }
+    ],
+    "painPoints": [
+      {
+        "label": "Blocking crawlers",
+        "detail": "It requires running your own site, and it is an honor system the long tail of crawlers ignores."
+      },
+      {
+        "label": "Platform settings",
+        "detail": "The control belongs to the platform, not the work. LinkedIn opted its users in by default when it introduced AI training."
+      },
+      {
+        "label": "Removal requests",
+        "detail": "They arrive after the fact, once the image has been collected and often already trained on."
+      },
+      {
+        "label": "Opt-out registers",
+        "detail": "They depend on the model trainer choosing to check, and on proving afterwards that they did not."
+      },
+      {
+        "label": "Going dark",
+        "detail": "Taking work offline means fewer images to license. Commissioned licensing fell 65%, income falls, and the profession gets harder to stay in."
+      }
+    ],
+    "headlines": [
+      {
+        "figure": "5.85bn",
+        "headline": "image and caption pairs in LAION-5B, scraped from the open web and used to train Stable Diffusion",
+        "source": "LAION",
+        "date": "2022"
+      },
+      {
+        "figure": "89.4%",
+        "headline": "of AI crawler traffic serves training or mixed purposes rather than search",
+        "source": "TechnologyChecker analysis of Cloudflare network data",
+        "date": "Q1 2026"
+      },
+      {
+        "figure": "416bn",
+        "headline": "AI scraping requests blocked by Cloudflare alone in five months",
+        "source": "Cloudflare",
+        "date": "Jul–Dec 2025"
+      },
+      {
+        "figure": "58%",
+        "headline": "of professional photographers surveyed had lost commissioned work to generative AI",
+        "source": "Association of Photographers, Copyright & AI Member Survey",
+        "date": "Jan 2026"
+      },
+      {
+        "figure": "~$48,000",
+        "headline": "average reported loss per photographer, up 142% in a single year",
+        "source": "Association of Photographers, Copyright & AI Member Survey",
+        "date": "Jan 2026"
+      },
+      {
+        "figure": "46%",
+        "headline": "fewer photographs publicly visible on members’ own websites in one year",
+        "source": "Association of Photographers",
+        "date": "2026"
+      },
+      {
+        "figure": "24%",
+        "headline": "projected income loss for music creators by 2028, and 21% for audiovisual work",
+        "source": "UNESCO, Re|Shaping Policies for Creativity",
+        "date": "Feb 2026"
+      }
+    ]
+  },
+  "goals": {
+    "rows": [],
+    "insights": [
+      {
+        "insight": "Publishing is the bargain",
+        "evidence": "Portfolio sites, client galleries, shop listings and the feed are where commissions come from, and nothing about a public post tells the art director from the crawler."
+      },
+      {
+        "insight": "Going dark feeds a cycle",
+        "evidence": "Work comes offline, fewer images can be licensed, income falls, and that is an argument for taking more work offline."
+      },
+      {
+        "insight": "Artists will not change how they post",
+        "evidence": "The persona switches only to a tool that works better than the existing ones and doesn’t change much about his current workflow."
+      }
+    ],
+    "report": null,
+    "roadmap": [
+      {
+        "when": "Today",
+        "what": "In development, built by a small team of artists and creatives"
+      },
+      {
+        "when": "End of September",
+        "what": "Beta, with first access for landing-page sign-ups"
+      },
+      {
+        "when": "After that",
+        "what": "Ongoing model tracking to keep protection current as scrapers change"
+      }
+    ]
+  },
+  "design": {
+    "lead": "Protection that stays with the picture, wherever the picture goes: a browser extension that shields each image on its way out, before it is published.",
+    "blocks": [
+      {
+        "type": "steps",
+        "title": "What Sunfish does",
+        "items": [
+          {
+            "title": "Install it once",
+            "body": "Sunfish is a browser extension. There is no separate app to open and no file to prepare before you post."
+          },
+          {
+            "title": "Post the way you already do",
+            "body": "It catches each image on its way out, to your portfolio, your feed or your shop, and shields it there."
+          },
+          {
+            "title": "Four layers stack on it",
+            "body": "Your followers see the art you made. A scraper has to get through all four."
+          }
+        ]
+      },
+      {
+        "type": "statement",
+        "title": "Why four layers",
+        "clauses": [
+          {
+            "label": "One protection",
+            "text": "is a research problem someone has already published on."
+          },
+          {
+            "label": "Four, on every image, at scrape scale",
+            "text": "is a cost: a decision about whether you are worth it."
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "title": "The protection landscape",
+        "rowHeader": "Tool",
+        "columns": [
+          {
+            "label": "What it protects, and what it asks of you"
+          }
+        ],
+        "rows": [
+          {
+            "label": "Glaze",
+            "cells": [
+              "Cloaks your style so mimicry fails. A desktop app you run on each image before posting."
+            ]
+          },
+          {
+            "label": "Nightshade",
+            "cells": [
+              "Corrupts the training set rather than hiding from it. The same per-image workflow, best applied alongside Glaze."
+            ]
+          },
+          {
+            "label": "Crawler blocking",
+            "cells": [
+              "Defends a website you control, and does nothing for the same image posted on a platform you don’t."
+            ]
+          },
+          {
+            "label": "Sunfish",
+            "cells": [
+              "Shields every image you post, wherever you post it, with no step to remember. Installed once, in the browser."
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "results": {
+    "lead": "Sunfish is in development, with ==a beta targeted for the end of September== and sign-ups open on its landing page.",
+    "blocks": [
+      {
+        "type": "list",
+        "title": "Until the beta",
+        "items": [
+          "Glaze: free, from the University of Chicago, cloaks your style against mimicry",
+          "Nightshade: from the same lab, poisons unauthorised training rather than hiding from it",
+          "WebGlaze: a free web version for artists without a machine that can run Glaze",
+          "Cloudflare AI controls: block training crawlers at the edge of a portfolio site you run"
+        ]
+      },
+      {
+        "type": "list",
+        "title": "Said plainly",
+        "items": [
+          "Every tool like this gets attacked eventually. Sunfish is not infallible, but will keep evolving to meet new attacks."
+        ]
+      }
+    ]
+  }
+}

@@ -1,6 +1,11 @@
 {
   "slug": "ocudrop",
-  "order": 5,
+  "category": "case-study",
+  "order": 7,
+  "keyFigure": {
+    "value": "$5,200–$8,000",
+    "label": "target price a year, 54% below injections"
+  },
   "title": "OcuDrop",
   "slugLine": "A strategic plan to take OCS-01, a dexamethasone eye drop for diabetic macular edema, from Phase 3 trials through approval and launch.",
   "tags": [

@@ -5,14 +5,20 @@ const nextConfig: NextConfig = {
   // errors are still surfaced.
   devIndicators: false,
 
-  // Project pages that were renamed. The old address was live, so it keeps
-  // working and passes on to the new one.
+  // Project pages that were renamed or taken down. The old address was live,
+  // so it keeps working: a renamed page passes on to its new address, a
+  // removed one to the portfolio (temporary, so the address stays free).
   redirects() {
     return [
       {
         source: "/projects/dock-puck",
         destination: "/projects/snooze-station",
         permanent: true,
+      },
+      {
+        source: "/projects/the-doghouse",
+        destination: "/",
+        permanent: false,
       },
     ];
   },

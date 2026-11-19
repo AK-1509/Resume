@@ -4,8 +4,16 @@ import type { CSSProperties, ReactNode } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { IndexDock } from "@/components/IndexDock";
 import { LiquidBackground } from "@/components/LiquidBackground";
+import { CATEGORY_LABELS } from "@/lib/anchors";
 import { SHOW_PLACEHOLDERS } from "@/lib/placeholders";
-import { CASE_PHASES, CASE_PHASE_LABELS, phaseHasContent, type CasePhase, type CaseStudy } from "@/lib/schema";
+import {
+  CASE_PHASES,
+  CASE_PHASE_LABELS,
+  phaseHasContent,
+  type CaseCategory,
+  type CasePhase,
+  type CaseStudy,
+} from "@/lib/schema";
 import { CaseNav, type NavSection } from "./CaseNav";
 import { DrawOnView } from "./DrawOnView";
 import { ExhibitBlock, Sheet } from "./Exhibits";
@@ -442,8 +450,8 @@ export function CaseStudyPage({
   email,
 }: {
   study: CaseStudy;
-  /** Every published case study, for the Index. */
-  all: { slug: string; title: string }[];
+  /** Every published page, projects and case studies, for the Index. */
+  all: { slug: string; title: string; category: CaseCategory }[];
   /** The site owner's name, for the header. */
   name: string;
   /** The contact address, for the footer. */
@@ -464,8 +472,13 @@ export function CaseStudyPage({
     })),
   ];
 
-  const here = all.findIndex((s) => s.slug === study.slug);
-  const next = all.length > 1 && here >= 0 ? all[(here + 1) % all.length] : null;
+  // "Next" stays within the page's own section: project to project, case
+  // study to case study.
+  const kin = all.filter((s) => s.category === study.category);
+  const here = kin.findIndex((s) => s.slug === study.slug);
+  const next = kin.length > 1 && here >= 0 ? kin[(here + 1) % kin.length] : null;
+  const kindOne = study.category === "case-study" ? "case study" : "project";
+  const kindMany = CATEGORY_LABELS[study.category];
 
   return (
     <div id={ROOT_ID} className="druid-root cs">
@@ -475,13 +488,16 @@ export function CaseStudyPage({
 
       <SiteHeader name={name} variant="case" />
       <IndexDock
-        label="Browse projects"
-        items={all.map((s) => ({
-          id: s.slug,
-          label: s.title,
-          href: `/projects/${s.slug}`,
-          current: s.slug === study.slug,
-        }))}
+        label="Browse the work"
+        items={[...all.filter((s) => s.category === "project"), ...all.filter((s) => s.category === "case-study")].map(
+          (s) => ({
+            id: s.slug,
+            label: s.title,
+            href: `/projects/${s.slug}`,
+            current: s.slug === study.slug,
+            group: CATEGORY_LABELS[s.category],
+          }),
+        )}
         home={{ href: "/", label: "Home" }}
       />
 
@@ -539,8 +555,8 @@ export function CaseStudyPage({
       <footer className="druid-container cs-foot" aria-labelledby="more-work-title">
         <div className="cs-end">
           <div>
-            <h2 id="more-work-title">More projects</h2>
-            <p>Every project is on the main page.</p>
+            <h2 id="more-work-title">More {kindMany.toLowerCase()}</h2>
+            <p>Every {kindOne} is on the main page.</p>
             <p className="cs-end__contact">
               <a href={`mailto:${email}`}>{email}</a>
             </p>
@@ -548,7 +564,7 @@ export function CaseStudyPage({
           <div className="cs-end__actions">
             {next && (
               <Link className="druid-button druid-button--quiet" href={`/projects/${next.slug}`}>
-                Next project: {next.title}
+                Next {kindOne}: {next.title}
               </Link>
             )}
             <Link className="druid-button" href="/">
