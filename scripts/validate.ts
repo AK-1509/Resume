@@ -19,7 +19,6 @@ import {
   ResumeSchema,
   caseStudyImages,
   caseStudyIssues,
-  portfolioIssues,
   type Resume,
 } from "../lib/schema";
 
@@ -77,13 +76,13 @@ const resume: Resume = result.data;
 
 // --- Layer 2: filesystem ---------------------------------------------------
 {
-  // A skill nothing endorses appears on no card and in no role's kit. Surface
-  // it here so it is never silently lost.
+  // A skill nothing endorses is attached to no entry. Surface it here so it is
+  // never silently lost.
   const endorsed = new Set(resume.experiences.flatMap((e) => e.endorsedSkills));
   for (const skill of resume.skills) {
     if (!endorsed.has(skill.id)) {
       notes.push(
-        `skill "${skill.id}" (${skill.label}) is in the registry but no experience endorses it, so it appears nowhere on the page. Endorse it somewhere, or remove it from skills[].`,
+        `skill "${skill.id}" (${skill.label}) is in the registry but no experience endorses it. Endorse it somewhere, or remove it from skills[].`,
       );
     }
   }
@@ -145,8 +144,7 @@ const resume: Resume = result.data;
 }
 
 // --- Layer 3: content/portfolio.json --------------------------------------
-// The presentation layer references resume entries by id and quotes their
-// bullets, so it is checked against the resume that just passed.
+// The hero's copy: the role line, the sub-line and the credentials.
 {
   let portfolioJson: unknown;
   try {
@@ -159,10 +157,6 @@ const resume: Resume = result.data;
     if (!parsed.success) {
       for (const issue of parsed.error.issues) {
         fail(`portfolio.json ${issue.path.join(".") || "(root)"}`, issue.message);
-      }
-    } else {
-      for (const { where, what } of portfolioIssues(parsed.data, resume)) {
-        fail(`portfolio.json ${where}`, what);
       }
     }
   }

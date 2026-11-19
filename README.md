@@ -1,6 +1,6 @@
 # Resume
 
-An interactive portfolio built on the Druid design system, set on a glassy gradient canvas. The hero rotates one headline per entry, each backed by a bullet quoted from the resume. Four role sections follow: Product management, Design thinking, Operations and Business development. Each holds two pages side by side: projects as a 3D stack of image slides on a green page, and experience and education as an expandable list on a brown one. A gold switch slides between them; drag its handle and the pages follow. A mauve index is docked on the right edge, and a mauve Languages card sits at the bottom right. The whole resume still exports as a one-page PDF.
+A project portfolio built on the Druid design system, set on a glassy gradient canvas. The hero fills the first screen: the name, the role line and the way into the work. Then come the **Projects**, one entry per project page at `/projects/<slug>`, each with its research, goals, design and results. A mauve Index is docked on the right edge and jumps to any project, and a mauve Languages card sits at the bottom right. The whole resume still exports as a one-page PDF.
 
 **Live:** <https://resume-phi-roan.vercel.app> · **Specimen:** <https://resume-phi-roan.vercel.app/specimen>
 
@@ -22,7 +22,7 @@ The skill transcribes verbatim — it will not fix a typo, rewrite a bullet, inv
 
 Images live in `public/gallery/<experience-id>/` and are referenced by path from the JSON.
 
-How the page *presents* the resume lives in [`content/portfolio.json`](content/portfolio.json): the role sections and their card order, the executive summaries, the hero copy, the rotating headlines, and live-demo links. It is edited directly. Validation checks that every id resolves and that every headline's proof is a bullet copied word for word from `resume.json`.
+The hero's copy lives in [`content/portfolio.json`](content/portfolio.json), and each project is one file in [`content/case-studies/`](content/case-studies) (copy `_template.json` to add one). Both are edited directly and checked by `npm run validate`.
 
 ## Commands
 
@@ -47,7 +47,7 @@ Design tokens are CSS custom properties in the `@theme` block of [`app/globals.c
 
 Two things worth knowing before changing any colour:
 
-- **The slides and the mauve cards are fixed materials.** They look the same in both themes. Slides have a gradient frame and a hatched brown shadow, with the headline on a dark scrim; the Index and Languages cards are mauve with metallic gold labels. Tags are gold, and mauve only on brown pages.
+- **The mauve cards and the Content Cards are fixed materials.** They look the same in both themes. The Index and Languages cards are mauve with metallic gold labels; the cream Content Cards on project pages carry tables, charts and diagrams over a hatched brown shadow. Tags are gold, and mauve only on brown grounds.
 - **Dark mode is not an inversion.** Light is green-led and dark is brown-led. Links move from `green-deep` to `green-sage`, and actions flip from a brown fill to a sage fill. Components use the semantic tokens (`bg-surface`, `text-strong`, `bg-action`, ...), never the raw palette.
 
 Frutiger, Druid's heading face, is not committed because its licence doesn't cover a public repo. Headings use Schibsted Grotesk; captions and dates use Dekko.
@@ -58,9 +58,8 @@ The checks in `scripts/dev/` are the ones that were actually run at each checkpo
 
 ```bash
 npx tsx scripts/dev/audit.ts          # axe-core, landmarks, focus rings, 200% zoom, both themes
-npx tsx scripts/dev/keyboard.ts       # theme switch, headline drum, project carousels, experience pager, Index dock, export dialog, keyboard only
+npx tsx scripts/dev/keyboard.ts       # theme switch, skip link and projects, Index dock, phone menu, export dialog, keyboard only
 npx tsx scripts/dev/keyboard-export.ts# export incl. drag-reorder, keyboard only
-npx tsx scripts/dev/pager.ts         # side-by-side pages and the gold switch: tabs, keys, drag, swipe
 npx tsx scripts/dev/cross-browser.ts  # the engine-sensitive paths in Chromium, Firefox and WebKit
 npx tsx scripts/dev/usability.ts      # timed reader tasks, desktop and mobile
 npx tsx scripts/dev/export-cases.ts <sparse|typical|overloaded>

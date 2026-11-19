@@ -6,8 +6,11 @@ export type CaseStudyCardData = Pick<CaseStudy, "slug" | "title" | "slugLine" | 
 
 const RINGS = [70, 120, 170, 220, 270, 298];
 
+/** The id of a project's entry on the portfolio, which the Index scrolls to. */
+export const projectAnchor = (slug: string) => `project-${slug}`;
+
 /**
- * One case study on the portfolio page, set straight on the canvas: its words
+ * One project on the portfolio page, set straight on the canvas: its words
  * at the left and its picture fading in at the right, over a soft field of
  * colour with no edge.
  *
@@ -19,7 +22,7 @@ function Entry({ study }: { study: CaseStudyCardData }) {
   const meta = [study.role.title.trim(), study.role.sprint.trim()].filter(Boolean).join(" · ");
   const titleId = `${study.slug}-entry-title`;
   return (
-    <li>
+    <li id={projectAnchor(study.slug)} className="cs-entry-item">
       <Link className="cs-entry" href={`/projects/${study.slug}`} aria-labelledby={titleId}>
         <div className="cs-entry__text">
           {study.tags.length > 0 && (
@@ -33,12 +36,11 @@ function Entry({ study }: { study: CaseStudyCardData }) {
           )}
           <h3 id={titleId} className="cs-entry__title">
             {study.title}
-            <span className="sr-only"> case study</span>
           </h3>
           <p className="cs-entry__slug">{study.slugLine}</p>
           {meta && <p className="druid-caption cs-entry__meta">{meta}</p>}
           <span className="cs-entry__cta" aria-hidden="true">
-            Read the case study
+            See the project
             <svg
               viewBox="0 0 20 20"
               fill="none"
@@ -80,14 +82,15 @@ function Entry({ study }: { study: CaseStudyCardData }) {
   );
 }
 
+/** The projects: the body of the portfolio, one entry per project page. */
 export function CaseStudyCards({ studies }: { studies: CaseStudyCardData[] }) {
   if (studies.length === 0) return null;
   return (
-    <section id="case-studies" className="druid-section pf-role cs-studies" aria-labelledby="case-studies-title">
+    <section id="projects" className="druid-section pf-block cs-studies" aria-labelledby="projects-title">
       <div className="druid-container">
-        <div className="pf-role__head">
-          <h2 id="case-studies-title" className="pf-role__title">
-            Case studies
+        <div className="pf-block__head">
+          <h2 id="projects-title" className="pf-block__title">
+            Projects
           </h2>
           <a className="pf-back" href="#top">
             Back to the top

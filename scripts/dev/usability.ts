@@ -9,22 +9,10 @@
 import { chromium, devices, type Browser, type Page } from "@playwright/test";
 import { mkdirSync } from "node:fs";
 import { join, resolve } from "node:path";
-import {
-  experienceHeadline,
-  movableRole,
-  projectHeadline,
-  roles,
-  type Headline,
-} from "./fixtures";
+import { laterProject, projects } from "./fixtures";
 
 const BASE = process.argv[2] ?? "http://localhost:3000";
 const OUT = resolve(import.meta.dirname, "..", "..", ".screenshots");
-
-/** "Started March 2024", as formatStartMonth() writes a project's date. */
-const STARTED = /Started [A-Z][a-z]+ \d{4}/;
-
-/** "March 2024 – Present", as formatDurationLong() writes it. */
-const DURATION = /[A-Z][a-z]+ \d{4} – ([A-Z][a-z]+ \d{4}|Present)/;
 
 type Result = { task: string; ok: boolean; took: string; note: string };
 const results: Result[] = [];
@@ -60,146 +48,94 @@ const visible = (page: Page, selector: string) =>
     return r.height > 0 ? Math.max(0, shown) / r.height : 0;
   }, selector);
 
-/** 1 — Who is this and what do they do? Target: answered above the fold, 0 clicks. */
-async function task1(page: Page, mobile: boolean) {
+const heading = (page: Page) => page.evaluate(() => document.querySelector("h1")?.textContent?.trim() ?? "");
+
+/** 1 — Who is this and what do they do? Target: answered on the first screen, 0 clicks. */
+async function task1(page: Page) {
   const started = Date.now();
   await fresh(page);
 
   const name = await visible(page, "h1");
-  const headline = await visible(page, ".pf-line.is-current .pf-hl__text");
-  const proof = await visible(page, ".pf-line.is-current .pf-proof");
+  const sub = await visible(page, ".pf-sub");
+  const action = await visible(page, ".pf-hero__actions .druid-button");
 
   record(
     "1. Who is this and what do they do",
-    name === 1 && (headline > 0.5 || mobile),
+    name === 1 && action === 1,
     started,
-    `0 clicks; name and role ${name === 1 ? "in" : "NOT in"} the first viewport; current headline ${
-      headline > 0.5 ? "in view" : "below the fold"
-    }${proof > 0.5 ? " with its proof" : ""}${mobile && headline <= 0.5 ? " (one scroll on a phone)" : ""}`,
+    `0 clicks; name and role ${name === 1 ? "in" : "NOT in"} the first viewport${sub === 1 ? " with the sub-line" : ""}; "See the projects" ${
+      action === 1 ? "in view" : "below the fold"
+    }`,
   );
 }
 
-/** Where an element's top sits in the viewport, as a fraction of its height (0 = top edge). */
-const topIn = (page: Page, selector: string) =>
-  page.evaluate((sel) => {
-    const r = document.querySelector(sel)?.getBoundingClientRect();
-    return r ? { top: r.top, inView: r.top >= 0 && r.top < window.innerHeight } : { top: NaN, inView: false };
-  }, selector);
-
-/** The drum rolls on its own; pick a headline through its segment, then follow its call to action. */
-async function followHeadline(page: Page, h: Headline) {
-  await page.getByRole("button", { name: `Headline ${h.position}:` }).click();
-  await page.getByRole("link", { name: h.cta }).click();
-  await settle(page);
-  // Pages and rows open on short transitions; let them finish before measuring.
-  await page.waitForTimeout(700);
-}
-
-/**
- * 2 — See the project behind a headline, and when it started. Target: the
- * slide lands in view with no hunting. Below the slide sit its title and
- * dates; if those need a scroll, that is reported as friction.
- */
+/** 2 — Open a project from the first screen. Target: two clicks. */
 async function task2(page: Page) {
   const started = Date.now();
   await fresh(page);
-  const h = projectHeadline();
-  await followHeadline(page, h);
+  const first = projects[0];
 
-  const scope = `#${h.role.id}`;
-  const front = await page.locator(`${scope} .pf-detail__title`).innerText();
-  const slide = await topIn(page, `${scope} .pf-slot.is-active`);
-  const titleInView = await visible(page, `${scope} .pf-detail__title`);
-  const meta = await page.locator(`${scope} .pf-detail .pf-meta`).innerText();
+  await page.getByRole("link", { name: "See the projects" }).click();
+  await settle(page);
+  const entryInView = await visible(page, `#${first.anchor}`);
+  await page.locator(`#${first.anchor} a`).click();
+  await page.waitForURL(`**${first.href}`, { timeout: 10_000 }).catch(() => null);
+  const h1 = await heading(page);
 
   record(
-    "2. The project behind a headline, and its start",
-    front === h.title && slide.inView && STARTED.test(meta),
+    "2. Open a project from the first screen",
+    h1 === first.title,
     started,
-    `2 clicks (segment, then "${h.cta}"); "${front}" at the front of ${h.role.label}, slide ${
-      slide.inView ? "in view" : "NOT in view"
-    }${titleInView === 1 ? " with its title" : ", title and dates one scroll down"}; ${
-      STARTED.test(meta) ? meta.match(STARTED)![0] : "no start month shown"
-    }`,
+    `2 clicks ("See the projects", then "${first.title}"); entry ${entryInView > 0.5 ? "in view" : "NOT in view"} after the first; landed on "${h1}"`,
   );
 }
 
-/** 3 — See the job behind a headline, and how long it ran. Target: the open row lands in view. */
+/** 3 — Reach a project well down the list through the Index. Target: no hunting. */
 async function task3(page: Page) {
   const started = Date.now();
   await fresh(page);
-  const h = experienceHeadline();
-  await followHeadline(page, h);
-
-  const row = h.href;
-  const expanded = await page.locator(`${row} .pf-xp__toggle`).getAttribute("aria-expanded");
-  const at = await topIn(page, row);
-  const when = await page.locator(`${row} .pf-xp__when`).innerText();
-  const pageShown = await page
-    .locator(`#${h.role.id} .pf-page--experience`)
-    .getAttribute("data-state");
-
-  record(
-    "3. The job behind a headline, and how long it ran",
-    pageShown === "here" && expanded === "true" && at.inView && DURATION.test(when),
-    started,
-    `2 clicks (segment, then "${h.cta}"); experience page ${pageShown === "here" ? "showing" : "NOT showing"}, row ${
-      expanded === "true" ? "open" : "closed"
-    } and ${at.inView ? "in view" : `NOT in view (${Math.round(at.top)}px)`}; ${
-      DURATION.test(when) ? when : "no dates on the row"
-    }`,
-  );
-}
-
-/**
- * 4 — Browse one role from the Index: a second project, then its experience
- * page, then back to the top. Target: no dead ends.
- */
-async function task4(page: Page) {
-  const started = Date.now();
-  await fresh(page);
-  // Not the first role: arriving there would not show the Index responding
-  // to anything but the first scroll.
-  const role = roles.slice(1).find((r) => r.hasSwitch && r.projects.length > 1) ?? movableRole();
+  const target = laterProject();
 
   // A tap or click on the tab opens the dock on any device; hover is a bonus.
   await page.locator(".pf-dock__tab").click();
-  await page.locator(".pf-dock__panel").getByRole("link", { name: role.label }).click();
+  await page.locator(".pf-dock__panel").getByRole("link", { name: target.title }).click();
   await settle(page);
   const current = await page.evaluate(
     () => document.querySelector(".druid-index a[aria-current='location']")?.getAttribute("href") ?? "",
   );
-  const headingInView = await visible(page, `#${role.id}-title`);
+  const titleInView = await visible(page, `#${target.slug}-entry-title`);
+  await page.locator(`#${target.anchor} a`).click();
+  await page.waitForURL(`**${target.href}`, { timeout: 10_000 }).catch(() => null);
+  const h1 = await heading(page);
 
-  const section = page.locator(`section#${role.id}`);
-  await section.getByRole("button", { name: "Next project" }).click();
-  await page.waitForTimeout(400);
-  const second = await section.locator(".pf-detail__title").innerText();
-
-  await section.getByRole("button", { name: "Experience and education" }).click();
-  await page.waitForTimeout(700);
-  const firstRow = section.locator(".pf-xp > li").first();
-  await firstRow.locator(".pf-xp__toggle").click();
-  await page.waitForTimeout(500);
-  const opened = (await firstRow.locator(".pf-xp__toggle").getAttribute("aria-expanded")) === "true";
-
-  await section.getByRole("link", { name: "Back to the top" }).click();
-  await settle(page);
-  const heroInView = await visible(page, "h1");
-
-  const ok =
-    current === `#${role.id}` &&
-    headingInView === 1 &&
-    second === role.projects[1].title &&
-    opened &&
-    heroInView === 1;
   record(
-    "4. Browse a role from the Index and return",
-    ok,
+    "3. Reach a later project through the Index",
+    current === `#${target.anchor}` && titleInView === 1 && h1 === target.title,
     started,
-    `6 clicks; Index marks ${current || "nothing"}, heading ${headingInView === 1 ? "in view" : "NOT in view"}; Next showed "${second}"; experience row ${
-      opened ? "opened" : "did NOT open"
-    }; ${heroInView === 1 ? "back at the top" : "hero NOT in view after Back to the top"}`,
+    `3 clicks; Index marks ${current || "nothing"}, title ${titleInView === 1 ? "in view" : "NOT in view"}; landed on "${h1}"`,
+  );
+}
+
+/** 4 — From one project to the next, then back to the portfolio. Target: no dead ends. */
+async function task4(page: Page) {
+  const started = Date.now();
+  const [a, b] = projects;
+  await page.goto(`${BASE}${a.href}`, { waitUntil: "networkidle" });
+
+  await page.getByRole("link", { name: `Next project: ${b.title}` }).click();
+  await page.waitForURL(`**${b.href}`, { timeout: 10_000 }).catch(() => null);
+  const second = await heading(page);
+
+  await page.getByRole("link", { name: "Back to the portfolio" }).click();
+  await page.waitForURL(`${BASE}/`, { timeout: 10_000 }).catch(() => null);
+  await page.waitForLoadState("networkidle");
+  const home = await page.evaluate(() => location.pathname === "/" && Boolean(document.getElementById("projects")));
+
+  record(
+    "4. Next project, then back to the portfolio",
+    second === b.title && home,
+    started,
+    `2 clicks; "Next project" showed "${second}"; ${home ? "back on the portfolio" : "did NOT get back to the portfolio"}`,
   );
 }
 
@@ -246,7 +182,7 @@ async function run(browser: Browser, name: string, mobile: boolean) {
   const page = await context.newPage();
 
   results.length = 0;
-  await task1(page, mobile);
+  await task1(page);
   await task2(page);
   await task3(page);
   await task4(page);

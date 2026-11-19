@@ -15,7 +15,7 @@
   --color-*: initial;
   --color-white: #ffffff;
 
-  /* Greens: the light-mode ground and the projects page. */
+  /* Greens: the light-mode ground and green grounds. */
   --color-green-pale: #f1f5ef; /* light page */
   --color-green-soft: #dfe9dc; /* light green page */
   --color-green-sage: #b8ceb2; /* dark-mode actions and links */
@@ -24,7 +24,7 @@
   --color-green-wire-light: #bdcdb8; /* DECORATIVE ONLY — 1.5:1 */
   --color-green-wire-dark: #14271e; /* DECORATIVE ONLY */
 
-  /* Browns: the dark-mode ground and the experience page. */
+  /* Browns: the dark-mode ground and brown grounds. */
   --color-espresso: #211a16; /* dark page */
   --color-walnut: #30251e; /* dark raised surfaces; text on gold and mauve tags */
   --color-brown-rich: #49372a; /* light actions, brown page, slide hatch */
@@ -108,7 +108,7 @@
   --page-green: var(--color-green-soft);
   --page-green-text: var(--color-ink);
   --page-brown: var(--color-brown-rich);
-  /* The hero's name and the headline timer. */
+  /* The hero's name, and the meters on project pages. */
   --hero-name: var(--color-gold-shadow);
   --meter: var(--color-green-deep);
 
@@ -631,7 +631,6 @@
       opacity 200ms ease,
       visibility 0s linear 240ms;
   }
-  .pf-dock:hover .pf-dock__panel,
   .pf-dock__panel:focus-within,
   .pf-dock[data-open="true"] .pf-dock__panel {
     clip-path: inset(0 0 0 0 round 18px);
@@ -639,11 +638,33 @@
     visibility: visible;
     transition-delay: 0s;
   }
+  /* Hover opens it only for a real pointer. On a touch screen a tap leaves
+     :hover stuck, which would hold the card open over the page after a link
+     in it was chosen. */
+  @media (hover: hover) and (pointer: fine) {
+    .pf-dock:hover .pf-dock__panel {
+      clip-path: inset(0 0 0 0 round 18px);
+      opacity: 1;
+      visibility: visible;
+      transition-delay: 0s;
+    }
+  }
 
-  /* Hero ------------------------------------------------------------------- */
+  /* Hero: the first screen on its own, its words centred in the space below
+     the header, so the projects begin on the next screen. ------------------ */
   .pf-front {
-    padding-top: 208px;
-    padding-bottom: 136px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100svh;
+    padding-top: 136px;
+    padding-bottom: 96px;
+  }
+  .pf-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 36px;
   }
   .pf-hero__main {
     max-width: 780px;
@@ -681,181 +702,12 @@
     line-height: 1.4;
     color: var(--text-soft);
   }
-  .pf-panel {
-    margin-top: 48px;
-    padding: 32px 36px 24px;
-    -webkit-backdrop-filter: blur(40px) saturate(150%);
-    backdrop-filter: blur(40px) saturate(150%);
-  }
-  .druid-root .pf-scroll {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    min-height: 44px;
-    margin: 18px -36px -24px;
-    padding: 12px 16px 14px;
-    color: inherit;
-    text-decoration: none;
-    font-family: var(--font-note);
-    font-size: 18px;
-    line-height: 1.3;
-    border-top: 1px solid var(--glass-line);
-    border-radius: 0 0 24px 24px;
-    transition: background-color 200ms ease;
-  }
-  .pf-scroll:hover {
-    background-color: var(--glass-card);
-  }
-  .pf-scroll svg {
-    width: 22px;
-    height: 22px;
-    animation: pf-bob 2.4s var(--ease-druid) infinite;
-  }
 
-  /* The headline drum: every line shares one grid cell and rolls in on X. */
-  .pf-drum {
-    display: grid;
-    perspective: var(--perspective);
-    perspective-origin: 20% 0%;
-  }
-  .pf-line {
-    grid-area: 1 / 1;
-    min-width: 0;
-    transform-origin: 50% 0%;
-    transform: translate3d(0, 48px, -160px) rotateX(-16deg);
-    opacity: 0;
-    visibility: hidden;
-    transition:
-      transform 300ms var(--ease-druid),
-      opacity 200ms ease,
-      visibility 0s linear 300ms;
-  }
-  .pf-line.is-current {
-    transform: translate3d(0, 0, 0) rotateX(0deg);
-    opacity: 1;
-    visibility: visible;
-    transition-delay: 0s, 150ms, 0s;
-  }
-  .pf-line.is-above {
-    transform: translate3d(0, -32px, -140px) rotateX(16deg);
-  }
-  .druid-root .pf-hl {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 24px;
-    color: inherit;
-    text-decoration: none;
-    border-radius: 6px;
-  }
-  .pf-hl__text {
-    font-family: var(--font-heading);
-    font-weight: 700;
-    font-size: clamp(28px, 2.8vw, 40px);
-    line-height: 1.1;
-    letter-spacing: -0.022em;
-    max-width: 30ch;
-    text-wrap: pretty;
-    text-decoration-line: underline;
-    text-decoration-color: transparent;
-    text-decoration-thickness: 3px;
-    text-underline-offset: 0.16em;
-    transition: text-decoration-color 200ms ease;
-  }
-  .pf-hl:hover .pf-hl__text {
-    text-decoration-color: var(--meter);
-  }
-  .pf-attr {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 8px 14px;
-  }
-  .pf-attr .druid-tag {
-    margin: 0;
-  }
-  .pf-attr__title {
-    font-family: var(--font-heading);
-    font-size: clamp(18px, 1.6vw, 22px);
-    line-height: 1.25;
-    letter-spacing: -0.01em;
-  }
-  .druid-root .pf-proof {
-    margin: 12px 0 0;
-    max-width: 70ch;
-    color: var(--text-soft);
-  }
-  .pf-segs {
-    display: flex;
-    gap: 6px;
-    list-style: none;
-    margin: 24px 0 0;
-    padding: 0;
-  }
-  .pf-segs li {
-    flex: 1 1 0;
-    min-width: 0;
-  }
-  .pf-seg {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    height: 44px;
-    padding: 0;
-    border: 0;
-    background: none;
-    color: inherit;
-    cursor: pointer;
-  }
-  .pf-seg__bar {
-    position: relative;
-    display: block;
-    width: 100%;
-    height: 4px;
-    border-radius: 2px;
-    background: color-mix(in srgb, currentColor 22%, transparent);
-    overflow: hidden;
-  }
-  .pf-seg__fill {
-    position: absolute;
-    inset: 0;
-    background: var(--meter);
-    transform: scaleX(0);
-    transform-origin: 0 50%;
-  }
-  .pf-seg.is-done .pf-seg__fill {
-    transform: scaleX(1);
-  }
-  .pf-seg.is-active .pf-seg__fill {
-    animation: pf-fill 7s linear forwards;
-  }
-  .pf-front.is-paused .pf-seg.is-active .pf-seg__fill {
-    animation-play-state: paused;
-  }
-  .pf-hero__controls {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 12px 24px;
-    margin-top: 12px;
-  }
-  .pf-hero__nav {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 8px;
-  }
-  .druid-root .pf-hero__count {
-    margin: 0 0 0 8px;
-  }
-
-  /* Role sections ---------------------------------------------------------- */
-  .pf-role {
+  /* A page section: the projects. A large title, and the way back up. ------ */
+  .pf-block {
     padding-block: 72px 112px;
   }
-  .pf-role__head {
+  .pf-block__head {
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
@@ -863,7 +715,7 @@
     gap: 8px 32px;
     margin-bottom: 72px;
   }
-  .druid-root .pf-role__title {
+  .druid-root .pf-block__title {
     font-size: clamp(40px, 4.4vw, 56px);
     line-height: 1.12;
     margin: 0;
@@ -874,402 +726,7 @@
     min-height: 44px;
   }
 
-  /* The gold switch between a role's two pages: a glass rail, two tabs, and
-     a gold handle that tracks the pager's scroll position. */
-  .pf-switch {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    margin: 0 auto 32px;
-  }
-  .pf-switch__rail {
-    position: relative;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    width: min(100%, 520px);
-    padding: 6px;
-    border-radius: 999px;
-    background: var(--glass-card);
-    -webkit-backdrop-filter: blur(20px) saturate(140%);
-    backdrop-filter: blur(20px) saturate(140%);
-    border: 1px solid var(--glass-line);
-    box-shadow:
-      inset 1px 1px 0 var(--glass-hi),
-      0 8px 32px var(--glass-shadow);
-    touch-action: pan-y;
-    user-select: none;
-    -webkit-user-select: none;
-    cursor: grab;
-  }
-  .pf-switch__rail.is-dragging {
-    cursor: grabbing;
-  }
-  .pf-switch__thumb {
-    position: absolute;
-    top: 6px;
-    bottom: 6px;
-    left: 6px;
-    width: calc(50% - 6px);
-    border-radius: 999px;
-    /* The shine travels across the handle as it slides. */
-    background: linear-gradient(
-        115deg,
-        var(--color-gold-light) 0%,
-        var(--color-gold-glint) 45%,
-        var(--color-gold-light) 60%,
-        var(--color-gold-base) 100%
-      )
-      calc(var(--p) * 100%) 50% / 240% 100%;
-    box-shadow:
-      inset 0 1px 0 color-mix(in srgb, var(--color-white) 65%, transparent),
-      inset 0 -2px 0 color-mix(in srgb, var(--color-gold-shadow) 45%, transparent),
-      0 6px 18px color-mix(in srgb, var(--color-espresso) 28%, transparent);
-    transform: translateX(calc(var(--p) * 100%));
-    transition:
-      scale 200ms var(--ease-druid),
-      translate 240ms var(--ease-druid);
-  }
-  /* Squashed while held; it settles back on release. */
-  .pf-switch__rail.is-dragging .pf-switch__thumb {
-    scale: 1.04 0.9;
-    transition: scale 160ms ease-out;
-  }
-  /* Two little columns of grip dots, one at each end of the handle. */
-  .pf-switch__grip {
-    position: absolute;
-    top: calc(50% - 9px);
-    left: 12px;
-    right: 12px;
-    height: 18px;
-    opacity: 0.4;
-    background:
-      radial-gradient(circle, var(--color-walnut) 1.3px, transparent 1.7px) left top / 5px 6px repeat-y,
-      radial-gradient(circle, var(--color-walnut) 1.3px, transparent 1.7px) right top / 5px 6px repeat-y;
-  }
-  .pf-switch__tab {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    min-height: 48px;
-    padding: 8px 24px;
-    border: 0;
-    border-radius: 999px;
-    background: transparent;
-    color: var(--text-strong);
-    font-family: var(--font-heading);
-    font-size: 17px;
-    line-height: 1.2;
-    cursor: inherit;
-    transition: color 200ms ease;
-  }
-  .pf-switch__tab[aria-selected="true"] {
-    color: var(--color-walnut);
-  }
-  .pf-switch__count {
-    display: grid;
-    place-items: center;
-    min-width: 26px;
-    height: 26px;
-    padding: 0 6px;
-    border-radius: 999px;
-    font-family: var(--font-note);
-    font-size: 15px;
-    background: color-mix(in srgb, currentColor 14%, transparent);
-  }
-  .druid-root .pf-switch__hint {
-    margin: 0;
-    max-width: none;
-    text-align: center;
-    color: var(--text-soft);
-  }
-  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-    /* Hovering the other side teases the handle toward it. */
-    .pf-switch__rail:not(.is-dragging):has(> button:nth-of-type(2)[aria-selected="false"]:hover) .pf-switch__thumb {
-      translate: 12px 0;
-    }
-    .pf-switch__rail:not(.is-dragging):has(> button:nth-of-type(1)[aria-selected="false"]:hover) .pf-switch__thumb {
-      translate: -12px 0;
-    }
-  }
-
-  /* The pager track: both pages side by side in a native horizontal scroller
-     that snaps to either one. The page in view fills the width; a dimmed
-     sliver of the other shows at the edge. Its height is set from script to
-     the page in view, so the track is clipped vertically. */
-  .pf-track {
-    --peek: 64px;
-    --gap: 22px;
-    display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: calc(100% - var(--peek));
-    gap: var(--gap);
-    align-items: start;
-    padding-bottom: 40px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    overscroll-behavior-x: contain;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-  }
-  .pf-track::-webkit-scrollbar {
-    display: none;
-  }
-  .pf-track.is-dragging {
-    scroll-snap-type: none;
-  }
-  .pf-track > .pf-page:first-child {
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
-  }
-  .pf-track > .pf-page:last-child {
-    scroll-snap-align: end;
-    scroll-snap-stop: always;
-  }
-  .pf-track--single {
-    grid-auto-columns: 100%;
-    padding-bottom: 24px;
-    overflow: visible;
-  }
-  .pf-page {
-    position: relative;
-    border-radius: 28px;
-    padding: 40px 44px 32px;
-    border: 1px solid var(--glass-line);
-    box-shadow:
-      inset 1px 1px 0 color-mix(in srgb, var(--color-white) 18%, transparent),
-      0 16px 40px var(--glass-shadow);
-    transition: opacity 300ms ease;
-  }
-  .pf-page[data-state="away"] {
-    opacity: 0.45;
-    cursor: pointer;
-  }
-  .pf-page[data-state="away"]:hover {
-    opacity: 0.75;
-  }
-  .pf-page__head {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 8px 24px;
-    margin-bottom: 8px;
-  }
-  .druid-root .pf-page__title {
-    margin: 0;
-  }
-  .pf-page__foot {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 36px;
-  }
-  .pf-page--experience .pf-page__foot {
-    justify-content: flex-start;
-  }
-
-  /* Project carousel: a depth stack of image slides. */
-  .pf-controls {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 12px 16px;
-  }
-  .druid-root .pf-count {
-    margin: 0;
-    min-width: 4.5ch;
-    text-align: center;
-  }
-  .pf-stage {
-    --pf-top: 64px;
-    --pf-w: min(100% - 200px, 900px);
-    --pf-d1x: 96px;
-    --pf-d1y: -52px;
-    --pf-d1z: -120px;
-    --pf-d2x: 176px;
-    --pf-d2y: -98px;
-    --pf-d2z: -240px;
-    position: relative;
-    padding: var(--pf-top) 0 28px;
-    perspective: var(--perspective);
-  }
-  .pf-slot {
-    position: absolute;
-    top: var(--pf-top);
-    left: 0;
-    width: var(--pf-w);
-    z-index: 1;
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transform: translate3d(var(--pf-d2x), var(--pf-d2y), -360px) rotateY(-4deg);
-    transition:
-      transform 300ms var(--ease-druid),
-      opacity 200ms ease,
-      visibility 0s linear 300ms;
-    will-change: transform;
-  }
-  .pf-slot.is-active {
-    position: relative;
-    top: auto;
-    z-index: 5;
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-    transform: translate3d(0, 0, 0) rotateY(0deg);
-    transition-delay: 0s;
-  }
-  .pf-slot.is-d1 {
-    z-index: 4;
-    opacity: 1;
-    visibility: visible;
-    transform: translate3d(var(--pf-d1x), var(--pf-d1y), var(--pf-d1z)) rotateY(-4deg);
-    transition-delay: 0s;
-  }
-  .pf-slot.is-d2 {
-    z-index: 3;
-    opacity: 1;
-    visibility: visible;
-    transform: translate3d(var(--pf-d2x), var(--pf-d2y), var(--pf-d2z)) rotateY(-4deg);
-    transition-delay: 0s;
-  }
-  .pf-slot.is-far {
-    z-index: 2;
-  }
-  .pf-slot.is-past {
-    z-index: 6;
-    transform: translate3d(-14%, 40px, 80px) rotateY(5deg);
-  }
-  .pf-slot.is-behind .pf-slide__text {
-    visibility: hidden;
-  }
-
-  .pf-slide__face {
-    position: relative;
-    z-index: 1;
-    aspect-ratio: 16 / 9;
-    overflow: hidden;
-    border: 3px solid transparent;
-    border-radius: 20px;
-    background:
-      linear-gradient(var(--color-espresso), var(--color-espresso)) padding-box,
-      var(--frame-gradient) border-box;
-    color: var(--color-white);
-  }
-  .pf-slide__img {
-    object-fit: cover;
-  }
-  /* Until a VVP is added: a labelled, patterned placeholder. */
-  .pf-slide__ph {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 24px 28px;
-    color: var(--color-gold-light);
-    background:
-      repeating-linear-gradient(
-        135deg,
-        color-mix(in srgb, var(--color-white) 7%, transparent) 0 1px,
-        transparent 1px 12px
-      ),
-      radial-gradient(70% 80% at 85% 10%, color-mix(in srgb, var(--color-mauve-index) 90%, transparent), transparent 70%),
-      radial-gradient(60% 70% at 10% 30%, color-mix(in srgb, var(--color-green-deep) 70%, transparent), transparent 70%),
-      linear-gradient(150deg, var(--color-brown-rich), var(--color-espresso));
-  }
-  .pf-slide__ph svg {
-    width: 28px;
-    height: 28px;
-    flex: none;
-  }
-  .druid-root .pf-slide__ph p {
-    margin: 0;
-    font-family: var(--font-note);
-    font-size: 18px;
-    line-height: 1.5;
-  }
-  .pf-slide__scrim {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      to top,
-      color-mix(in srgb, var(--color-espresso) 92%, transparent) 0%,
-      color-mix(in srgb, var(--color-espresso) 55%, transparent) 38%,
-      transparent 70%
-    );
-  }
-  .pf-slide__text {
-    position: absolute;
-    inset: auto 0 0 0;
-    padding: 28px 32px 30px;
-  }
-  .druid-root .pf-slide__label {
-    margin: 0 0 8px;
-    font-family: var(--font-note);
-    font-size: 17px;
-    line-height: 1.3;
-    color: var(--color-gold-light);
-  }
-  .druid-root .pf-slide__headline {
-    margin: 0;
-    font-family: var(--font-heading);
-    font-weight: 700;
-    font-size: clamp(22px, 2.4vw, 34px);
-    line-height: 1.12;
-    letter-spacing: -0.02em;
-    max-width: 26ch;
-    text-wrap: balance;
-    text-shadow: 0 2px 4px color-mix(in srgb, black 30%, transparent);
-  }
-
-  /* The front project's details, under the stack. */
-  .pf-detail {
-    display: grid;
-    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-    gap: 24px 48px;
-    margin-top: 12px;
-  }
-  .druid-root .pf-detail__title {
-    margin: 0 0 6px;
-    font-size: clamp(24px, 2.4vw, 30px);
-  }
-  .druid-root .pf-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2px 18px;
-    margin: 0 0 14px;
-    color: var(--soft, var(--text-soft));
-  }
-  .druid-root .pf-tagline {
-    margin: 0 0 14px;
-    font-size: 16px;
-    line-height: 1.5;
-    color: var(--soft, var(--text-soft));
-  }
-  .druid-root .pf-summary {
-    margin: 0 0 16px;
-  }
-  .pf-detail__side {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    align-items: stretch;
-  }
-  .pf-list {
-    margin: 12px 0 0;
-    padding: 0 0 0 20px;
-    list-style: disc;
-    font-size: 16px;
-    line-height: 1.55;
-    max-width: 72ch;
-  }
-  .pf-list li + li {
-    margin-top: 6px;
-  }
+  /* A row of gold tags. */
   .pf-skills {
     display: flex;
     flex-wrap: wrap;
@@ -1280,14 +737,6 @@
   }
   .pf-skills .druid-tag {
     margin: 0;
-  }
-  .pf-more summary {
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
-    cursor: pointer;
-    font-family: var(--font-note);
-    font-size: 18px;
   }
 
   /* Live demo slot */
@@ -1340,121 +789,6 @@
     font-family: var(--font-note);
     font-size: 16px;
     line-height: 1.3;
-  }
-
-  /* Experience list (brown page): a plain disclosure list, no pictures. */
-  .pf-xp-group + .pf-xp-group {
-    margin-top: 40px;
-  }
-  .druid-root .pf-xp-group__title {
-    margin: 0 0 8px;
-    font-family: var(--font-note);
-    font-size: 20px;
-    letter-spacing: normal;
-    color: var(--soft);
-  }
-  .pf-xp {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    border-top: 1px solid color-mix(in srgb, currentColor 22%, transparent);
-  }
-  .pf-xp > li {
-    border-bottom: 1px solid color-mix(in srgb, currentColor 22%, transparent);
-  }
-  .pf-xp__toggle {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto 24px;
-    align-items: center;
-    gap: 4px 24px;
-    width: 100%;
-    min-height: 44px;
-    padding: 18px 12px;
-    border: 0;
-    border-radius: 12px;
-    background: transparent;
-    color: inherit;
-    text-align: left;
-    cursor: pointer;
-    transition:
-      background-color 200ms ease,
-      transform 300ms var(--ease-druid);
-  }
-  .pf-xp__toggle:hover {
-    background: color-mix(in srgb, var(--color-white) 8%, transparent);
-  }
-  .pf-xp__title {
-    display: block;
-    font-family: var(--font-heading);
-    font-size: clamp(19px, 1.7vw, 22px);
-    line-height: 1.25;
-    letter-spacing: -0.01em;
-  }
-  .pf-xp__org {
-    display: block;
-    margin-top: 2px;
-    font-size: 16px;
-    line-height: 1.4;
-    color: var(--soft);
-  }
-  .pf-xp__when {
-    font-family: var(--font-note);
-    font-size: 16px;
-    line-height: 1.3;
-    text-align: right;
-    white-space: nowrap;
-  }
-  .pf-xp__chevron {
-    width: 20px;
-    height: 20px;
-    transition: transform 300ms var(--ease-druid);
-  }
-  .pf-xp__toggle[aria-expanded="true"] .pf-xp__chevron {
-    transform: rotate(180deg);
-  }
-  .pf-xp__body {
-    display: grid;
-    grid-template-rows: 1fr;
-    transition:
-      grid-template-rows 260ms var(--ease-druid),
-      visibility 0s linear 0s;
-  }
-  .pf-xp__body[data-open="false"] {
-    grid-template-rows: 0fr;
-    visibility: hidden;
-    transition:
-      grid-template-rows 260ms var(--ease-druid),
-      visibility 0s linear 260ms;
-  }
-  .pf-xp__inner {
-    min-height: 0;
-    overflow: hidden;
-  }
-  .pf-xp__content {
-    padding: 0 12px 24px;
-  }
-  .pf-xp__content .pf-list {
-    margin: 0 0 18px;
-  }
-
-  /* Executive summary under each role. */
-  .pf-brief {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(360px, 100%), 1fr));
-    gap: 24px 56px;
-    margin-top: 40px;
-    padding: 32px 36px;
-  }
-  .druid-root .pf-brief__title {
-    margin: 0 0 12px;
-  }
-  .druid-root .pf-brief__body {
-    margin: 0;
-    max-width: 64ch;
-  }
-  .druid-root .pf-brief__label {
-    margin: 0 0 12px;
-    color: var(--text-soft);
   }
 
   /* Footer: contact on the left, the Languages card bottom right. */
@@ -1580,18 +914,6 @@
     .druid-container {
       width: min(100% - 64px, 1280px);
     }
-    .pf-stage {
-      --pf-w: calc(100% - 100px);
-      --pf-d1x: 48px;
-      --pf-d1y: -40px;
-      --pf-d1z: -60px;
-      --pf-d2x: 90px;
-      --pf-d2y: -76px;
-      --pf-d2z: -120px;
-    }
-    .pf-detail {
-      grid-template-columns: minmax(0, 1fr);
-    }
   }
   @media (max-width: 639px) {
     .druid-root {
@@ -1651,67 +973,18 @@
       clip-path: inset(100% 0 0 0 round 18px);
     }
     .pf-front {
-      padding-top: 128px;
+      padding-top: 112px;
       padding-bottom: 72px;
     }
-    .pf-panel {
-      padding: 22px 18px 16px;
+    .pf-hero__actions .druid-button {
+      flex: 1 1 100%;
     }
-    .druid-root .pf-scroll {
-      margin: 14px -18px -16px;
-    }
-    .pf-role {
+    .pf-block {
       padding-block: 40px 72px;
     }
-    .pf-role__head {
+    .pf-block__head {
       margin-bottom: 40px;
     }
-    .pf-page {
-      padding: 24px 18px 20px;
-      border-radius: 22px;
-    }
-    .pf-track {
-      --peek: 34px;
-      --gap: 12px;
-    }
-    .pf-switch__tab {
-      padding: 8px 12px;
-      font-size: 16px;
-    }
-    /* No room for grip dots beside the label on a phone. */
-    .pf-switch__grip {
-      display: none;
-    }
-    .pf-stage {
-      --pf-top: 52px;
-      --pf-w: calc(100% - 28px);
-      --pf-d1x: 14px;
-      --pf-d1y: -26px;
-      --pf-d1z: -24px;
-      --pf-d2x: 26px;
-      --pf-d2y: -48px;
-      --pf-d2z: -48px;
-    }
-    .pf-slide__face {
-      aspect-ratio: 4 / 5;
-    }
-    .pf-slide__text {
-      padding: 20px 20px 22px;
-    }
-    .pf-xp__toggle {
-      grid-template-columns: minmax(0, 1fr) 24px;
-      padding: 16px 6px;
-    }
-    .pf-xp__when {
-      grid-column: 1;
-      grid-row: 2;
-      text-align: left;
-    }
-    .pf-xp__chevron {
-      grid-column: 2;
-      grid-row: 1 / span 2;
-    }
-    .pf-brief,
     .pf-contact {
       padding: 24px 20px;
     }
@@ -1744,12 +1017,7 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .pf-seg.is-active .pf-seg__fill {
-      animation: none;
-      transform: scaleX(1);
-    }
-    .pf-liquid i,
-    .pf-scroll svg {
+    .pf-liquid i {
       animation: none !important;
     }
     .pf-langs li,
@@ -1765,9 +1033,6 @@
       color: LinkText;
       -webkit-text-fill-color: LinkText;
       filter: none;
-    }
-    .pf-slide__face {
-      border-color: CanvasText;
     }
     .druid-card::before {
       border: 1px solid CanvasText;
@@ -3216,11 +2481,14 @@
     transform: scale(0.97);
   }
 
-  /* Case studies on the portfolio page: each one straight on the canvas, its
+  /* The projects on the portfolio page: each one straight on the canvas, its
      words at the left and its picture fading in at the right. The whole entry
-     is one link. */
+     is one link, and the Index scrolls to it. */
   .cs-studies {
     overflow-x: clip;
+  }
+  .cs-entry-item {
+    scroll-margin-top: 100px;
   }
   .cs-cards {
     display: grid;
@@ -3770,23 +3038,6 @@
   }
   to {
     transform: translateX(345%);
-  }
-}
-@keyframes pf-bob {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(6px);
-  }
-}
-@keyframes pf-fill {
-  from {
-    transform: scaleX(0);
-  }
-  to {
-    transform: scaleX(1);
   }
 }
 @keyframes pf-drift-a {

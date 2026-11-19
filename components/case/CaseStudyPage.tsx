@@ -539,8 +539,8 @@ export function CaseStudyPage({
       <footer className="druid-container cs-foot" aria-labelledby="more-work-title">
         <div className="cs-end">
           <div>
-            <h2 id="more-work-title">More work</h2>
-            <p>Roles, projects and experience are on the main page.</p>
+            <h2 id="more-work-title">More projects</h2>
+            <p>Every project is on the main page.</p>
             <p className="cs-end__contact">
               <a href={`mailto:${email}`}>{email}</a>
             </p>
