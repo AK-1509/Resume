@@ -4,6 +4,7 @@ import type { CSSProperties, ReactNode } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { IndexDock } from "@/components/IndexDock";
 import { LiquidBackground } from "@/components/LiquidBackground";
+import { SHOW_PLACEHOLDERS } from "@/lib/placeholders";
 import { CASE_PHASES, CASE_PHASE_LABELS, phaseHasContent, type CasePhase, type CaseStudy } from "@/lib/schema";
 import { CaseNav, type NavSection } from "./CaseNav";
 import { DrawOnView } from "./DrawOnView";
@@ -119,6 +120,8 @@ function Tag({
 
 function Hero({ study }: { study: CaseStudy }) {
   const { image, figure } = study.hero;
+  // With no picture on the live site, the art column is rings alone.
+  const bare = !image && !figure && !SHOW_PLACEHOLDERS;
   return (
     <header className={`cs-hero${image ? " cs-hero--image" : ""}`}>
       {image && (
@@ -131,7 +134,7 @@ function Hero({ study }: { study: CaseStudy }) {
           <h1 className="cs-hero__title">{study.title}</h1>
           <p className="cs-hero__slug">{study.slugLine}</p>
         </div>
-        <div className="cs-hero__art">
+        <div className={`cs-hero__art${bare ? " cs-hero__art--bare" : ""}`}>
           {!image && (
             <svg className="cs-hero__rings" viewBox="0 0 600 600" fill="none" aria-hidden="true">
               {[70, 120, 170, 220, 270, 298].map((r) => (
@@ -151,7 +154,7 @@ function Hero({ study }: { study: CaseStudy }) {
               />
             </div>
           )}
-          {!image && !figure && (
+          {!image && !figure && SHOW_PLACEHOLDERS && (
             <div
               className="cs-ph cs-hero__ph"
               role="img"
@@ -182,11 +185,14 @@ function Hero({ study }: { study: CaseStudy }) {
 function Role({ study }: { study: CaseStudy }) {
   const { role, tags } = study;
   const empty = !role.title.trim() && !role.sprint.trim() && !role.summary.trim() && role.moves.length === 0;
+  // On the live site an empty role leaves only the tags; the heading stays for
+  // screen readers and the "Overview" link in the pane.
+  const quiet = empty && !SHOW_PLACEHOLDERS;
   return (
     <section id="overview" className="cs-role" aria-labelledby="overview-title">
       <div className="cs-role__head">
-        <h2 id="overview-title" className="cs-role__title">
-          {role.title.trim() || "Role"}
+        <h2 id="overview-title" className={quiet ? "sr-only" : "cs-role__title"}>
+          {role.title.trim() || (quiet ? "Overview" : "Role")}
         </h2>
         {role.sprint.trim() && <p className="druid-caption cs-role__sprint">Sprint time: {role.sprint}</p>}
       </div>
@@ -200,10 +206,12 @@ function Role({ study }: { study: CaseStudy }) {
         </ul>
       )}
       {empty ? (
-        <div className="cs-ph">
-          <p>Placeholder for the role.</p>
-          <p>Role title, sprint time and a short summary, then each action and the impact it had.</p>
-        </div>
+        SHOW_PLACEHOLDERS && (
+          <div className="cs-ph">
+            <p>Placeholder for the role.</p>
+            <p>Role title, sprint time and a short summary, then each action and the impact it had.</p>
+          </div>
+        )
       ) : (
         <>
           {role.summary.trim() && <p className="cs-role__summary">{role.summary}</p>}
@@ -274,6 +282,7 @@ function Research({ study, number }: { study: CaseStudy; number: number }) {
 
 function Goals({ study, number }: { study: CaseStudy; number: number }) {
   const { rows, insights, report, roadmap } = study.goals;
+  const reportSlot = report && (report.href || SHOW_PLACEHOLDERS) ? report : null;
   return (
     <section id="goals" className={`cs-phase ${GROUND.goals}`} aria-labelledby="goals-title">
       <div className="cs-goals">
@@ -321,7 +330,7 @@ function Goals({ study, number }: { study: CaseStudy; number: number }) {
           )}
         </div>
 
-        {(insights.length > 0 || report) && (
+        {(insights.length > 0 || reportSlot) && (
           <div id="goals-insights" className="cs-block">
             {insights.length > 0 && (
               <>
@@ -338,10 +347,10 @@ function Goals({ study, number }: { study: CaseStudy; number: number }) {
                 </ol>
               </>
             )}
-            {report && (
+            {reportSlot && (
               <div className="cs-report">
                 <Slot
-                  href={report.href}
+                  href={reportSlot.href}
                   title="See the full strategic report"
                   emptyNote="Placeholder for the report link"
                 />
@@ -442,6 +451,8 @@ export function CaseStudyPage({
 }) {
   const phases = CASE_PHASES.filter((phase) => phaseHasContent(study, phase));
   const numberOf = (phase: CasePhase) => phases.indexOf(phase) + 1;
+  // Without a date on any stop, the timeline would only repeat the pane's links.
+  const dated = phases.some((phase) => study.timeline[phase].trim());
 
   const sections: NavSection[] = [
     { id: "overview", label: "Overview" },
@@ -483,14 +494,14 @@ export function CaseStudyPage({
 
             <aside className="cs-rail" aria-label="Demo and page navigation">
               <div className="cs-rail__stick">
-                {study.demo && (
+                {study.demo && (study.demo.href || SHOW_PLACEHOLDERS) && (
                   <Slot href={study.demo.href} title="Live demo" emptyNote="Placeholder for the demo link" />
                 )}
                 <CaseNav sections={sections} />
               </div>
             </aside>
 
-            {phases.length > 0 && (
+            {phases.length > 0 && dated && (
               <section id="timeline" className="cs-timeline" aria-labelledby="timeline-title">
                 <h2 id="timeline-title" className="cs-timeline__title">
                   Sprint timeline

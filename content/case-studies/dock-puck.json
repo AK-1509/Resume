@@ -166,8 +166,7 @@
           "alt": "Dock+Puck on a wooden bedside table in a dim bedroom, its base glowing warm, with a phone on the puck showing 12:50.",
           "width": 1200,
           "height": 897
-        },
-        "caption": "Dock+Puck concept photo."
+        }
       },
       {
         "type": "figure",
@@ -177,8 +176,7 @@
           "alt": "A handmade prototype in cardboard and white paper: a round base with a cardboard puck tilted up on top.",
           "width": 1000,
           "height": 1000
-        },
-        "caption": "The medium-fidelity prototype used in user testing."
+        }
       }
     ]
   },

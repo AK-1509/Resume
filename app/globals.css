@@ -254,6 +254,12 @@
     margin: 0 0 24px;
     text-wrap: balance;
   }
+  /* No word left alone on the last line of a paragraph. */
+  .druid-root p,
+  .druid-root li,
+  .druid-root dd {
+    text-wrap: pretty;
+  }
   .druid-root h2 {
     font-size: clamp(26px, 3vw, 36px);
   }
@@ -563,6 +569,16 @@
     align-items: center;
     gap: 8px;
   }
+  /* The phone menu button; hidden wherever the links fit in the bar. */
+  .pf-menu-btn {
+    display: none;
+    width: 44px;
+    padding: 0;
+  }
+  .pf-menu-btn svg {
+    width: 20px;
+    height: 20px;
+  }
 
   /* The index dock: a small mauve tab on the right edge that opens into the
      full Index on hover, or on click and keyboard via its button. */
@@ -611,9 +627,9 @@
     opacity: 0;
     visibility: hidden;
     transition:
-      clip-path 420ms var(--ease-druid),
-      opacity 240ms ease,
-      visibility 0s linear 420ms;
+      clip-path 240ms var(--ease-druid),
+      opacity 200ms ease,
+      visibility 0s linear 240ms;
   }
   .pf-dock:hover .pf-dock__panel,
   .pf-dock__panel:focus-within,
@@ -712,9 +728,9 @@
     opacity: 0;
     visibility: hidden;
     transition:
-      transform 900ms var(--ease-druid),
-      opacity 500ms ease,
-      visibility 0s linear 900ms;
+      transform 300ms var(--ease-druid),
+      opacity 200ms ease,
+      visibility 0s linear 300ms;
   }
   .pf-line.is-current {
     transform: translate3d(0, 0, 0) rotateX(0deg);
@@ -911,10 +927,10 @@
       0 6px 18px color-mix(in srgb, var(--color-espresso) 28%, transparent);
     transform: translateX(calc(var(--p) * 100%));
     transition:
-      scale 380ms cubic-bezier(0.34, 1.56, 0.64, 1),
-      translate 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
+      scale 200ms var(--ease-druid),
+      translate 240ms var(--ease-druid);
   }
-  /* Squashed while held; it springs back with a small overshoot on release. */
+  /* Squashed while held; it settles back on release. */
   .pf-switch__rail.is-dragging .pf-switch__thumb {
     scale: 1.04 0.9;
     transition: scale 160ms ease-out;
@@ -1091,9 +1107,9 @@
     pointer-events: none;
     transform: translate3d(var(--pf-d2x), var(--pf-d2y), -360px) rotateY(-4deg);
     transition:
-      transform 700ms var(--ease-druid),
-      opacity 450ms ease,
-      visibility 0s linear 700ms;
+      transform 300ms var(--ease-druid),
+      opacity 200ms ease,
+      visibility 0s linear 300ms;
     will-change: transform;
   }
   .pf-slot.is-active {
@@ -1400,15 +1416,15 @@
     display: grid;
     grid-template-rows: 1fr;
     transition:
-      grid-template-rows 320ms var(--ease-druid),
+      grid-template-rows 260ms var(--ease-druid),
       visibility 0s linear 0s;
   }
   .pf-xp__body[data-open="false"] {
     grid-template-rows: 0fr;
     visibility: hidden;
     transition:
-      grid-template-rows 320ms var(--ease-druid),
-      visibility 0s linear 320ms;
+      grid-template-rows 260ms var(--ease-druid),
+      visibility 0s linear 260ms;
   }
   .pf-xp__inner {
     min-height: 0;
@@ -1501,7 +1517,7 @@
     color: var(--color-gold-light);
     transform-origin: 100% 50%;
     transition:
-      transform 320ms var(--ease-druid),
+      transform 240ms var(--ease-druid),
       color 200ms ease,
       text-shadow 200ms ease;
   }
@@ -1585,26 +1601,57 @@
       width: calc(100% - 32px);
     }
     .druid-section {
-      scroll-margin-top: 140px;
+      scroll-margin-top: 96px;
     }
+    /* One row: the name, the actions and the menu button. The links open
+       underneath, one to a line. */
     .pf-glass {
-      padding: 6px 8px 6px 16px;
-      gap: 0 12px;
+      padding: 6px 6px 6px 16px;
+      gap: 0 8px;
     }
     .pf-brand {
       font-size: 19px;
     }
+    .pf-menu-btn {
+      display: inline-flex;
+    }
     .pf-nav {
+      display: none;
       order: 3;
       width: 100%;
-      gap: 0 18px;
-      padding-bottom: 2px;
+      flex-direction: column;
+      padding: 4px 4px 8px;
     }
+    .pf-nav[data-open="true"] {
+      display: flex;
+    }
+    .druid-root .pf-nav a {
+      font-size: 18px;
+    }
+    /* The Index tab moves to the foot of the screen, out of the text column,
+       and opens upwards. */
     .pf-dock {
-      top: 152px;
+      top: auto;
+      bottom: max(16px, env(safe-area-inset-bottom));
+      right: 16px;
+      width: auto;
+    }
+    .pf-dock__tab {
+      width: auto;
+      min-height: 44px;
+      padding: 10px 18px;
+      border-right: 1px solid color-mix(in srgb, var(--color-mauve-soft) 40%, transparent);
+      border-radius: 999px;
+      writing-mode: horizontal-tb;
+    }
+    .pf-dock__panel {
+      top: auto;
+      bottom: calc(100% + 10px);
+      right: 0;
+      clip-path: inset(100% 0 0 0 round 18px);
     }
     .pf-front {
-      padding-top: 184px;
+      padding-top: 128px;
       padding-bottom: 72px;
     }
     .pf-panel {
@@ -1677,6 +1724,22 @@
   @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
     .druid-button:hover {
       transform: perspective(1200px) translateZ(6px) translateY(-1px);
+    }
+  }
+  /* Every button answers a press, on any pointer: a small, quick give that
+     wins over the hover lift while held. */
+  @media (prefers-reduced-motion: no-preference) {
+    .druid-button:active,
+    .pf-dock__tab:active,
+    .druid-root .pf-demo.is-live:active {
+      transform: scale(0.97);
+      transition-duration: 120ms;
+    }
+    .pf-dock__tab,
+    .druid-root .pf-demo.is-live {
+      transition:
+        transform 160ms var(--ease-druid),
+        filter 180ms ease;
     }
   }
 
@@ -1872,16 +1935,16 @@
      explains it, while the figure glides forward through the scene. */
   .cs-hero__title,
   .cs-hero__slug {
-    animation: cs-rise 800ms var(--ease-out) both;
+    animation: cs-rise 300ms var(--ease-out) both;
   }
   .cs-hero__slug {
     animation-delay: 120ms;
   }
   .cs-hero__figure img {
-    animation: cs-glide 1300ms var(--ease-out) 80ms both;
+    animation: cs-glide 300ms var(--ease-out) 60ms both;
   }
   .cs-hero__rings {
-    animation: cs-rings 1600ms var(--ease-out) both;
+    animation: cs-rings 300ms var(--ease-out) both;
   }
 
   /* Layout: the main column, and a rail that holds the demo link and the
@@ -2278,8 +2341,8 @@
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
     transition:
-      background-size 720ms var(--ease-out) calc(var(--i, 0) * 180ms),
-      color 240ms ease calc(var(--i, 0) * 180ms + 120ms);
+      background-size 300ms var(--ease-out) calc(var(--i, 0) * 40ms),
+      color 200ms ease calc(var(--i, 0) * 40ms + 100ms);
   }
   .cs[data-draw-ready] [data-draw=""] mark {
     color: inherit;
@@ -2672,7 +2735,7 @@
     height: 2px;
     background: color-mix(in srgb, currentColor 30%, transparent);
     transform-origin: 0 50%;
-    transition: transform 1100ms var(--ease-out);
+    transition: transform 300ms var(--ease-out);
   }
   .cs-road li {
     position: relative;
@@ -2692,8 +2755,8 @@
     border-radius: 50%;
     background: var(--gold-ink);
     transition:
-      opacity 300ms ease calc(var(--i, 0) * 150ms + 200ms),
-      transform 500ms var(--ease-out) calc(var(--i, 0) * 150ms + 200ms);
+      opacity 200ms ease calc(var(--i, 0) * 40ms),
+      transform 300ms var(--ease-out) calc(var(--i, 0) * 40ms);
   }
   .cs .cs-road__what {
     margin: 8px 0 0;
@@ -2813,7 +2876,7 @@
     height: 2px;
     background: currentColor;
     transform-origin: 0 50%;
-    transition: transform 600ms var(--ease-out) calc(var(--i, 0) * 260ms);
+    transition: transform 300ms var(--ease-out) calc(var(--i, 0) * 40ms);
   }
   .cs-flow__line::after {
     content: "";
@@ -2861,7 +2924,7 @@
     transform: scaleX(0);
   }
   .cs-xchg[data-draw="in"] .cs-flow__track i {
-    animation: cs-pulse 900ms cubic-bezier(0.45, 0, 0.3, 1) calc(var(--i, 0) * 620ms + 500ms) 1 var(--dir, normal)
+    animation: cs-pulse 300ms cubic-bezier(0.45, 0, 0.3, 1) calc(var(--i, 0) * 120ms + 200ms) 1 var(--dir, normal)
       both;
   }
   .cs .cs-xchg__caption {
@@ -2978,13 +3041,6 @@
     height: auto;
     border-radius: 10px;
   }
-  .cs-figure figcaption {
-    margin-top: 18px;
-    font-family: var(--font-note);
-    font-size: 16px;
-    line-height: 1.4;
-    color: var(--soft);
-  }
 
   /* Market sizing: nested rings, widest first, all resting on one floor. */
   .cs-sizing {
@@ -3006,8 +3062,8 @@
     transform-box: fill-box;
     transform-origin: 50% 100%;
     transition:
-      transform 800ms var(--ease-out) calc(var(--i, 0) * 130ms),
-      opacity 400ms ease calc(var(--i, 0) * 130ms);
+      transform 300ms var(--ease-out) calc(var(--i, 0) * 40ms),
+      opacity 200ms ease calc(var(--i, 0) * 40ms);
   }
   .cs-ring--0 {
     fill: var(--color-mauve-soft);
@@ -3110,7 +3166,7 @@
     border-radius: 6px;
     background: var(--gold-ink);
     transform-origin: 0 50%;
-    transition: transform 900ms var(--ease-out) calc(var(--i, 0) * 70ms);
+    transition: transform 300ms var(--ease-out) calc(var(--i, 0) * 40ms);
   }
   .cs-bars .is-muted .cs-bars__fill {
     background: color-mix(in srgb, currentColor 40%, transparent);
@@ -3288,7 +3344,7 @@
     transform: rotateY(-18deg) rotateX(8deg) rotateZ(5deg);
     transform-origin: 50% 20%;
     filter: drop-shadow(18px 22px 26px color-mix(in srgb, var(--color-espresso) 38%, transparent));
-    transition: transform 600ms var(--ease-out);
+    transition: transform 240ms var(--ease-out);
   }
 
   /* The Index on a project page lists pages, and ends with the way home. */
@@ -3350,7 +3406,7 @@
     }
     /* Hovering the exchange runs its four flows again. */
     .cs-xchg[data-draw]:hover .cs-flow__track i {
-      animation: cs-pulse-again 900ms cubic-bezier(0.45, 0, 0.3, 1) calc(var(--i, 0) * 620ms) 1 var(--dir, normal)
+      animation: cs-pulse-again 300ms cubic-bezier(0.45, 0, 0.3, 1) calc(var(--i, 0) * 120ms) 1 var(--dir, normal)
         both;
     }
     .cs-entry:hover .cs-entry__figure img,
@@ -3447,7 +3503,7 @@
       width: calc(100% - 32px);
     }
     .cs-hero {
-      padding-top: 150px;
+      padding-top: 120px;
     }
     .cs-hero__inner {
       grid-template-columns: minmax(0, 1fr);
@@ -3457,6 +3513,10 @@
     .cs-hero__art {
       min-height: 0;
       height: 360px;
+    }
+    /* Rings alone are not worth a screen on a phone. */
+    .cs-hero__art--bare {
+      display: none;
     }
     .cs-hero__figure {
       width: calc(54% + 104px);

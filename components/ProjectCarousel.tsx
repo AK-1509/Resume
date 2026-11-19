@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { formatStartMonth } from "@/lib/format";
+import { SHOW_PLACEHOLDERS } from "@/lib/placeholders";
 import type { Experience, Skill } from "@/lib/schema";
 
 function slotClass(offset: number): string {
@@ -50,8 +51,9 @@ function PlayIcon() {
 
 /**
  * One slide: the project's VVP filling the frame — its gallery thumbnail once
- * added, a labelled placeholder until then — with a bold headline set on a
- * scrim along the bottom edge.
+ * added — with a bold headline set on a scrim along the bottom edge. Without a
+ * thumbnail the slide's ground carries the headline alone; in development the
+ * ground is labelled as a placeholder so the missing picture is easy to spot.
  */
 function Slide({ project, line }: { project: Experience; line: string | null }) {
   const thumb = project.gallery.find((g) => g.id === project.thumbnailId);
@@ -67,6 +69,8 @@ function Slide({ project, line }: { project: Experience; line: string | null }) 
             sizes="(min-width: 1280px) 900px, 90vw"
             className="pf-slide__img"
           />
+        ) : !SHOW_PLACEHOLDERS ? (
+          <div className="pf-slide__ph" aria-hidden="true" />
         ) : (
           <div
             className="pf-slide__ph"
@@ -222,13 +226,15 @@ export function ProjectCarousel({
               </span>
             </a>
           ) : (
-            <div className="pf-demo is-empty">
-              <PlayIcon />
-              <span>
-                <span className="pf-demo__title">Live demo</span>
-                <span className="pf-demo__note">Placeholder for the demo link</span>
-              </span>
-            </div>
+            SHOW_PLACEHOLDERS && (
+              <div className="pf-demo is-empty">
+                <PlayIcon />
+                <span>
+                  <span className="pf-demo__title">Live demo</span>
+                  <span className="pf-demo__note">Placeholder for the demo link</span>
+                </span>
+              </div>
+            )
           )}
           {front.url && (
             <a className="druid-button" href={front.url} target="_blank" rel="noopener noreferrer">

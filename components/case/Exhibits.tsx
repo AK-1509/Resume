@@ -157,7 +157,6 @@ function Figure({ block }: { block: Of<"figure"> }) {
           />
         </div>
       </div>
-      {block.caption && <figcaption>{block.caption}</figcaption>}
     </figure>
   );
 }
