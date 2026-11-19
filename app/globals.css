@@ -1714,14 +1714,31 @@
   /* ========================================================================
      Case study page: /projects/<slug>
 
-     The template drawn from content/case-studies/<slug>.json: a framed hero,
-     the role, a sprint timeline, then four phases on alternating green and
-     brown pages, with the navigation pane riding in a rail on the right.
+     The template drawn from content/case-studies/<slug>.json. The words are
+     set straight on the canvas: the hero, the role, the timeline and the four
+     phases. A phase takes its colour from a soft field of green or warm gold
+     behind it that fades out on every side. Tables, charts and diagrams sit
+     on cream Content Cards (.cs-sheet), so each reads as one object.
      ======================================================================== */
   .cs {
     /* A stronger ease-out than --ease-druid, for small UI answers. */
     --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --soft: var(--text-soft);
+    /* The readable gold: gold-shadow on the pale canvas, gold-light on the dark. */
+    --gold-ink: var(--hero-name);
+    --wash-green: color-mix(in srgb, var(--color-green-sage) 42%, transparent);
+    --wash-green-2: color-mix(in srgb, var(--color-green-soft) 80%, transparent);
+    --wash-warm: color-mix(in srgb, var(--color-gold-light) 28%, transparent);
+    --wash-warm-2: color-mix(in srgb, var(--color-mauve-soft) 26%, transparent);
+    /* The fields run past the column; clip, unlike hidden, keeps sticky working. */
+    overflow-x: clip;
     padding-bottom: 24px;
+  }
+  :root[data-theme="dark"] .cs {
+    --wash-green: color-mix(in srgb, var(--color-green-dark) 92%, transparent);
+    --wash-green-2: color-mix(in srgb, var(--color-green-deep) 32%, transparent);
+    --wash-warm: color-mix(in srgb, var(--color-walnut) 96%, transparent);
+    --wash-warm-2: color-mix(in srgb, var(--color-frame-red) 24%, transparent);
   }
   .cs ::selection {
     background: var(--color-gold-light);
@@ -1735,54 +1752,69 @@
     width: min(100% - 96px, 1400px);
   }
 
-  /* Hero: one framed slide, the title on the scrim along its foot. --------- */
+  /* Hero: the title and the picture straight on the canvas. ---------------- */
   .cs-hero {
-    padding-top: 108px;
-  }
-  .cs .cs-hero__face {
-    display: grid;
-    align-items: end;
-    aspect-ratio: auto;
-    min-height: clamp(360px, 35vw, 480px);
+    position: relative;
     isolation: isolate;
-    --focus: var(--color-gold-light);
+    padding-top: 112px;
   }
-  .cs-hero__ground {
-    position: absolute;
-    inset: 0;
-    background:
-      repeating-linear-gradient(
-        135deg,
-        color-mix(in srgb, var(--color-white) 5%, transparent) 0 1px,
-        transparent 1px 14px
-      ),
-      radial-gradient(46% 95% at 84% 34%, color-mix(in srgb, var(--color-mauve-index) 96%, transparent), transparent 72%),
-      radial-gradient(42% 80% at 56% 0%, color-mix(in srgb, var(--color-green-deep) 78%, transparent), transparent 70%),
-      radial-gradient(50% 75% at 0% 100%, color-mix(in srgb, var(--color-green-dark) 92%, transparent), transparent 70%),
-      linear-gradient(150deg, var(--color-brown-rich), var(--color-espresso) 70%);
+  .cs-hero__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    align-items: end;
+    gap: 32px 48px;
+    min-height: clamp(460px, 42vw, 600px);
   }
-  .cs-hero__img {
-    object-fit: cover;
+  .cs-hero__text {
+    position: relative;
+    z-index: 2;
+    padding-bottom: 8px;
+  }
+  .cs .cs-hero__title {
+    margin: 0 0 20px;
+    font-weight: 700;
+    font-size: clamp(56px, 8vw, 96px);
+    line-height: 0.98;
+    letter-spacing: -0.035em;
+  }
+  .cs .cs-hero__slug {
+    margin: 0;
+    max-width: 36ch;
+    font-size: clamp(19px, 1.7vw, 24px);
+    line-height: 1.42;
+    text-wrap: pretty;
+  }
+  .cs-hero__art {
+    position: relative;
+    align-self: stretch;
+    min-height: 420px;
   }
   /* Quiet gold rings behind the figure. Decorative. */
   .cs-hero__rings {
     position: absolute;
-    top: 50%;
-    right: clamp(-150px, -6vw, -40px);
-    width: clamp(420px, 52vw, 700px);
+    top: 46%;
+    left: 50%;
+    width: min(150%, 760px);
     aspect-ratio: 1 / 1;
-    translate: 0 -46%;
-    color: var(--color-gold-light);
+    translate: -50% -50%;
+    color: var(--gold-ink);
     opacity: 0.3;
     pointer-events: none;
   }
+  /* The figure has no frame: it dissolves into the page at its foot. A mask
+     clips to its box, so the box is padded to hold the shadow, which falls
+     down and to the right; the shift keeps the picture itself centred. */
   .cs-hero__figure {
     position: absolute;
-    top: clamp(28px, 3.4vw, 48px);
-    right: clamp(28px, 9%, 136px);
-    width: clamp(190px, 23%, 300px);
+    top: 0;
+    left: 50%;
+    width: calc(clamp(210px, 21vw, 290px) + 104px);
+    padding: 0 80px 0 24px;
+    translate: calc(-50% + 28px) 0;
     perspective: var(--perspective);
     pointer-events: none;
+    -webkit-mask-image: linear-gradient(to bottom, black 58%, transparent 92%);
+    mask-image: linear-gradient(to bottom, black 58%, transparent 92%);
   }
   .cs-hero__figure img {
     display: block;
@@ -1790,30 +1822,51 @@
     height: auto;
     transform: rotateY(-20deg) rotateX(9deg) rotateZ(5deg);
     transform-origin: 50% 20%;
-    filter: drop-shadow(26px 30px 34px color-mix(in srgb, black 55%, transparent));
+    filter: drop-shadow(22px 28px 30px color-mix(in srgb, var(--color-espresso) 40%, transparent));
   }
-  .cs-hero__text {
-    position: relative;
-    z-index: 2;
-    padding: 32px 36px 34px;
-    max-width: 860px;
+  .cs-hero__ph {
+    position: absolute;
+    inset: 0 0 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-align: center;
   }
-  .cs .cs-hero__title {
-    margin: 0 0 12px;
-    font-weight: 700;
-    font-size: clamp(46px, 6.4vw, 88px);
-    line-height: 1.02;
-    letter-spacing: -0.028em;
+  .cs-hero__ph svg {
+    width: 36px;
+    height: 36px;
+  }
+  /* A wide picture, when a study has one, runs edge to edge behind the title
+     and fades into the canvas at its foot. The title turns white on it. */
+  .cs-hero--image {
+    padding-bottom: 72px;
+  }
+  .cs-hero__bleed {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent);
+    mask-image: linear-gradient(to bottom, black 80%, transparent);
+  }
+  .cs-hero__bleed img {
+    object-fit: cover;
+  }
+  .cs-hero__bleed::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-espresso) 86%, transparent) 0%,
+      color-mix(in srgb, var(--color-espresso) 50%, transparent) 55%,
+      transparent 85%
+    );
+  }
+  .cs-hero--image .cs-hero__text {
     color: var(--color-white);
-    text-shadow: 0 2px 6px color-mix(in srgb, black 30%, transparent);
-  }
-  .cs .cs-hero__slug {
-    margin: 0;
-    max-width: 50ch;
-    font-size: clamp(17px, 1.5vw, 21px);
-    line-height: 1.45;
-    color: var(--color-white);
-    text-wrap: pretty;
+    --focus: var(--color-gold-light);
   }
   /* The entrance, once on load: the title arrives first, then the line that
      explains it, while the figure glides forward through the scene. */
@@ -1837,9 +1890,9 @@
   .cs-layout {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 280px;
-    column-gap: 40px;
+    column-gap: 56px;
     align-items: start;
-    margin-top: 56px;
+    margin-top: 48px;
   }
   .cs-layout > * {
     grid-column: 1;
@@ -1855,12 +1908,7 @@
     top: 100px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
-  }
-  .cs .cs-rail .pf-demo {
-    background-color: var(--glass-card);
-    -webkit-backdrop-filter: blur(20px) saturate(140%);
-    backdrop-filter: blur(20px) saturate(140%);
+    gap: 20px;
   }
 
   /* A labelled slot for content still to come. */
@@ -1885,8 +1933,7 @@
 
   /* Role ------------------------------------------------------------------- */
   .cs-role {
-    padding: 32px 36px 30px;
-    margin-bottom: 48px;
+    margin-bottom: 72px;
     scroll-margin-top: 100px;
   }
   .cs-role__head {
@@ -1894,17 +1941,20 @@
     flex-wrap: wrap;
     align-items: baseline;
     gap: 4px 20px;
-    margin-bottom: 14px;
+    margin-bottom: 16px;
   }
   .cs .cs-role__title {
     margin: 0;
+    font-size: clamp(30px, 3.2vw, 44px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
   }
   .cs .cs-role__sprint {
     margin: 0;
     color: var(--text-soft);
   }
   .cs-role .pf-skills {
-    margin-bottom: 18px;
+    margin-bottom: 20px;
   }
   .cs .cs-role__summary {
     margin: 0;
@@ -1913,7 +1963,7 @@
     list-style: none;
     margin: 20px 0 0;
     padding: 0;
-    border-top: 1px solid color-mix(in srgb, currentColor 16%, transparent);
+    border-top: 1px solid color-mix(in srgb, currentColor 18%, transparent);
   }
   .cs-move {
     display: grid;
@@ -1921,7 +1971,7 @@
     gap: 14px;
     align-items: start;
     padding: 14px 0;
-    border-bottom: 1px solid color-mix(in srgb, currentColor 16%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, currentColor 18%, transparent);
     font-size: 17px;
     line-height: 1.5;
   }
@@ -1966,12 +2016,13 @@
       inset 0 -1px 0 color-mix(in srgb, var(--color-gold-shadow) 45%, transparent);
   }
 
-  /* Navigation pane --------------------------------------------------------- */
+  /* Navigation pane: a list hung on one hairline, no panel. ---------------- */
   .cs-nav {
-    padding: 18px 12px 12px;
+    padding: 2px 0 2px 16px;
+    border-left: 1px solid color-mix(in srgb, currentColor 20%, transparent);
   }
   .cs .cs-nav__title {
-    margin: 0 10px 8px;
+    margin: 0 0 6px 10px;
     color: var(--text-soft);
   }
   .cs-nav ol {
@@ -1993,15 +2044,16 @@
     text-decoration: none;
     transition: background-color 160ms ease;
   }
-  /* The mark for where the reader is: a bar, as well as the heavier weight. */
+  /* The mark for where the reader is: a bar on the hairline, as well as the
+     heavier weight. */
   .cs-nav__link::before {
     content: "";
     position: absolute;
-    left: -12px;
+    left: -18px;
     top: 9px;
     bottom: 9px;
-    width: 4px;
-    border-radius: 0 4px 4px 0;
+    width: 3px;
+    border-radius: 3px;
     background: var(--meter);
     transform: scaleY(0);
     transition: transform 240ms var(--ease-out);
@@ -2054,9 +2106,9 @@
     color: var(--text-strong);
   }
 
-  /* Sprint timeline: four stops, each a way into its phase. ----------------- */
+  /* Sprint timeline: one line through four stops, each a way into its phase. */
   .cs-timeline {
-    margin-bottom: 72px;
+    margin-bottom: 48px;
     scroll-margin-top: 100px;
   }
   .cs .cs-timeline__title {
@@ -2067,83 +2119,97 @@
     color: var(--text-soft);
   }
   .cs-stops {
+    position: relative;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 18px;
+    grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr));
     list-style: none;
-    margin: 22px 0 0;
+    margin: 24px 0 0;
     padding: 0;
+  }
+  /* From the first disc's centre to the last one's. */
+  .cs-stops::before {
+    content: "";
+    position: absolute;
+    top: 21px;
+    left: 17px;
+    right: calc(100% / var(--n, 4) - 17px);
+    height: 2px;
+    background: color-mix(in srgb, currentColor 24%, transparent);
   }
   .cs-stops > li {
     position: relative;
-  }
-  /* The link between one stop and the next, drawn in the gap. */
-  .cs-stops > li + li::before {
-    content: "";
-    position: absolute;
-    top: 34px;
-    left: -18px;
-    width: 18px;
-    height: 2px;
-    background: color-mix(in srgb, currentColor 30%, transparent);
+    min-width: 0;
   }
   .cs .cs-stop {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
     gap: 12px;
-    height: 100%;
-    min-height: 148px;
-    padding: 18px 18px 14px;
-    border-radius: 18px;
+    padding: 4px 20px 8px 0;
+    border-radius: 12px;
     color: var(--text-strong);
     text-decoration: none;
-    transition:
-      transform 220ms var(--ease-out),
-      box-shadow 220ms ease;
+  }
+  .cs-stop .cs-disc {
+    transition: transform 220ms var(--ease-out);
   }
   .cs-stop__name {
     font-family: var(--font-heading);
-    font-size: clamp(17px, 1.5vw, 20px);
+    font-size: clamp(18px, 1.6vw, 21px);
     line-height: 1.2;
     letter-spacing: -0.01em;
     text-wrap: balance;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.2em;
+    transition: text-decoration-color 160ms ease;
   }
   .cs-stop__foot {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: 8px;
-    margin-top: auto;
     min-height: 24px;
     color: var(--text-soft);
   }
   .cs-stop__foot svg {
-    width: 20px;
-    height: 20px;
-    margin-left: auto;
+    width: 18px;
+    height: 18px;
     transition: transform 220ms var(--ease-out);
   }
-  .cs-stop:active {
-    transform: scale(0.97);
-  }
 
-  /* A phase: one rounded page, green or brown. ------------------------------ */
+  /* A phase: no page, only a field of colour behind it. --------------------- */
   .cs-phase {
     position: relative;
-    margin-bottom: 40px;
-    padding: 44px 44px 48px;
-    border: 1px solid var(--glass-line);
-    border-radius: 28px;
-    box-shadow:
-      inset 1px 1px 0 color-mix(in srgb, var(--color-white) 18%, transparent),
-      0 16px 40px var(--glass-shadow);
+    isolation: isolate;
+    padding-block: 64px 80px;
     scroll-margin-top: 100px;
+  }
+  /* Two soft fields that fade into the canvas on every side, so the phase
+     has a colour but no edge. */
+  .cs-phase::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: -40px -16vw;
+    pointer-events: none;
+    background:
+      radial-gradient(46% 40% at 24% 26%, var(--wash-a), transparent 72%),
+      radial-gradient(42% 44% at 76% 74%, var(--wash-b), transparent 72%);
+  }
+  .cs-phase--green {
+    --wash-a: var(--wash-green);
+    --wash-b: var(--wash-green-2);
+  }
+  .cs-phase--warm {
+    --wash-a: var(--wash-warm);
+    --wash-b: var(--wash-warm-2);
   }
   .cs-block {
     scroll-margin-top: 110px;
   }
   .cs-block + .cs-block {
-    margin-top: 52px;
+    margin-top: 56px;
   }
   .cs .cs-h3 {
     margin: 0 0 14px;
@@ -2164,41 +2230,32 @@
     color: var(--soft);
   }
 
-  /* The section tag: a tab that runs in from the page's left edge and fades
-     out to the right. The wash is the text colour, so it holds on any ground. */
+  /* A phase's heading: the gold disc, the title, and a hairline that runs on
+     from it and fades out. */
   .cs-tag {
     display: flex;
     align-items: center;
     gap: 14px;
-    width: fit-content;
-    min-width: min(100%, 380px);
-    margin: 0 0 32px -44px;
-    padding: 12px 64px 12px 44px;
-    border-radius: 0 999px 999px 0;
-    background: linear-gradient(
-      90deg,
-      color-mix(in srgb, currentColor 22%, transparent) 0%,
-      color-mix(in srgb, currentColor 10%, transparent) 55%,
-      transparent 100%
-    );
+    margin: 0 0 36px;
+  }
+  .cs-tag::after {
+    content: "";
+    flex: 1 1 auto;
+    min-width: 32px;
+    height: 1px;
+    background: linear-gradient(90deg, color-mix(in srgb, currentColor 35%, transparent), transparent);
   }
   .cs .cs-tag__title {
     margin: 0;
-    font-size: clamp(24px, 2.6vw, 32px);
-    line-height: 1.15;
+    font-size: clamp(28px, 3vw, 40px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
   }
   .cs-tag--sub {
-    padding-block: 9px;
     margin-bottom: 24px;
   }
   .cs .cs-tag--sub .cs-tag__title {
-    font-size: clamp(20px, 2vw, 25px);
-  }
-  /* Inside a column the tag has no edge to run in from. */
-  .cs-tag--inset {
-    margin-left: 0;
-    padding-left: 20px;
-    border-radius: 12px 999px 999px 12px;
+    font-size: clamp(21px, 2vw, 26px);
   }
 
   /* Research: problem, stakeholders, pain points, headlines. ---------------- */
@@ -2242,6 +2299,11 @@
     padding: 14px 16px 16px;
     border-left: 1px solid color-mix(in srgb, currentColor 20%, transparent);
     margin-left: -1px;
+  }
+  .cs-stake li:first-child {
+    padding-left: 0;
+    border-left: 0;
+    margin-left: 0;
   }
   .cs-stake__kind {
     display: block;
@@ -2311,35 +2373,37 @@
     transform: scale(0.97);
   }
   .cs-pain {
-    margin-top: 14px;
-    padding: 20px 24px;
-    border-radius: 16px;
-    background: color-mix(in srgb, currentColor 7%, transparent);
+    margin-top: 20px;
+    max-width: 64ch;
+    border-radius: 6px;
   }
   .cs .cs-pain p {
     margin: 0;
-    max-width: 64ch;
+    font-size: clamp(17px, 1.4vw, 19px);
+    line-height: 1.6;
   }
   /* A pointer's choice crossfades; an arrow key's just changes. */
   .cs-pain[data-swap="soft"] p {
     animation: cs-swap 220ms var(--ease-out) both;
   }
 
-  /* Research headlines: cream clippings in a row that scrolls sideways. */
+  /* Research headlines: columns of figures and sources, split by hairlines,
+     in a row that scrolls sideways. */
   .cs-heads {
     display: grid;
-    grid-template-columns: 52px minmax(0, 1fr) 52px;
-    gap: 6px;
-    align-items: stretch;
+    grid-template-columns: 44px minmax(0, 1fr) 44px;
+    gap: 16px;
+    align-items: center;
   }
   .cs-heads__btn {
     display: grid;
     place-items: center;
-    margin-block: 16px 30px;
+    width: 44px;
+    height: 44px;
     padding: 0;
     border: 1.5px solid color-mix(in srgb, currentColor 40%, transparent);
-    border-radius: 14px;
-    background: color-mix(in srgb, currentColor 6%, transparent);
+    border-radius: 50%;
+    background: transparent;
     color: inherit;
     cursor: pointer;
     transition:
@@ -2348,97 +2412,76 @@
       transform 160ms var(--ease-out);
   }
   .cs-heads__btn svg {
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
   }
   .cs-heads__btn[aria-disabled="true"] {
     opacity: 0.35;
     cursor: default;
   }
   .cs-heads__btn:not([aria-disabled="true"]):active {
-    transform: scale(0.95);
+    transform: scale(0.94);
   }
+  /* Positioned, so the visually hidden words inside scroll with it instead
+     of escaping and widening the page. */
   .cs-heads__view {
     position: relative;
     overflow-x: auto;
     overflow-y: hidden;
     overscroll-behavior-x: contain;
     scroll-snap-type: x mandatory;
-    scroll-padding-inline: 8px;
     scrollbar-width: none;
-    padding: 16px 20px 30px 8px;
-    border-radius: 14px;
+    padding: 6px 2px;
+    border-radius: 8px;
   }
   .cs-heads__view::-webkit-scrollbar {
     display: none;
   }
   .cs-heads__track {
     display: flex;
-    gap: 24px;
     list-style: none;
     margin: 0;
     padding: 0;
   }
   .cs-clip {
-    flex: 0 0 min(292px, 80%);
+    flex: 0 0 min(270px, 80%);
     scroll-snap-align: start;
+    margin-right: 28px;
+    padding-right: 28px;
+    border-right: 1px solid color-mix(in srgb, currentColor 18%, transparent);
   }
-  .cs-clip__card {
-    height: 100%;
-    transition: transform 300ms var(--ease-druid);
+  .cs-clip:last-child {
+    margin-right: 0;
+    border-right: 0;
   }
-  .cs-clip__card::before {
-    transition: transform 300ms var(--ease-druid);
-  }
-  /* The cream Content Card face: framed, with a fine canvas weave. */
-  .cs-face {
+  .cs-clip__item {
     position: relative;
-    z-index: 1;
-    border: 3px solid transparent;
-    border-radius: 20px;
-    /* The weave is two hairline grids laid over the cream, inside the frame. */
-    background:
-      repeating-linear-gradient(0deg, color-mix(in srgb, var(--color-walnut) 7%, transparent) 0 1px, transparent 1px 3px)
-        padding-box,
-      repeating-linear-gradient(90deg, color-mix(in srgb, var(--color-walnut) 7%, transparent) 0 1px, transparent 1px 3px)
-        padding-box,
-      linear-gradient(var(--color-cream), var(--color-cream)) padding-box,
-      var(--frame-gradient) border-box;
-    color: var(--color-walnut);
-    box-shadow:
-      inset 1px 1px 0 color-mix(in srgb, var(--color-white) 55%, transparent),
-      inset -1px -1px 0 color-mix(in srgb, var(--color-frame-shadow) 18%, transparent);
-    --focus: var(--color-mauve-ink);
-    --link: var(--color-mauve-ink);
-    --soft: var(--color-mauve-ink);
-  }
-  .cs-clip__face {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 14px;
     height: 100%;
-    min-height: 236px;
-    padding: 22px 22px 14px;
+    min-height: 196px;
+    transition: transform 300ms var(--ease-druid);
   }
   .cs .cs-clip__headline {
     margin: 0;
     font-size: 19px;
-    line-height: 1.3;
+    line-height: 1.32;
     letter-spacing: -0.01em;
     text-wrap: pretty;
   }
   .cs .cs-clip__headline.is-lead {
     font-size: 21px;
-    line-height: 1.25;
+    line-height: 1.28;
   }
   .cs-clip__fig {
     display: block;
     margin-bottom: 8px;
-    font-size: clamp(34px, 3.2vw, 42px);
+    font-size: clamp(40px, 3.6vw, 52px);
     font-weight: 700;
     line-height: 1;
-    letter-spacing: -0.03em;
-    color: var(--color-mauve-ink);
+    letter-spacing: -0.035em;
+    color: var(--gold-ink);
   }
   .cs .cs-clip__src {
     display: flex;
@@ -2449,22 +2492,22 @@
     font-family: var(--font-note);
     font-size: 16px;
     line-height: 1.3;
-    color: var(--color-mauve-ink);
+    color: var(--soft);
   }
   .cs .cs-clip__link {
     display: inline-flex;
     align-items: center;
     gap: 6px;
     min-height: 44px;
-    color: var(--color-mauve-ink);
+    color: var(--link);
     text-decoration-thickness: 1.5px;
   }
-  /* The link is the whole card, so the card may lift. */
+  /* The source link covers its column, so the whole column is the target. */
   .cs-clip__link::after {
     content: "";
     position: absolute;
-    inset: 0;
-    border-radius: 17px;
+    inset: -4px -14px -4px -4px;
+    border-radius: 10px;
   }
   .cs-clip__link svg {
     width: 14px;
@@ -2481,7 +2524,7 @@
   .cs-goals {
     display: grid;
     grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
-    gap: 40px 44px;
+    gap: 40px 48px;
     align-items: start;
   }
   .cs-goals > :only-child {
@@ -2536,7 +2579,7 @@
     color: var(--soft);
   }
   .cs-table .is-highlight {
-    background: color-mix(in srgb, currentColor 9%, transparent);
+    background: color-mix(in srgb, currentColor 8%, transparent);
   }
   .cs-table thead .is-highlight {
     font-weight: 700;
@@ -2582,7 +2625,7 @@
     gap: 8px;
   }
   .cs-legend .cs-mark {
-    color: var(--color-white);
+    color: var(--text-strong);
   }
 
   .cs-insights {
@@ -2627,7 +2670,7 @@
     left: 0;
     right: 0;
     height: 2px;
-    background: color-mix(in srgb, currentColor 32%, transparent);
+    background: color-mix(in srgb, currentColor 30%, transparent);
     transform-origin: 0 50%;
     transition: transform 1100ms var(--ease-out);
   }
@@ -2641,14 +2684,13 @@
     font-family: var(--font-note);
     font-size: 18px;
     line-height: 1.2;
-    color: var(--color-gold-light);
+    color: var(--gold-ink);
   }
   .cs-road__node {
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background: var(--color-gold-light);
-    box-shadow: 0 0 0 5px var(--page-brown);
+    background: var(--gold-ink);
     transition:
       opacity 300ms ease calc(var(--i, 0) * 150ms + 200ms),
       transform 500ms var(--ease-out) calc(var(--i, 0) * 150ms + 200ms);
@@ -2691,39 +2733,36 @@
     line-height: 1.5;
   }
 
-  /* The exchange: two cream cards, a dark hub between them, and four flows. */
+  /* The exchange: three parties in columns with the four flows between
+     them. The product in the middle has a gold glow instead of a box. */
   .cs-xchg {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(86px, 0.42fr) minmax(0, 1fr) minmax(86px, 0.42fr) minmax(0, 1fr);
-    align-items: stretch;
-    padding: 0 10px 12px 0;
+    align-items: center;
   }
   .cs-party {
-    height: 100%;
-  }
-  .cs-party__face {
-    height: 100%;
-    padding: 18px 18px 20px;
-  }
-  .cs-party--hub .cs-party__face {
     position: relative;
-    z-index: 1;
-    border: 3px solid transparent;
-    border-radius: 20px;
-    background:
-      linear-gradient(var(--color-espresso), var(--color-espresso)) padding-box,
-      var(--frame-gradient) border-box;
-    color: var(--color-white);
-    --soft: var(--color-green-sage);
+  }
+  .cs-party--hub {
+    isolation: isolate;
+  }
+  .cs-party--hub::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: -44px -36px;
+    pointer-events: none;
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--color-gold-light) 32%, transparent), transparent);
   }
   .cs .cs-party__name {
     margin: 0;
-    font-size: 21px;
+    font-size: 22px;
     line-height: 1.2;
     font-weight: 700;
   }
-  .cs-party--hub .cs-party__name {
-    color: var(--color-gold-light);
+  .cs .cs-party--hub .cs-party__name {
+    font-size: 28px;
+    color: var(--gold-ink);
   }
   .cs .cs-party__sub {
     margin: 4px 0 0;
@@ -2812,11 +2851,11 @@
     inset: 0 auto 0 0;
     width: 30%;
     border-radius: 4px;
-    background: linear-gradient(90deg, transparent, var(--color-gold-light) 55%, var(--color-gold-glint));
+    background: linear-gradient(90deg, transparent, var(--gold-ink) 55%, var(--color-gold-light));
     transform: translateX(-110%);
   }
   .cs-flow--back .cs-flow__track i {
-    background: linear-gradient(270deg, transparent, var(--color-gold-light) 55%, var(--color-gold-glint));
+    background: linear-gradient(270deg, transparent, var(--gold-ink) 55%, var(--color-gold-light));
   }
   .cs[data-draw-ready] .cs-xchg[data-draw=""] .cs-flow__line {
     transform: scaleX(0);
@@ -2826,15 +2865,14 @@
       both;
   }
   .cs .cs-xchg__caption {
-    margin: 20px 0 0;
+    margin: 32px 0 0;
     max-width: none;
-    padding: 14px 20px;
-    border-radius: 14px;
-    background: var(--color-espresso);
-    color: var(--color-white);
+    padding-top: 20px;
+    border-top: 1px solid color-mix(in srgb, currentColor 20%, transparent);
     font-family: var(--font-heading);
-    font-size: clamp(17px, 1.6vw, 20px);
+    font-size: clamp(20px, 2vw, 26px);
     line-height: 1.3;
+    letter-spacing: -0.012em;
     text-align: center;
     text-wrap: balance;
   }
@@ -2866,22 +2904,66 @@
     letter-spacing: -0.008em;
   }
 
+  /* A short list: words set in a row, each after a gold dot. */
   .cs-points {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px 12px;
+    gap: 10px 32px;
     list-style: none;
     margin: 0;
     padding: 0;
   }
   .cs-points li {
-    padding: 9px 16px;
-    border: 1.5px solid color-mix(in srgb, currentColor 40%, transparent);
-    border-radius: 12px;
-    font-size: 17px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--font-heading);
+    font-size: clamp(18px, 1.6vw, 21px);
     line-height: 1.3;
   }
+  .cs-points li::before {
+    content: "";
+    flex: none;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--gold-ink);
+  }
 
+  /* The cream Content Card face, for pictures and for the sheets that hold
+     tables, charts and diagrams. Inside it the page's tokens re-point to the
+     card's: walnut text, mauve-ink for the quiet parts, the readable gold. */
+  .cs-face {
+    --text-strong: var(--color-walnut);
+    --text-soft: var(--color-mauve-ink);
+    --gold-ink: var(--color-gold-shadow);
+    --meter: var(--color-gold-shadow);
+    position: relative;
+    z-index: 1;
+    border: 3px solid transparent;
+    border-radius: 20px;
+    background:
+      repeating-linear-gradient(0deg, color-mix(in srgb, var(--color-walnut) 7%, transparent) 0 1px, transparent 1px 3px)
+        padding-box,
+      repeating-linear-gradient(90deg, color-mix(in srgb, var(--color-walnut) 7%, transparent) 0 1px, transparent 1px 3px)
+        padding-box,
+      linear-gradient(var(--color-cream), var(--color-cream)) padding-box,
+      var(--frame-gradient) border-box;
+    color: var(--color-walnut);
+    box-shadow:
+      inset 1px 1px 0 color-mix(in srgb, var(--color-white) 55%, transparent),
+      inset -1px -1px 0 color-mix(in srgb, var(--color-frame-shadow) 18%, transparent);
+    --focus: var(--color-mauve-ink);
+    --link: var(--color-mauve-ink);
+    --soft: var(--color-mauve-ink);
+  }
+  /* A sheet: room at its foot and right for the hatched shadow. It never lifts. */
+  .cs-sheet {
+    margin: 0 10px 12px 0;
+  }
+  .cs-sheet__face {
+    padding: 28px;
+  }
   .cs-figure {
     width: fit-content;
     max-width: min(100%, 620px);
@@ -3026,12 +3108,12 @@
     min-width: 4px;
     height: 100%;
     border-radius: 6px;
-    background: var(--color-gold-light);
+    background: var(--gold-ink);
     transform-origin: 0 50%;
     transition: transform 900ms var(--ease-out) calc(var(--i, 0) * 70ms);
   }
   .cs-bars .is-muted .cs-bars__fill {
-    background: color-mix(in srgb, currentColor 45%, transparent);
+    background: color-mix(in srgb, currentColor 40%, transparent);
   }
   .cs[data-draw-ready] .cs-bars[data-draw=""] .cs-bars__fill {
     transform: scaleX(0);
@@ -3045,12 +3127,9 @@
     color: var(--soft);
   }
 
-  /* The way out, under the last phase. */
+  /* The way out, under the last phase: a rule, then the links. */
   .cs-foot {
-    padding-block: 16px 72px;
-  }
-  .cs .cs-end__contact {
-    margin-top: 10px;
+    padding-block: 24px 72px;
   }
   .cs-end {
     display: flex;
@@ -3058,7 +3137,8 @@
     align-items: center;
     justify-content: space-between;
     gap: 20px 40px;
-    padding: 28px 32px;
+    padding-top: 36px;
+    border-top: 1px solid color-mix(in srgb, currentColor 18%, transparent);
   }
   .cs .cs-end h2 {
     margin: 0 0 4px;
@@ -3067,6 +3147,9 @@
   .cs .cs-end p {
     margin: 0;
     color: var(--text-soft);
+  }
+  .cs .cs-end__contact {
+    margin-top: 10px;
   }
   .cs-end__actions {
     display: flex;
@@ -3077,168 +3160,135 @@
     transform: scale(0.97);
   }
 
-  /* Case-study cards on the portfolio page. One cream Content Card per
-     project, its picture on the hero's dark ground at the right. */
+  /* Case studies on the portfolio page: each one straight on the canvas, its
+     words at the left and its picture fading in at the right. The whole entry
+     is one link. */
+  .cs-studies {
+    overflow-x: clip;
+  }
   .cs-cards {
     display: grid;
-    gap: 40px;
+    gap: 56px;
     list-style: none;
     margin: 0;
-    padding: 0 12px 16px 0;
+    padding: 0;
   }
-  .cs-card {
+  .druid-root .cs-entry {
     --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
-    border-radius: 20px;
-    transition: transform 300ms var(--ease-druid);
-  }
-  .cs-card::before {
-    transition: transform 300ms var(--ease-druid);
-  }
-  .cs-card__face {
+    --wash-a: color-mix(in srgb, var(--color-gold-light) 24%, transparent);
+    --wash-b: color-mix(in srgb, var(--color-green-sage) 30%, transparent);
+    position: relative;
+    isolation: isolate;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
-    min-height: 380px;
-    overflow: hidden;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr);
+    align-items: center;
+    gap: 24px 48px;
+    min-height: 440px;
+    border-radius: 24px;
+    color: var(--text-strong);
+    text-decoration: none;
   }
-  .cs-card__body {
+  :root[data-theme="dark"] .druid-root .cs-entry {
+    --wash-a: color-mix(in srgb, var(--color-frame-red) 22%, transparent);
+    --wash-b: color-mix(in srgb, var(--color-green-dark) 90%, transparent);
+  }
+  /* A soft field of colour behind it, with no edge. */
+  .cs-entry::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: -48px -8%;
+    pointer-events: none;
+    background:
+      radial-gradient(46% 58% at 74% 50%, var(--wash-a), transparent 72%),
+      radial-gradient(40% 56% at 16% 44%, var(--wash-b), transparent 72%);
+  }
+  .cs-entry__text {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 14px;
-    padding: 32px 36px 30px;
+    padding-block: 8px;
   }
-  .cs-card__body .pf-skills {
+  .cs-entry__text .pf-skills {
     margin-bottom: 4px;
   }
-  .druid-root .cs-card__title {
+  .druid-root .cs-entry__title {
     margin: 0;
-    font-size: clamp(40px, 4.4vw, 60px);
+    font-size: clamp(48px, 6vw, 88px);
     font-weight: 700;
-    line-height: 1.02;
-    letter-spacing: -0.028em;
+    line-height: 0.98;
+    letter-spacing: -0.035em;
   }
-  /* The link is the whole face. It sits outside the cream, so its ring is
-     drawn on the page's ground in the page's focus colour. */
-  .druid-root .cs-card__link {
-    position: relative;
-    z-index: 1;
-    display: block;
-    border-radius: 20px;
-    color: inherit;
-    text-decoration: none;
-  }
-  .druid-root .cs-card__slug {
+  .druid-root .cs-entry__slug {
     margin: 0;
-    max-width: 44ch;
-    font-size: clamp(17px, 1.4vw, 20px);
+    max-width: 40ch;
+    font-size: clamp(18px, 1.5vw, 21px);
     line-height: 1.5;
     text-wrap: pretty;
   }
-  .druid-root .cs-card__meta {
+  .druid-root .cs-entry__meta {
     margin: 0;
-    color: var(--color-mauve-ink);
+    color: var(--text-soft);
   }
-  .cs-card__cta {
+  .cs-entry__cta {
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    margin-top: auto;
-    padding-top: 12px;
+    margin-top: 10px;
     font-family: var(--font-heading);
-    font-size: 18px;
+    font-size: 19px;
     line-height: 1.2;
-    color: var(--color-mauve-ink);
+    color: var(--accent);
     text-decoration: underline;
     text-decoration-thickness: 1.5px;
     text-underline-offset: 0.22em;
   }
-  .cs-card__cta svg {
+  .cs-entry__cta svg {
     width: 20px;
     height: 20px;
     transition: transform 220ms var(--ease-out);
   }
-  .cs-card__media {
+  .cs-entry__art {
     position: relative;
-    isolation: isolate;
-    overflow: hidden;
-    margin: 10px 10px 10px 0;
-    border-radius: 12px;
-    min-height: 300px;
+    align-self: stretch;
+    min-height: 400px;
   }
-  .cs-card__rings {
+  .cs-entry__img {
+    object-fit: cover;
+    -webkit-mask-image: radial-gradient(closest-side, black 62%, transparent);
+    mask-image: radial-gradient(closest-side, black 62%, transparent);
+  }
+  .cs-entry__rings {
     position: absolute;
-    top: 52%;
+    top: 50%;
     left: 50%;
-    width: 120%;
+    width: min(130%, 640px);
     aspect-ratio: 1 / 1;
     translate: -50% -50%;
-    color: var(--color-gold-light);
-    opacity: 0.28;
+    color: var(--hero-name);
+    opacity: 0.3;
   }
-  .cs-card__figure {
+  /* Padded to hold its shadow inside the mask, as on the case study's hero. */
+  .cs-entry__figure {
     position: absolute;
-    top: 30px;
+    top: 8px;
     left: 50%;
-    width: min(48%, 236px);
-    translate: -50% 0;
+    width: calc(min(48%, 220px) + 96px);
+    padding: 0 72px 0 24px;
+    translate: calc(-50% + 24px) 0;
     perspective: var(--perspective);
+    -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 94%);
+    mask-image: linear-gradient(to bottom, black 60%, transparent 94%);
   }
-  .cs-card__figure img {
+  .cs-entry__figure img {
     display: block;
     width: 100%;
     height: auto;
     transform: rotateY(-18deg) rotateX(8deg) rotateZ(5deg);
     transform-origin: 50% 20%;
-    filter: drop-shadow(18px 22px 26px color-mix(in srgb, black 55%, transparent));
+    filter: drop-shadow(18px 22px 26px color-mix(in srgb, var(--color-espresso) 38%, transparent));
     transition: transform 600ms var(--ease-out);
-  }
-  @media (hover: hover) and (pointer: fine) {
-    .cs-card:hover .cs-card__cta {
-      text-decoration-thickness: 2.5px;
-    }
-  }
-  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-    .cs-card:hover,
-    .cs-card:focus-within {
-      transform: perspective(1200px) translateZ(24px);
-    }
-    .cs-card:hover::before,
-    .cs-card:focus-within::before {
-      transform: translate(11px, 15px);
-    }
-    .cs-card:active {
-      transform: perspective(1200px) translateZ(10px);
-      transition-duration: 120ms;
-    }
-    .cs-card:hover .cs-card__figure img {
-      transform: translateY(-16px) rotateY(-11deg) rotateX(5deg) rotateZ(3deg);
-    }
-    .cs-card:hover .cs-card__cta svg {
-      transform: translateX(4px);
-    }
-  }
-  @media (max-width: 959px) {
-    .cs-card__face {
-      grid-template-columns: minmax(0, 1fr);
-    }
-    .cs-card__media {
-      order: -1;
-      min-height: 0;
-      height: clamp(240px, 52vw, 340px);
-      margin: 10px 10px 0;
-    }
-  }
-  @media (max-width: 639px) {
-    .cs-cards {
-      padding-right: 8px;
-    }
-    .cs-card__body {
-      padding: 22px 20px 24px;
-    }
-    .cs-card__figure {
-      width: 52%;
-      top: 20px;
-    }
   }
 
   /* The Index on a project page lists pages, and ends with the way home. */
@@ -3268,42 +3318,51 @@
   /* Hover answers, on fine pointers only. */
   @media (hover: hover) and (pointer: fine) {
     .cs-nav__link:hover {
-      background-color: var(--glass-card);
+      background-color: color-mix(in srgb, currentColor 7%, transparent);
     }
     .cs-chip:not([aria-selected="true"]):hover,
     .cs-heads__btn:not([aria-disabled="true"]):hover {
-      background-color: color-mix(in srgb, currentColor 13%, transparent);
+      background-color: color-mix(in srgb, currentColor 10%, transparent);
+    }
+    .cs-stop:hover .cs-stop__name {
+      text-decoration-color: currentColor;
     }
     .cs-clip__link:hover svg {
       transform: translate(2px, -2px);
     }
+    .cs-entry:hover .cs-entry__cta {
+      text-decoration-thickness: 2.5px;
+    }
   }
   @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-    .cs-stop:hover {
+    .cs-stop:hover .cs-disc {
       transform: translateY(-3px);
-      box-shadow:
-        inset 1px 1px 0 var(--glass-hi),
-        0 16px 36px var(--glass-shadow);
+    }
+    .cs-stop:active .cs-disc {
+      transform: translateY(-1px) scale(0.94);
     }
     .cs-stop:hover .cs-stop__foot svg {
       transform: translateY(3px);
     }
-    .cs-stop:active {
-      transform: scale(0.97);
-    }
-    /* Only a card that goes somewhere lifts, and its hatch falls further. */
-    .cs-clip__card.is-link:hover,
-    .cs-clip__card.is-link:focus-within {
-      transform: perspective(1200px) translateZ(24px);
-    }
-    .cs-clip__card.is-link:hover::before,
-    .cs-clip__card.is-link:focus-within::before {
-      transform: translate(11px, 15px);
+    .cs-clip__item.is-link:hover,
+    .cs-clip__item.is-link:focus-within {
+      transform: translateY(-3px);
     }
     /* Hovering the exchange runs its four flows again. */
     .cs-xchg[data-draw]:hover .cs-flow__track i {
       animation: cs-pulse-again 900ms cubic-bezier(0.45, 0, 0.3, 1) calc(var(--i, 0) * 620ms) 1 var(--dir, normal)
         both;
+    }
+    .cs-entry:hover .cs-entry__figure img,
+    .cs-entry:focus-visible .cs-entry__figure img {
+      transform: translateY(-14px) rotateY(-11deg) rotateX(5deg) rotateZ(3deg);
+    }
+    .cs-entry:active .cs-entry__figure img {
+      transform: translateY(-6px) rotateY(-14deg) rotateX(6deg) rotateZ(4deg);
+      transition-duration: 120ms;
+    }
+    .cs-entry:hover .cs-entry__cta svg {
+      transform: translateX(4px);
     }
   }
 
@@ -3316,9 +3375,13 @@
     .cs .druid-container {
       width: min(100% - 64px, 1400px);
     }
+    .cs-hero__inner {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 0.75fr);
+      min-height: 440px;
+    }
     .cs-layout {
       grid-template-columns: minmax(0, 1fr);
-      margin-top: 44px;
+      margin-top: 40px;
     }
     .cs-layout > .cs-rail {
       grid-column: 1;
@@ -3329,7 +3392,7 @@
       position: static;
     }
     .cs-role {
-      margin-bottom: 20px;
+      margin-bottom: 32px;
     }
     /* Stacked, the pane sits just above the timeline, so it names the
        phases only and leaves their parts to the page itself. */
@@ -3338,12 +3401,14 @@
     }
     .cs-xchg {
       grid-template-columns: minmax(0, 1fr);
-      padding-right: 10px;
+    }
+    .cs-party--hub::before {
+      inset: -28px -8px;
     }
     .cs-lane {
       flex-direction: row;
       gap: 12px;
-      padding: 18px 0 22px;
+      padding: 22px 0 26px;
     }
     .cs .cs-flow {
       flex: 1 1 0;
@@ -3367,85 +3432,89 @@
     .cs-sizing {
       grid-template-columns: minmax(0, 1fr);
     }
+    .druid-root .cs-entry {
+      grid-template-columns: minmax(0, 1fr);
+      min-height: 0;
+    }
+    .cs-entry__art {
+      order: -1;
+      min-height: 0;
+      height: clamp(300px, 64vw, 420px);
+    }
   }
   @media (max-width: 639px) {
     .cs .druid-container {
       width: calc(100% - 32px);
     }
     .cs-hero {
-      padding-top: 148px;
+      padding-top: 150px;
     }
-    .cs .cs-hero__face {
-      min-height: 460px;
+    .cs-hero__inner {
+      grid-template-columns: minmax(0, 1fr);
+      min-height: 0;
+      gap: 8px;
     }
-    .cs-hero__text {
-      padding: 22px 20px 24px;
+    .cs-hero__art {
+      min-height: 0;
+      height: 360px;
     }
-    /* On a phone the figure runs down behind the scrim, under the title. */
     .cs-hero__figure {
-      top: 24px;
-      right: 13%;
-      width: 56%;
+      width: calc(54% + 104px);
     }
     .cs-hero__rings {
-      top: 34%;
-      right: -34%;
-      width: 130%;
-    }
-    .cs-role {
-      padding: 24px 20px;
+      width: 150%;
     }
     .cs-move {
       gap: 10px;
       font-size: 16px;
     }
-    .cs-timeline {
-      margin-bottom: 48px;
-    }
     .cs-stops {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 6px;
     }
-    .cs-stops > li + li::before {
-      display: none;
+    .cs-stops::before {
+      top: 21px;
+      bottom: 21px;
+      left: 16px;
+      right: auto;
+      width: 2px;
+      height: auto;
     }
     .cs .cs-stop {
-      min-height: 128px;
-      padding: 14px 14px 12px;
+      flex-direction: row;
+      align-items: center;
+      gap: 14px;
+      min-height: 44px;
+      padding: 4px 0;
+    }
+    .cs-stop__foot {
+      margin-left: auto;
     }
     .cs-phase {
-      padding: 26px 18px 30px;
-      border-radius: 22px;
-      margin-bottom: 24px;
+      padding-block: 40px 56px;
     }
     .cs-tag {
-      margin-left: -18px;
-      padding: 10px 36px 10px 18px;
       margin-bottom: 24px;
-    }
-    .cs-tag--inset {
-      margin-left: 0;
     }
     .cs-block + .cs-block {
       margin-top: 40px;
     }
-    /* On a phone the clippings take the full width, with the buttons under them. */
+    .cs-stake li:nth-child(2n + 1) {
+      padding-left: 0;
+      border-left: 0;
+      margin-left: 0;
+    }
+    /* On a phone the headlines take the full width, with the buttons under them. */
     .cs-heads {
-      grid-template-columns: 1fr 1fr;
-      gap: 0 10px;
+      grid-template-columns: 44px 44px minmax(0, 1fr);
+      gap: 14px 12px;
     }
     .cs-heads__view {
       grid-column: 1 / -1;
       grid-row: 1;
-      margin-inline: -8px;
     }
     .cs-heads__btn {
       grid-row: 2;
-      min-height: 44px;
-      margin-block: 0;
-    }
-    .cs-pain {
-      padding: 16px 18px;
     }
     /* Three columns do not fit a phone: each goal becomes its own block,
        with its target and KPI labelled underneath. The roles in the markup
@@ -3549,14 +3618,17 @@
       grid-column: 1 / -1;
       grid-row: 2;
     }
-    .cs-end {
-      padding: 24px 20px;
+    .cs-entry__figure {
+      width: calc(46% + 96px);
+    }
+    .cs-sheet__face {
+      padding: 20px 18px;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .cs-clip__card,
-    .cs-stop {
+    .cs-clip__item,
+    .cs-stop .cs-disc {
       transform: none !important;
     }
     .cs-flow__track {
@@ -3565,8 +3637,7 @@
   }
 
   @media (forced-colors: active) {
-    .cs-face,
-    .cs-party--hub .cs-party__face {
+    .cs-face {
       border-color: CanvasText;
     }
     .cs-disc,

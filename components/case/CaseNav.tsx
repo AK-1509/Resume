@@ -57,7 +57,7 @@ export function CaseNav({ sections }: { sections: NavSection[] }) {
   }, [ids]);
 
   return (
-    <nav className="pf-glass-card cs-nav" aria-label="On this page">
+    <nav className="cs-nav" aria-label="On this page">
       <p className="druid-caption cs-nav__title">On this page</p>
       <ol>
         {sections.map((section) => {
