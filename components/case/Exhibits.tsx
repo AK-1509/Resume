@@ -279,7 +279,9 @@ function Bars({ block }: { block: Of<"bars"> }) {
               <span className="cs-bars__fill" style={vars({ "--len": (item.share / longest) * 100, "--i": i })} />
             </span>
             <span className="cs-bars__value">{item.value}</span>
-            <span className="cs-bars__share">{item.share}%</span>
+            {/* A value that is already a percentage would only be repeated
+                here, so the cell stays empty and keeps the grid. */}
+            <span className="cs-bars__share">{item.value.trim().endsWith("%") ? null : `${item.share}%`}</span>
           </li>
         ))}
       </ul>

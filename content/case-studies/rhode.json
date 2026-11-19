@@ -1,0 +1,151 @@
+{
+  "slug": "rhode",
+  "order": 10,
+  "title": "Rhode",
+  "slugLine": "A month of Instagram content for Rhode that promotes Rhode World and new launches and brings Justin Bieber into the brand.",
+  "tags": [
+    "Social media strategy",
+    "Content planning",
+    "Team of six"
+  ],
+  "hero": {
+    "image": null,
+    "figure": null
+  },
+  "role": {
+    "title": "",
+    "sprint": "",
+    "summary": "",
+    "moves": []
+  },
+  "demo": null,
+  "timeline": {
+    "research": "",
+    "goals": "",
+    "design": "",
+    "results": ""
+  },
+  "research": {
+    "problem": "",
+    "stakeholders": [
+      {
+        "kind": "Brand",
+        "name": "Rhode",
+        "note": "Launching Rhode x The Biebers and Spotwear"
+      },
+      {
+        "kind": "Audience",
+        "name": "Justin Bieber’s fanbase",
+        "note": "Reached through posts featuring him"
+      },
+      {
+        "kind": "Partner",
+        "name": "Creators and influencers",
+        "note": "Collaborations, UGC and behind-the-scenes content"
+      },
+      {
+        "kind": "Partner",
+        "name": "818 and Patrón",
+        "note": "Cocktail bar collabs at Rhode World"
+      }
+    ],
+    "painPoints": [],
+    "headlines": []
+  },
+  "goals": {
+    "rows": [
+      {
+        "goal": "Drive launch sales",
+        "target": "Rhode x The Biebers and Spotwear",
+        "kpi": "Waitlist sign-ups"
+      },
+      {
+        "goal": "Promote Rhode World",
+        "target": "The Rhode World event",
+        "kpi": "Attendees"
+      },
+      {
+        "goal": "Bring Justin Bieber into the brand",
+        "target": "Posts featuring Justin Bieber",
+        "kpi": "Comments, shares, saves and reposts; follower growth after each post"
+      }
+    ],
+    "insights": [],
+    "report": {
+      "href": null
+    },
+    "roadmap": []
+  },
+  "design": {
+    "lead": "Rhode posts every day across three content pillars, mostly in carousels, because Instagram is where people window-shop for products.",
+    "blocks": [
+      {
+        "type": "statement",
+        "title": "Content pillars",
+        "clauses": [
+          {
+            "label": "Product showcase",
+            "text": "drives product education and builds the product aesthetic."
+          },
+          {
+            "label": "Behind the scenes",
+            "text": "an inside look at photoshoots and Hailey’s life builds an intimate connection with the brand and the Biebers."
+          },
+          {
+            "label": "Overall brand vibe",
+            "text": "curates the aesthetic and branding that draw people to Rhode."
+          }
+        ],
+        "note": "Series running through the month: Spotwear, Rhode x The Biebers, Rhode World."
+      },
+      {
+        "type": "bars",
+        "title": "Format mix",
+        "items": [
+          {
+            "label": "Carousels",
+            "value": "70%",
+            "share": 70
+          },
+          {
+            "label": "Reels",
+            "value": "20%",
+            "share": 20
+          },
+          {
+            "label": "Single posts",
+            "value": "10%",
+            "share": 10
+          }
+        ],
+        "note": "Carousels show variations and examples of a product, so they carry the product showcase. Reels give quick storytelling with visual and audio hooks, for behind the scenes and brand vibe. Single posts carry quick, consumable visuals and information."
+      },
+      {
+        "type": "list",
+        "title": "Production needs",
+        "items": [
+          "A product and lifestyle shoot with Justin, Hailey and models",
+          "Makeup tutorials",
+          "A graphic designer for product-education infographics",
+          "Influencer and creator collaborations, and UGC",
+          "On-site creators shooting behind the scenes at Rhode World, including visitors joining in the activities",
+          "Aesthetic shots of the 818 and Patrón cocktail bar collabs"
+        ]
+      },
+      {
+        "type": "list",
+        "title": "Calls to action",
+        "items": [
+          "“visit rhode world!”",
+          "“launching x/x/x. join the waitlist now.”",
+          "“what do you think of this look?”",
+          "“see how [celebrity] styles rhode.”"
+        ]
+      }
+    ]
+  },
+  "results": {
+    "lead": "",
+    "blocks": []
+  }
+}

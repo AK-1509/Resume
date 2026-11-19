@@ -1,0 +1,304 @@
+{
+  "slug": "eight-sleep",
+  "order": 7,
+  "title": "Eight Sleep",
+  "slugLine": "A financial case analysis of the smart-mattress company, and a VC-method valuation of a $150M Series E.",
+  "tags": [
+    "Financial analysis",
+    "VC valuation"
+  ],
+  "hero": {
+    "image": null,
+    "figure": null
+  },
+  "role": {
+    "title": "",
+    "sprint": "",
+    "summary": "",
+    "moves": []
+  },
+  "demo": {
+    "href": "https://claude.ai/public/artifacts/189c2ecf-2df0-4a9b-a120-fd004581bd38"
+  },
+  "timeline": {
+    "research": "",
+    "goals": "",
+    "design": "",
+    "results": ""
+  },
+  "research": {
+    "problem": "Eight Sleep earns most of its revenue from ==hardware sales==, with subscriptions only about 20%, while **high manufacturing and marketing costs** and a reliance on affluent buyers leave it exposed when spending tightens.",
+    "stakeholders": [
+      {
+        "kind": "Customer",
+        "name": "Affluent early adopters",
+        "note": "Pods average $2,000–$5,000"
+      },
+      {
+        "kind": "Customer",
+        "name": "Subscribers",
+        "note": "Pro, Enhanced and Elite plans, about $17–$33 a month"
+      },
+      {
+        "kind": "Partner",
+        "name": "Wellness programs, insurers and gyms",
+        "note": "For example Equinox, Fitbit, Anthem"
+      },
+      {
+        "kind": "Competitor",
+        "name": "Health-tech ecosystems",
+        "note": "Apple, Oura, Whoop, Chilipad"
+      },
+      {
+        "kind": "Investor",
+        "name": "Series E investors",
+        "note": "A $150M round"
+      }
+    ],
+    "painPoints": [
+      {
+        "label": "High manufacturing and marketing costs",
+        "detail": "Premium materials and complex temperature-control hardware raise production costs, and teaching buyers about a high-tech sleep product takes expensive campaigns."
+      },
+      {
+        "label": "Dependence on luxury customers",
+        "detail": "With prices averaging $2,000–$5,000, Eight Sleep relies on affluent early adopters and is exposed to economic shifts and lower discretionary spending."
+      },
+      {
+        "label": "Strong competition",
+        "detail": "Apple, Oura, Whoop and Chilipad have large ecosystems and user trust, which makes market share harder to win and keep."
+      },
+      {
+        "label": "Product and service issues",
+        "detail": "Leaks and reliability problems, warranty and out-of-warranty coverage, customer service complaints, and subscription and feature access."
+      }
+    ],
+    "headlines": []
+  },
+  "goals": {
+    "rows": [
+      {
+        "goal": "Raise subscription conversion",
+        "target": "From 20% to 30%",
+        "kpi": "About 25,000 more paid users, +$8.75M a year in recurring revenue at $350 each"
+      },
+      {
+        "goal": "Lower CAC through partnerships",
+        "target": "Cut CAC by 20%",
+        "kpi": "$470 saved per customer, about $18M across 40,000 new customers in 2026"
+      },
+      {
+        "goal": "Expand the accessory ecosystem",
+        "target": "+25–35% average order value",
+        "kpi": "+30–40% LTV and +$6M annual profit"
+      }
+    ],
+    "insights": [
+      {
+        "insight": "High margins, reinvested",
+        "evidence": "High prices and cheap marginal costs give exceptionally high margins, which mostly go back into R&D and marketing."
+      },
+      {
+        "insight": "Marketing and R&D lead spending",
+        "evidence": "Marketing and R&D run at about 40% and 25% of revenue, standard for a hardware innovation brand, and marketing spend is expected to grow as the market saturates."
+      },
+      {
+        "insight": "Break-even came in 2022",
+        "evidence": "Eight Sleep broke even at about $91M in revenue and more than 18,000 Pods sold. Projected churn of 0.5% keeps subscription revenue flowing year after year."
+      },
+      {
+        "insight": "CAC will rise as the market matures",
+        "evidence": "Eight Sleep looks to be in the early-majority stage of adoption, so CAC will probably rise over the next 3–4 years, but subscriptions should sustain revenue growth."
+      }
+    ],
+    "report": {
+      "href": null
+    },
+    "roadmap": [
+      {
+        "when": "Series E",
+        "what": "Raise $150M at a $1.02B pre-money valuation (base case)"
+      },
+      {
+        "when": "Retail",
+        "what": "Open physical stores so customers can try the products first-hand"
+      },
+      {
+        "when": "FDA",
+        "what": "Apply for FDA approval to position the Pod as a medical device"
+      },
+      {
+        "when": "2030",
+        "what": "Exit at a base-case enterprise value of $2.93B"
+      }
+    ]
+  },
+  "design": {
+    "lead": "Eight Sleep pairs hardware with AI. The Pod’s water-powered heating and cooling adjusts temperature in real time, and a subscription turns each night’s data into ongoing updates and personalized insight.",
+    "blocks": [
+      {
+        "type": "bars",
+        "title": "Revenue mix",
+        "lead": "Estimated share of revenue by stream.",
+        "items": [
+          {
+            "label": "Hardware sales and add-ons",
+            "value": "60%",
+            "share": 60
+          },
+          {
+            "label": "Subscriptions",
+            "value": "20%",
+            "share": 20
+          },
+          {
+            "label": "Direct to consumer",
+            "value": "10%",
+            "share": 10
+          },
+          {
+            "label": "Partnerships",
+            "value": "5%",
+            "share": 5
+          }
+        ]
+      },
+      {
+        "type": "list",
+        "title": "Product line",
+        "items": [
+          "A water-powered heating and cooling mattress designed for breathability",
+          "Premium air pillows that dissipate heat",
+          "Pod protective covers",
+          "Sleep supplements"
+        ]
+      },
+      {
+        "type": "list",
+        "title": "Strategic recommendations",
+        "items": [
+          "Move free and lower-tier users up to Autopilot through feature gating, in-app coaching and deeper integration with other health devices",
+          "Add referral bonuses and family plans to grow multi-user households",
+          "Sell Pods as reimbursable or employer-subsidized health solutions through wellness programs, insurers and gyms",
+          "Grow the line of connected accessories, with bundles and loyalty discounts for existing users"
+        ]
+      }
+    ]
+  },
+  "results": {
+    "lead": "At a $150M Series E, the base case needs only ==about 12.8% investor ownership==, and the founders keep 48% of the company.",
+    "blocks": [
+      {
+        "type": "table",
+        "title": "Series E by the VC method",
+        "rowHeader": "Scenario",
+        "numeric": true,
+        "columns": [
+          {
+            "label": "Conservative"
+          },
+          {
+            "label": "Base",
+            "highlight": true
+          },
+          {
+            "label": "Optimistic"
+          }
+        ],
+        "rows": [
+          {
+            "label": "Revenue CAGR to 2030",
+            "cells": [
+              "25%",
+              "40%",
+              "50%"
+            ]
+          },
+          {
+            "label": "EV / revenue",
+            "cells": [
+              "2.5×",
+              "3.0×",
+              "3.5×"
+            ]
+          },
+          {
+            "label": "Target MOIC",
+            "cells": [
+              "2.0×",
+              "2.5×",
+              "3.0×"
+            ]
+          },
+          {
+            "label": "2030 exit value",
+            "cells": [
+              "$1.38B",
+              "$2.93B",
+              "$4.82B"
+            ]
+          },
+          {
+            "label": "Investor return at exit",
+            "cells": [
+              "$300M",
+              "$375M",
+              "$450M"
+            ]
+          },
+          {
+            "label": "Investor ownership",
+            "cells": [
+              "21.8%",
+              "12.8%",
+              "9.3%"
+            ]
+          },
+          {
+            "label": "Pre-money valuation",
+            "cells": [
+              "$0.54B",
+              "$1.02B",
+              "$1.46B"
+            ]
+          },
+          {
+            "label": "Post-money valuation",
+            "cells": [
+              "$0.69B",
+              "$1.17B",
+              "$1.61B"
+            ]
+          },
+          {
+            "label": "Founder ownership after the round",
+            "cells": [
+              "43.1%",
+              "48.0%",
+              "49.9%"
+            ]
+          },
+          {
+            "label": "Founder stake at exit",
+            "cells": [
+              "$0.60B",
+              "$1.40B",
+              "$2.40B"
+            ]
+          }
+        ],
+        "note": "Assumes $181M of gross revenue in 2025, a five-year horizon to 2030, a $150M check, and 55% founder ownership before the round."
+      },
+      {
+        "type": "list",
+        "title": "Key takeaways",
+        "items": [
+          "The cap table is healthy and investor-ready: founders keep nearly 50% after the Series E",
+          "A low-dilution round: the base-case exit is strong enough to need only about 12.8% investor ownership",
+          "With a pre-money valuation over $1B, founders give up little equity to raise substantial capital",
+          "Prior investors and the employee option pool still hold 39.2%, so incentives stay aligned"
+        ]
+      }
+    ]
+  }
+}

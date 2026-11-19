@@ -1,0 +1,347 @@
+{
+  "slug": "chimed",
+  "order": 2,
+  "title": "ChiMED",
+  "slugLine": "A wristband that reads the three pulse points of Traditional Chinese Medicine and uses AI to turn them into preventive health guidance.",
+  "tags": [
+    "Product strategy",
+    "Health tech"
+  ],
+  "hero": {
+    "image": null,
+    "figure": {
+      "src": "/case-studies/chimed/band-render.webp",
+      "alt": "Render of the ChiMED wristband: a white band with a grey display panel on top and a pad of three sensor rows on the inside.",
+      "width": 760,
+      "height": 817
+    }
+  },
+  "role": {
+    "title": "",
+    "sprint": "",
+    "summary": "",
+    "moves": []
+  },
+  "demo": null,
+  "timeline": {
+    "research": "",
+    "goals": "",
+    "design": "",
+    "results": ""
+  },
+  "research": {
+    "problem": "Healthcare is ==expensive== and the system cannot be changed, so **people would prefer to avoid hospitals altogether**.",
+    "stakeholders": [
+      {
+        "kind": "Customer",
+        "name": "Busy professionals",
+        "note": "Mr. Zhang, 35, a product manager in Shanghai"
+      },
+      {
+        "kind": "Customer",
+        "name": "People managing chronic conditions",
+        "note": "Ms. Mei, 45, a grocery store owner with type 2 diabetes"
+      },
+      {
+        "kind": "Customer",
+        "name": "Older adults without cover",
+        "note": "Irving, 66, after his Medicare fell through"
+      },
+      {
+        "kind": "Partner",
+        "name": "Licensed TCM doctors",
+        "note": "Dr. Liu, 50, in Chengdu"
+      },
+      {
+        "kind": "Partner",
+        "name": "Herbalists and apothecaries",
+        "note": "Fill premium-tier herbal prescriptions"
+      },
+      {
+        "kind": "Competitor",
+        "name": "Mainstream wearables",
+        "note": "Apple Watch, Oura Ring, Fitbit"
+      }
+    ],
+    "painPoints": [
+      {
+        "label": "Rising costs",
+        "detail": "Health expenditure per capita has risen 70% since 2015, and 27% of people avoid seeking care because it costs too much."
+      },
+      {
+        "label": "Long waits for small check-ups",
+        "detail": "Big hospitals are expensive and time-consuming, and long waits for minor check-ups make regular physicals hard to fit in."
+      },
+      {
+        "label": "Health apps people do not trust",
+        "detail": "Health apps are confusing or overly technical, their advice is vague, and users worry about data privacy and AI accuracy."
+      },
+      {
+        "label": "No view between visits",
+        "detail": "TCM doctors have little time for deep pulse analysis on busy clinic days and find it hard to track patients between visits."
+      },
+      {
+        "label": "Doubts about TCM",
+        "detail": "Patients who do not fully understand TCM hesitate, and doctors struggle to win the trust of those who doubt it."
+      }
+    ],
+    "headlines": []
+  },
+  "goals": {
+    "rows": [
+      {
+        "goal": "Validate the diagnosis",
+        "target": "More than 90% precision in diagnosis",
+        "kpi": "Alpha users report improved health"
+      },
+      {
+        "goal": "Win the consumer segment",
+        "target": "5% of US consumer-grade wearable medical devices",
+        "kpi": "≈ $103M in the first year, $1.82B by 2030"
+      },
+      {
+        "goal": "Fund growth in three stages",
+        "target": "Seed $90K, Stage A $1M, Stage B $3.3M",
+        "kpi": "Net worth of $18M after Stage A, $118M after Stage B"
+      }
+    ],
+    "insights": [
+      {
+        "insight": "Wearable health tech is growing fast",
+        "evidence": "The market for IoT wearable health tech is projected to grow at a 25.8% CAGR over the next five years."
+      },
+      {
+        "insight": "AI is ready to do the reading",
+        "evidence": "AI models now score 99% on quantitative reasoning and coding (MATH-500), enough to back computational automation."
+      },
+      {
+        "insight": "TCM pulse diagnosis can work with sensors",
+        "evidence": "New research at UChina and Penn State gives proof of concept for integrating TCM with modern sensors, and they launched the first TCM pulse-diagnosis AI model."
+      },
+      {
+        "insight": "People already look past conventional care",
+        "evidence": "37% of people seek alternative medicine in place of traditional care, and health influencers who push alternative medicine have large followings on social media."
+      }
+    ],
+    "report": {
+      "href": null
+    },
+    "roadmap": [
+      {
+        "when": "Validate",
+        "what": "Train and validate on data: more than 90% diagnostic precision, alpha users report better health"
+      },
+      {
+        "when": "Launch",
+        "what": "Partner with TCM doctors and apothecaries"
+      },
+      {
+        "when": "Market",
+        "what": "Sell in traditional hospitals and TCM clinics, online, and in dense areas"
+      },
+      {
+        "when": "Scale",
+        "what": "Expand globally and into other diagnostic and health needs, or exit"
+      }
+    ]
+  },
+  "design": {
+    "lead": "A wristband with three sensors reads the three TCM pulse points around the clock. Its app turns the readings into AI-driven diagnostics and lifestyle suggestions, and a premium tier adds a personalized herbal prescription filled by a local herbalist.",
+    "blocks": [
+      {
+        "type": "list",
+        "title": "What it offers",
+        "items": [
+          "Copay-free diagnostics: AI-driven analysis that diagnoses health conditions",
+          "Preventive care: lifestyle suggestions that reduce the need for doctor’s visits",
+          "24/7 monitoring of organ health: three sensors detect the three TCM pulse points"
+        ]
+      },
+      {
+        "type": "steps",
+        "title": "How it works",
+        "items": [
+          {
+            "title": "Monitor",
+            "body": "The wristband monitors health 24/7 through the three TCM pulse points."
+          },
+          {
+            "title": "Read",
+            "body": "The phone app shows organ-by-organ readings and AI-enabled care suggestions based on pulse patterns."
+          },
+          {
+            "title": "Prescribe",
+            "body": "Premium users receive a personalized prescription for herbal TCM supplements."
+          },
+          {
+            "title": "Fill",
+            "body": "A local herbalist fills the prescription and answers questions about its effects."
+          }
+        ]
+      }
+    ]
+  },
+  "results": {
+    "lead": "The pitch ends in a three-stage raise, from a $90K seed to a $3.3M international round, with ==an estimated $118M net worth== at the end of Stage B.",
+    "blocks": [
+      {
+        "type": "sizing",
+        "title": "Market sizing",
+        "rings": [
+          {
+            "name": "TAM",
+            "value": "$91.21B",
+            "label": "Global wearable medical devices market",
+            "note": "2024 value. Projected to reach $324.73B by 2030, a 17.2% CAGR (2024–2032)."
+          },
+          {
+            "name": "SAM",
+            "value": "$13.3B",
+            "label": "US wearable medical devices market",
+            "note": "About 14.6% of the global market in 2024. Projected to reach $46.89B by 2030, a 23.4% CAGR."
+          },
+          {
+            "name": "SOM",
+            "value": "$103M",
+            "label": "US consumer-grade wearable medical devices",
+            "note": "The consumer-grade segment is 77.5% of the US market. ChiMED targets a 5% share: about $103M in the first year and $1.82B by 2030 ($46.89B × 77.5% × 5%)."
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "title": "How it compares",
+        "rowHeader": "Feature",
+        "columns": [
+          {
+            "label": "ChiMED",
+            "highlight": true
+          },
+          {
+            "label": "Apple Watch"
+          },
+          {
+            "label": "Oura Ring"
+          },
+          {
+            "label": "Fitbit"
+          }
+        ],
+        "rows": [
+          {
+            "label": "AI integration",
+            "cells": [
+              "yes",
+              "yes",
+              "yes",
+              "no"
+            ]
+          },
+          {
+            "label": "Personalized recommendations",
+            "cells": [
+              "yes",
+              "yes",
+              "yes",
+              "no"
+            ]
+          },
+          {
+            "label": "Uses alternative medicine",
+            "cells": [
+              "yes",
+              "no",
+              "no",
+              "no"
+            ]
+          },
+          {
+            "label": "Affordable",
+            "cells": [
+              "yes",
+              "no",
+              "no",
+              "yes"
+            ]
+          },
+          {
+            "label": "User friendly",
+            "cells": [
+              "yes",
+              "yes",
+              "no",
+              "yes"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "title": "SWOT",
+        "rowHeader": "Origin",
+        "columns": [
+          {
+            "label": "Helpful"
+          },
+          {
+            "label": "Harmful"
+          }
+        ],
+        "rows": [
+          {
+            "label": "Internal",
+            "cells": [
+              "Strengths: cheaper, easily accessible, convenient, user friendly, personalized medicine",
+              "Weaknesses: seen as less trustworthy and reliable, liability issues, finite functional data, technical limitations, integration challenges"
+            ]
+          },
+          {
+            "label": "External",
+            "cells": [
+              "Opportunities: healthcare growing more expensive, distrust in the medical system, rising interest in Eastern medicine",
+              "Threats: data privacy and security, ethical concerns, comfort with a doctor’s opinion over AI, increasing job insecurity"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "title": "Funding stages",
+        "rowHeader": "Stage",
+        "numeric": true,
+        "columns": [
+          {
+            "label": "Raise"
+          },
+          {
+            "label": "Equity"
+          }
+        ],
+        "rows": [
+          {
+            "label": "Seed",
+            "cells": [
+              "$90,000",
+              "5%"
+            ]
+          },
+          {
+            "label": "Stage A (mainstream)",
+            "cells": [
+              "$1,000,000",
+              "15%"
+            ]
+          },
+          {
+            "label": "Stage B (international)",
+            "cells": [
+              "$3,300,000",
+              "10%"
+            ]
+          }
+        ],
+        "note": "Funds go to marketing, AI model R&D, product optimization and taxes."
+      }
+    ]
+  }
+}
