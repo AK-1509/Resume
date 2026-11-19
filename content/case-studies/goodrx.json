@@ -1,0 +1,225 @@
+{
+  "slug": "goodrx",
+  "order": 5,
+  "title": "GoodRx",
+  "slugLine": "A plan to grow GoodRx beyond prescription discounts with an in-house telehealth team and new revenue streams.",
+  "tags": [
+    "Business strategy",
+    "Revenue models",
+    "Solo project"
+  ],
+  "hero": {
+    "image": null,
+    "figure": null
+  },
+  "role": {
+    "title": "",
+    "sprint": "",
+    "summary": "",
+    "moves": []
+  },
+  "demo": null,
+  "timeline": {
+    "research": "",
+    "goals": "",
+    "design": "",
+    "results": ""
+  },
+  "research": {
+    "problem": "A cost-sensitive consumer who saves on prescriptions through GoodRx needs ==a more sustainable and rewarding way== to get affordable medication, but **GoodRx relies mainly on prescription discounts** and leaves other revenue streams untapped.",
+    "stakeholders": [
+      {
+        "kind": "Customer",
+        "name": "Cost-sensitive consumers",
+        "note": "Who save on prescriptions through GoodRx"
+      },
+      {
+        "kind": "Company",
+        "name": "GoodRx and its investors"
+      },
+      {
+        "kind": "Partner",
+        "name": "Pharmacies",
+        "note": "Profit sharing on prescriptions filled"
+      },
+      {
+        "kind": "Partner",
+        "name": "Insurers and health systems",
+        "note": "Profit sharing on referrals"
+      },
+      {
+        "kind": "Advertiser",
+        "name": "Pharmaceutical companies",
+        "note": "In-app ads and sponsored content"
+      },
+      {
+        "kind": "Competitor",
+        "name": "Telehealth providers",
+        "note": "Hims & Hers, Ro, Teladoc Health"
+      }
+    ],
+    "painPoints": [
+      {
+        "label": "A narrow revenue base",
+        "detail": "GoodRx relies mainly on prescription discounts and misses chances for greater profitability."
+      },
+      {
+        "label": "Savings left on the table",
+        "detail": "Consumers might miss out on savings or better healthcare benefits if GoodRx does not make the most of its opportunities."
+      },
+      {
+        "label": "An extra visit to pay for",
+        "detail": "Getting a prescription still means a separate doctor’s visit and its copay."
+      }
+    ],
+    "headlines": []
+  },
+  "goals": {
+    "rows": [],
+    "insights": [
+      {
+        "insight": "Telehealth is the growth market",
+        "evidence": "The global telehealth market was valued at about $83.5B in 2022 and is projected to grow at a 24% CAGR to $455.27B by 2030."
+      },
+      {
+        "insight": "The US market alone will more than quadruple",
+        "evidence": "US telemedicine is projected to grow from $35.75B in 2024 to $160.45B by 2034, a 16.2% CAGR."
+      },
+      {
+        "insight": "Competitors already pair care with prescriptions",
+        "evidence": "Hims & Hers, Ro and Teladoc Health offer online consultations with medication delivery. Ro partners with Eli Lilly, and Teladoc with pharmacies, to offer weight-loss drugs such as Zepbound."
+      },
+      {
+        "insight": "Medical data is untapped capital",
+        "evidence": "Personalized drug recommendations based on medical history put the capital hidden in medical data to work."
+      }
+    ],
+    "report": {
+      "href": null
+    },
+    "roadmap": [
+      {
+        "when": "Step 1",
+        "what": "Recruit an in-house telehealth team: practitioners, telehealth specialists and tech support"
+      },
+      {
+        "when": "Step 2",
+        "what": "Sign profit-sharing, commission and advertising partnerships with pharma companies, insurers and tech partners"
+      },
+      {
+        "when": "Step 3",
+        "what": "Build virtual consultations and medication management into the GoodRx platform"
+      },
+      {
+        "when": "10 years",
+        "what": "Broader access to affordable care, especially in underserved and rural areas"
+      }
+    ]
+  },
+  "design": {
+    "lead": "The plan keeps prescription discounts at the core and adds an in-house telehealth team, so users can get a prescription without paying for another doctor’s visit, while ads, subscriptions, profit sharing and commissions fund the savings.",
+    "blocks": [
+      {
+        "type": "list",
+        "title": "Products and services",
+        "items": [
+          "Lower prices on drugs",
+          "Telehealth prescriptions without an additional doctor’s-visit copay",
+          "Personalized drug recommendations based on medical history"
+        ]
+      },
+      {
+        "type": "table",
+        "title": "Revenue models",
+        "rowHeader": "Model",
+        "columns": [
+          {
+            "label": "How it earns"
+          }
+        ],
+        "rows": [
+          {
+            "label": "Advertising",
+            "cells": [
+              "Targeted in-app ads and sponsored placements from pharma companies, providers, insurers and pharmacy partners"
+            ]
+          },
+          {
+            "label": "Cross-subsidization",
+            "cells": [
+              "GoodRx Gold subscriptions for deeper discounts help fund savings for users on the free service"
+            ]
+          },
+          {
+            "label": "Profit sharing",
+            "cells": [
+              "Pharmacies share revenue on every prescription filled through GoodRx; health systems and insurers share profits on referrals"
+            ]
+          },
+          {
+            "label": "Commissions",
+            "cells": [
+              "A fee on every prescription filled and every telehealth consultation booked, plus commissions for referrals to outside services"
+            ]
+          },
+          {
+            "label": "Partnerships",
+            "cells": [
+              "Income from collaborations with insurers, telehealth and wellness brands"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "list",
+        "title": "Resources required",
+        "items": [
+          "Talent: doctors, nurse practitioners, telehealth developers, marketing and partnership managers",
+          "Technology: telehealth software, data analytics tools and platform integration",
+          "Capital: investors or strategic partners to fund new services and hiring"
+        ]
+      }
+    ]
+  },
+  "results": {
+    "lead": "In ten years, the plan sees GoodRx as ==a one-stop shop for prescription savings and telehealth==, with better health outcomes and higher medication adherence.",
+    "blocks": [
+      {
+        "type": "sizing",
+        "title": "Market sizing",
+        "rings": [
+          {
+            "name": "Global",
+            "value": "$83.5B",
+            "label": "Global telehealth market, 2022",
+            "note": "Projected to grow at a 24% CAGR from 2023 to reach $455.27B by 2030."
+          },
+          {
+            "name": "US",
+            "value": "$35.75B",
+            "label": "US telemedicine market, 2024",
+            "note": "Projected to reach $160.45B by 2034, a 16.2% CAGR."
+          }
+        ]
+      },
+      {
+        "type": "list",
+        "title": "What success looks like",
+        "items": [
+          "Sustainable revenue growth: several revenue streams, without compromising the mission",
+          "Telehealth adoption: an in-house team serving users across demographics",
+          "Market leadership: one platform for prescription savings, telehealth and diverse revenue",
+          "Customer satisfaction: customers value a one-stop shop for savings and telehealth"
+        ]
+      },
+      {
+        "type": "list",
+        "title": "Impact models",
+        "items": [
+          "Universal healthcare: measure the total savings delivered to patients against market prices for prescription drugs",
+          "Pro bono partnerships that deliver free or low-cost healthcare options"
+        ]
+      }
+    ]
+  }
+}

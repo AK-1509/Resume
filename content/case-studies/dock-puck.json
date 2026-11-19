@@ -1,0 +1,333 @@
+{
+  "slug": "dock-puck",
+  "order": 3,
+  "title": "Dock+Puck",
+  "slugLine": "A bedside sleep companion concept for Belkin with a removable puck, so people who travel often can take their wind-down routine with them.",
+  "tags": [
+    "Product design",
+    "User testing",
+    "Team of four"
+  ],
+  "hero": {
+    "image": null,
+    "figure": {
+      "src": "/case-studies/dock-puck/render.webp",
+      "alt": "Render of Dock+Puck: a white puck tilted open on a metal hinge above a base with a warm glowing light band and a grey fabric speaker.",
+      "width": 556,
+      "height": 734
+    }
+  },
+  "role": {
+    "title": "Product Manager",
+    "sprint": "",
+    "summary": "",
+    "moves": []
+  },
+  "demo": null,
+  "timeline": {
+    "research": "",
+    "goals": "",
+    "design": "",
+    "results": ""
+  },
+  "research": {
+    "problem": "Working adults who travel often ==do not feel well rested== even after sleeping enough hours, because **their wind-down routine is disrupted the moment they leave home**.",
+    "stakeholders": [
+      {
+        "kind": "Customer",
+        "name": "Frequent travelers",
+        "note": "Working adults, 25–40, who travel for work and leisure"
+      },
+      {
+        "kind": "Client",
+        "name": "Belkin",
+        "note": "The Belkin & Wellness brief"
+      },
+      {
+        "kind": "Competitor",
+        "name": "Sleep audio devices",
+        "note": "Lullabar, Jabees PEACE, Hatch Restore"
+      }
+    ],
+    "painPoints": [
+      {
+        "label": "A disrupted wind-down",
+        "detail": "They cannot sleep comfortably because their wind-down routine is disrupted the moment they leave home."
+      },
+      {
+        "label": "A shifting schedule",
+        "detail": "Their sleep schedule shifts every time they travel for business or leisure."
+      },
+      {
+        "label": "Unfamiliar rooms",
+        "detail": "Testers named falling asleep and staying asleep in unfamiliar sleep environments as their main challenges."
+      },
+      {
+        "label": "Screens before bed",
+        "detail": "They rack up high daily screen time, and screen use before bed makes it harder to fall asleep."
+      }
+    ],
+    "headlines": []
+  },
+  "goals": {
+    "rows": [],
+    "insights": [
+      {
+        "insight": "Familiar cues help people settle",
+        "evidence": "A tester who travels six times a year found the scent feature useful for creating a familiar sleep environment."
+      },
+      {
+        "insight": "The light helps waking more than winding down",
+        "evidence": "One tester said the light seems to help with waking up but not with winding down. Another valued it as a sunrise alarm."
+      },
+      {
+        "insight": "The controls were not clear",
+        "evidence": "Testers found the toggle controls unclear and, beyond the on/off button and the adaptive light, could not tell what the other features were."
+      },
+      {
+        "insight": "It needs to be smaller to travel",
+        "evidence": "Testers said it takes up too much desk space and asked for a smaller, more portable form."
+      }
+    ],
+    "report": {
+      "href": null
+    },
+    "roadmap": []
+  },
+  "design": {
+    "lead": "The final concept pairs a magnetic charging dock with a removable sleep puck. At home it is one bedside device for light, sound and charging. On the road the puck comes along, and the routine comes with it.",
+    "blocks": [
+      {
+        "type": "list",
+        "title": "Design criteria",
+        "items": [
+          "Aids physical and mental relaxation with multi-sensory features",
+          "Provides signature Belkin connectivity",
+          "Travel-friendly"
+        ]
+      },
+      {
+        "type": "list",
+        "title": "An earlier concept: Sleep Plane",
+        "items": [
+          "A charging dock, adaptive light and sleep speaker",
+          "Its width and depth took up too much desk space",
+          "It offered too few features for its size"
+        ]
+      },
+      {
+        "type": "table",
+        "title": "Features and benefits",
+        "rowHeader": "Feature",
+        "columns": [
+          {
+            "label": "What it is"
+          },
+          {
+            "label": "Why it helps"
+          }
+        ],
+        "rows": [
+          {
+            "label": "Charging dock",
+            "cells": [
+              "Magnetic wireless charging dock for the puck and phone",
+              "Keeps the bedside setup simple and cuts extra cables during the wind-down routine"
+            ]
+          },
+          {
+            "label": "Adaptive light",
+            "cells": [
+              "Adjustable brightness and color temperature with simple touch or physical controls",
+              "Smooths the move from wakefulness to sleep with a calming bedside environment"
+            ]
+          },
+          {
+            "label": "Sleep speaker",
+            "cells": [
+              "Adjustable volume with simple physical controls for white noise, calming sounds and alarms",
+              "Creates a consistent sleep environment without headphones or earbuds"
+            ]
+          },
+          {
+            "label": "Portable puck",
+            "cells": [
+              "A removable, compact sleep module that works apart from the dock",
+              "Makes the sleep setup easy to bring when traveling or moving between rooms"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "figure",
+        "title": "Concept photo",
+        "image": {
+          "src": "/case-studies/dock-puck/concept-photo.webp",
+          "alt": "Dock+Puck on a wooden bedside table in a dim bedroom, its base glowing warm, with a phone on the puck showing 12:50.",
+          "width": 1200,
+          "height": 897
+        },
+        "caption": "Dock+Puck concept photo."
+      },
+      {
+        "type": "figure",
+        "title": "Medium-fidelity prototype",
+        "image": {
+          "src": "/case-studies/dock-puck/prototype.webp",
+          "alt": "A handmade prototype in cardboard and white paper: a round base with a cardboard puck tilted up on top.",
+          "width": 1000,
+          "height": 1000
+        },
+        "caption": "The medium-fidelity prototype used in user testing."
+      }
+    ]
+  },
+  "results": {
+    "lead": "Five frequent travelers tested the medium-fidelity prototype, and their feedback set ==three priority iterations== for the next round.",
+    "blocks": [
+      {
+        "type": "table",
+        "title": "How it compares",
+        "rowHeader": "Feature",
+        "columns": [
+          {
+            "label": "Dock+Puck",
+            "highlight": true
+          },
+          {
+            "label": "Lullabar"
+          },
+          {
+            "label": "Jabees PEACE"
+          },
+          {
+            "label": "Hatch Restore"
+          }
+        ],
+        "rows": [
+          {
+            "label": "Non-wearable sleep audio",
+            "cells": [
+              "yes",
+              "yes",
+              "yes",
+              "yes"
+            ]
+          },
+          {
+            "label": "Portable and travel-friendly",
+            "cells": [
+              "yes",
+              "yes",
+              "yes",
+              "no"
+            ]
+          },
+          {
+            "label": "Sleep-focused speaker",
+            "cells": [
+              "yes",
+              "yes",
+              "yes",
+              "yes"
+            ]
+          },
+          {
+            "label": "Removable portable puck",
+            "cells": [
+              "yes",
+              "no",
+              "no",
+              "no"
+            ]
+          },
+          {
+            "label": "Adaptive or ambient light",
+            "cells": [
+              "yes",
+              "no",
+              "no",
+              "yes"
+            ]
+          },
+          {
+            "label": "Simple physical controls",
+            "cells": [
+              "yes",
+              "yes",
+              "yes",
+              "yes"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "title": "What testers said",
+        "rowHeader": "Tester",
+        "columns": [
+          {
+            "label": "Sleep challenge"
+          },
+          {
+            "label": "Liked"
+          },
+          {
+            "label": "Wanted changed"
+          }
+        ],
+        "rows": [
+          {
+            "label": "Gen Z woman, 6 trips a year",
+            "cells": [
+              "Falling asleep in unfamiliar sleep environments",
+              "The scent feature, for a familiar sleep environment",
+              "Simpler physical controls that are easier to understand at night"
+            ]
+          },
+          {
+            "label": "Millennial man, 5 trips a year",
+            "cells": [
+              "Falling asleep, sleep irregularity",
+              "The light seems to help with waking up",
+              "It does not help winding down, and takes up too much desk space"
+            ]
+          },
+          {
+            "label": "Gen Z woman, 3 trips a year",
+            "cells": [
+              "Staying asleep",
+              "The design looks futuristic and aesthetic",
+              "Beyond the on/off button and adaptive light, the features are not clear"
+            ]
+          },
+          {
+            "label": "Millennial woman, 2 trips a year",
+            "cells": [
+              "Falling asleep, staying asleep",
+              "Wireless charging and the light; a sunrise alarm helps her wake up",
+              "The toggle controls are not clear"
+            ]
+          },
+          {
+            "label": "Gen Z man, 2 trips a year",
+            "cells": [
+              "Falling asleep, screen use before bed",
+              "Combining speaker, light and scent in one product",
+              "A smaller, more portable form for travel"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "list",
+        "title": "Priority iterations",
+        "items": [
+          "Reduce the overall size of the product",
+          "Emphasize the control buttons",
+          "Add icons or visual aids that show each feature and what it does"
+        ]
+      }
+    ]
+  }
+}

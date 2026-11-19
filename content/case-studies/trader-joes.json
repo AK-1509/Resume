@@ -1,0 +1,224 @@
+{
+  "slug": "trader-joes",
+  "order": 6,
+  "title": "Trader Joe’s Expo",
+  "slugLine": "An Expo Counter and seating area that brings healthy, affordable hot food to Trader Joe’s stores.",
+  "tags": [
+    "Business strategy",
+    "Brand and marketing strategy",
+    "Team of five"
+  ],
+  "hero": {
+    "image": null,
+    "figure": null
+  },
+  "role": {
+    "title": "",
+    "sprint": "",
+    "summary": "",
+    "moves": []
+  },
+  "demo": null,
+  "timeline": {
+    "research": "",
+    "goals": "",
+    "design": "",
+    "results": ""
+  },
+  "research": {
+    "problem": "Customers who want ==hot, ready-made food== have no options at Trader Joe’s, **while Costco, PCC and Whole Foods all offer fresh hot-food counters**.",
+    "stakeholders": [
+      {
+        "kind": "Customer",
+        "name": "Busy, health-conscious shoppers",
+        "note": "Urban, mostly plant-based, prefer shopping in store"
+      },
+      {
+        "kind": "Partner",
+        "name": "Local farmers",
+        "note": "Produce sourced locally, with a share of sales"
+      },
+      {
+        "kind": "Partner",
+        "name": "Local artists",
+        "note": "Decorate containers and bags for each region"
+      },
+      {
+        "kind": "Partner",
+        "name": "Chefs",
+        "note": "Corporate chefs for national menus, local and guest chefs in store"
+      },
+      {
+        "kind": "Competitor",
+        "name": "Grocers with hot bars",
+        "note": "Costco, PCC, Whole Foods, Erewhon"
+      }
+    ],
+    "painPoints": [
+      {
+        "label": "Too busy to cook",
+        "detail": "She is too busy to prepare meals but still wants to eat healthy."
+      },
+      {
+        "label": "Few hot options",
+        "detail": "Limited hot-meal options push her toward delivery or unhealthy food."
+      },
+      {
+        "label": "Single-use packaging",
+        "detail": "She dislikes single-use packaging and looks for sustainable alternatives."
+      },
+      {
+        "label": "Frozen fatigue",
+        "detail": "She gets bored with frozen meals and wants more variety."
+      }
+    ],
+    "headlines": []
+  },
+  "goals": {
+    "rows": [
+      {
+        "goal": "Attract",
+        "target": "10% more new customers across stores nationally",
+        "kpi": "New customers per day"
+      },
+      {
+        "goal": "Activate",
+        "target": "Sell 20% more products by the end of the year",
+        "kpi": "Product sales"
+      },
+      {
+        "goal": "Retain",
+        "target": "65% of users keep eating at the hot bar",
+        "kpi": "Returning hot-bar customers"
+      },
+      {
+        "goal": "Generate revenue",
+        "target": "$500,000 in the first quarter across the first 12 stores",
+        "kpi": "Expo Counter sales"
+      },
+      {
+        "goal": "Earn referrals",
+        "target": "50,000 social media shares and 200,000 likes by the end of the three-month campaign",
+        "kpi": "Shares and likes"
+      }
+    ],
+    "insights": [
+      {
+        "insight": "Ready meals are a growing market",
+        "evidence": "The North American ready-meals market is expected to reach about $89.9B by 2027, growing 5.3% a year."
+      },
+      {
+        "insight": "Sampling sells",
+        "evidence": "69% of consumers are more likely to buy a food product after sampling it in store, and 86% have bought a product after trying a sample."
+      },
+      {
+        "insight": "Trader Joe’s wins in the store",
+        "evidence": "Costco and Whole Foods (since acquired by Amazon) prioritize online sales. Trader Joe’s model is built on its in-store experience, which a hot bar and free samples would deepen."
+      },
+      {
+        "insight": "The brand already carries the idea",
+        "evidence": "Shoppers see Trader Joe’s as healthier and affordable, like its frozen ready meals, and know it for unique private-label products the hot bar can showcase."
+      }
+    ],
+    "report": {
+      "href": null
+    },
+    "roadmap": [
+      {
+        "when": "Trial",
+        "what": "Modular kitchens and seating in 12 new stores"
+      },
+      {
+        "when": "Menus",
+        "what": "Corporate chefs set national menus, local chefs cook in store"
+      },
+      {
+        "when": "Sourcing",
+        "what": "Local farms for produce, local artists for custom containers and bags"
+      },
+      {
+        "when": "Rollout",
+        "what": "Modular kitchens in every store after the trial period"
+      }
+    ]
+  },
+  "design": {
+    "lead": "An Expo Counter and seating area in each store serves healthy, affordable hot food in reusable containers decorated by local artists, with free samples of seasonal items to draw shoppers in.",
+    "blocks": [
+      {
+        "type": "list",
+        "title": "Products and services",
+        "items": [
+          "The Expo Counter hot bar",
+          "Reusable containers decorated by local artists",
+          "Custom bags that mark hot-food items and build recognition",
+          "Quick bites and free food samples",
+          "Indoor or outdoor seating, depending on the location"
+        ]
+      },
+      {
+        "type": "statement",
+        "title": "Brand position",
+        "clauses": [
+          {
+            "label": "Hot meals",
+            "text": "convenient, quick access to ready-made meals"
+          },
+          {
+            "label": "High-quality produce",
+            "text": "sourced directly from ethical, well-maintained farms"
+          },
+          {
+            "label": "Affordability",
+            "text": "diverse healthy choices that follow Trader Joe’s business model"
+          },
+          {
+            "label": "Cozy vibe",
+            "text": "a curated hot bar and seating design that draws customers in"
+          }
+        ]
+      },
+      {
+        "type": "list",
+        "title": "Revenue model",
+        "items": [
+          "Revenue comes purely from sales",
+          "Samples and brand ambassadors give shoppers a reason to try it",
+          "A loss leader on one or two popular items leads shoppers into the rest, as at Costco"
+        ]
+      },
+      {
+        "type": "list",
+        "title": "Impact models",
+        "items": [
+          "A percentage of Expo sales goes to local farmers",
+          "Bottle and food-container returns for sustainability",
+          "Local artists decorate containers for each store"
+        ]
+      }
+    ]
+  },
+  "results": {
+    "lead": "The launch campaign runs for one quarter in the first 12 stores, aiming for ==$500,000 in Expo revenue== and 10% more new customers nationally.",
+    "blocks": [
+      {
+        "type": "list",
+        "title": "Campaign touchpoints",
+        "items": [
+          "An exclusive release to the first 12 stores",
+          "Social: “You already love our products, but now you can get them fresh at the hot bar”",
+          "Videos on Trader Joe’s Instagram, TikTok and YouTube, with local brand ambassadors filming mukbang videos at the counter",
+          "In store: free samples at the counter, signs to the seating area, and staff who engage shoppers"
+        ]
+      },
+      {
+        "type": "list",
+        "title": "Risks",
+        "items": [
+          "A negative impact on Trader Joe’s brand and market presence",
+          "Shoppers may not try the Expo, leading to monetary and spatial losses"
+        ]
+      }
+    ]
+  }
+}

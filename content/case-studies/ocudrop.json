@@ -1,0 +1,361 @@
+{
+  "slug": "ocudrop",
+  "order": 4,
+  "title": "OcuDrop",
+  "slugLine": "A strategic plan to take OCS-01, a dexamethasone eye drop for diabetic macular edema, from Phase 3 trials through approval and launch.",
+  "tags": [
+    "Drug development",
+    "Regulatory strategy",
+    "Go-to-market"
+  ],
+  "hero": {
+    "image": null,
+    "figure": null
+  },
+  "role": {
+    "title": "",
+    "sprint": "",
+    "summary": "",
+    "moves": []
+  },
+  "demo": null,
+  "timeline": {
+    "research": "",
+    "goals": "",
+    "design": "",
+    "results": ""
+  },
+  "research": {
+    "problem": "The standard of care for ==diabetic macular edema== works, but its **frequent, invasive injections** lead to major patient non-compliance and high logistical costs.",
+    "stakeholders": [
+      {
+        "kind": "Patient",
+        "name": "Diabetics aged 50–75",
+        "note": "At risk for DME"
+      },
+      {
+        "kind": "Prescriber",
+        "name": "Retinal specialists",
+        "note": "And specialty diabetes clinics"
+      },
+      {
+        "kind": "Customer",
+        "name": "Integrated delivery networks",
+        "note": "Kaiser, Geisinger"
+      },
+      {
+        "kind": "Payer",
+        "name": "Medicare Advantage plans",
+        "note": "Target: Tier 2 or Tier 3"
+      },
+      {
+        "kind": "Distributor",
+        "name": "National specialty pharmacies",
+        "note": "Optum, Accredo, CVS Specialty"
+      },
+      {
+        "kind": "Regulator",
+        "name": "FDA",
+        "note": "505(b)(2) pathway"
+      },
+      {
+        "kind": "Competitor",
+        "name": "Anti-VEGF injections",
+        "note": "Plus implants and suprachoroidal delivery"
+      }
+    ],
+    "painPoints": [
+      {
+        "label": "Injection fatigue",
+        "detail": "Anti-VEGF injections work, but patients do not stay compliant with a schedule of frequent, invasive injections."
+      },
+      {
+        "label": "Poorer outcomes",
+        "detail": "Low compliance leads to poorer long-term visual outcomes."
+      },
+      {
+        "label": "High out-of-pocket costs",
+        "detail": "Anti-VEGF drugs sit on the specialty tier with high copays and deductibles. The target patient spends $12K–$16K a year on injections and $600–$1,200 on clinic and OCT visits."
+      },
+      {
+        "label": "Hard to keep coming back",
+        "detail": "Patients often cannot see after treatment, and some, with no one to help, default on treatment because it is so inconvenient."
+      },
+      {
+        "label": "No non-invasive first line",
+        "detail": "There is no non-invasive first-line option on the market, leaving a large innovation gap."
+      }
+    ],
+    "headlines": [
+      {
+        "figure": "19M",
+        "headline": "people affected by DME globally",
+        "source": "American Academy of Ophthalmology",
+        "date": "2024"
+      },
+      {
+        "figure": "750K",
+        "headline": "estimated DME cases in the US",
+        "source": "American Academy of Ophthalmology",
+        "date": "2024"
+      },
+      {
+        "figure": "$4.8B",
+        "headline": "in patient spending",
+        "source": "American Academy of Ophthalmology",
+        "date": "2024"
+      }
+    ]
+  },
+  "goals": {
+    "rows": [
+      {
+        "goal": "Win FDA approval",
+        "target": "An NDA under 505(b)(2), backed by the DIAMOND-1 and DIAMOND-2 Phase 3 trials",
+        "kpi": "Superior reduction in central subfield thickness versus vehicle"
+      },
+      {
+        "goal": "Secure payer coverage",
+        "target": "Tier 2 or Tier 3 on Medicare Advantage",
+        "kpi": "A flat, predictable copay of $50–$90 a month"
+      },
+      {
+        "goal": "Break even",
+        "target": "About 20,000 patients treated",
+        "kpi": "Patients on therapy"
+      },
+      {
+        "goal": "Capture the serviceable market",
+        "target": "40–50% adoption and adherence",
+        "kpi": "Expected earnings of $1.04B–$1.60B"
+      }
+    ],
+    "insights": [
+      {
+        "insight": "Compliance is the new efficacy",
+        "evidence": "A treatment that keeps patients adherent will capture market share and give better long-term outcomes, which justifies a premium."
+      },
+      {
+        "insight": "Competitors still inject",
+        "evidence": "Implants and suprachoroidal delivery aim for less frequent or less invasive injections, not none. OcuDrop is the only topical, non-invasive option aiming to reach the retina, using OptiReach technology."
+      },
+      {
+        "insight": "A retail drug reaches more patients",
+        "evidence": "As a Part D retail drug, OcuDrop bypasses the capacity limits and costs of the physician office (Part B), opening treatment to patients who are new to it or tired of injections."
+      },
+      {
+        "insight": "The FDA will test retinal delivery",
+        "evidence": "The key regulatory question is whether a topical drop delivers enough drug to the retina. A posterior-segment PK package of clinical, formulation and penetration data answers it."
+      }
+    ],
+    "report": {
+      "href": null
+    },
+    "roadmap": [
+      {
+        "when": "Phase 3",
+        "what": "DIAMOND-1 and DIAMOND-2 registration trials"
+      },
+      {
+        "when": "Filing",
+        "what": "NDA under 505(b)(2) with a posterior-segment PK package"
+      },
+      {
+        "when": "Launch",
+        "what": "Specialty distributors and specialty pharmacies, aimed at retinal specialists"
+      },
+      {
+        "when": "Phase IV",
+        "what": "A safety registry for raised eye pressure and cataract"
+      },
+      {
+        "when": "Life cycle",
+        "what": "New indications, new formulations and a combination product"
+      }
+    ]
+  },
+  "design": {
+    "lead": "OCS-01 is a high-concentration dexamethasone eye drop. OptiReach technology carries it to the retina, so patients can treat the inflammation behind DME themselves, at home.",
+    "blocks": [
+      {
+        "type": "steps",
+        "title": "How DME develops",
+        "items": [
+          {
+            "title": "Chronic hyperglycemia",
+            "body": "Blood sugar stays high over the long term."
+          },
+          {
+            "title": "Barrier breakdown",
+            "body": "The blood-retinal barrier breaks down."
+          },
+          {
+            "title": "Inflammation",
+            "body": "Chronic low-grade inflammation raises vascular permeability."
+          },
+          {
+            "title": "Edema",
+            "body": "Fluid accumulates in the macula."
+          }
+        ]
+      },
+      {
+        "type": "list",
+        "title": "How OCS-01 works",
+        "items": [
+          "Dexamethasone, a potent glucocorticoid, suppresses inflammation by inhibiting cytokines and prostaglandins",
+          "It targets the inflammatory component of DME, a critical driver often secondary to VEGF",
+          "A highly bioavailable topical drop that patients use at home"
+        ]
+      },
+      {
+        "type": "list",
+        "title": "Manufacturing and quality",
+        "items": [
+          "A GMP-compliant sterile fill-finish process",
+          "The OptiReach formulation validated at commercial scale",
+          "Every batch tested for sterility, potency, viscosity and pH",
+          "Consistent drop size for predictable dosing",
+          "A full stability program to support a commercial shelf life"
+        ]
+      },
+      {
+        "type": "list",
+        "title": "Regulatory risks",
+        "items": [
+          "The FDA may decide 505(b)(2) is not appropriate, which could mean more studies and a later approval",
+          "505(b)(2) filings can draw patent challenges and 30-month delays",
+          "Raised intraocular pressure is the most common steroid-related finding, so long-term safety will be reviewed closely",
+          "As a potential first-in-class topical therapy for DME, it faces higher scrutiny"
+        ]
+      }
+    ]
+  },
+  "results": {
+    "lead": "The plan prices OcuDrop at ==$5,200–$8,000 a year==, 54% less than patients spend on injections, and breaks even at about 20,000 patients.",
+    "blocks": [
+      {
+        "type": "sizing",
+        "title": "Market sizing",
+        "rings": [
+          {
+            "name": "Global",
+            "value": "19M patients",
+            "label": "People affected by DME worldwide",
+            "note": "$4.8B in patient spending."
+          },
+          {
+            "name": "US",
+            "value": "750K cases",
+            "label": "Estimated DME cases in the US",
+            "note": "The patient segment goal is diabetics aged 50–75 at risk for DME."
+          },
+          {
+            "name": "Target",
+            "value": "150–200K patients",
+            "label": "Serviceable patients",
+            "note": "Drawn by fear of needles, insurance coverage issues, early detection, invasive-treatment fatigue and a better fit with daily life."
+          }
+        ],
+        "note": "Source: American Academy of Ophthalmology, 2024."
+      },
+      {
+        "type": "table",
+        "title": "Pricing and economics",
+        "rowHeader": "Item",
+        "columns": [
+          {
+            "label": "Figure"
+          }
+        ],
+        "rows": [
+          {
+            "label": "Anti-VEGF injection (price anchor)",
+            "cells": [
+              "$1,800–$2,500 a dose"
+            ]
+          },
+          {
+            "label": "Off-label bevacizumab (price anchor)",
+            "cells": [
+              "$50–$100 a dose"
+            ]
+          },
+          {
+            "label": "OcuDrop target price",
+            "cells": [
+              "$5,200–$8,000 a year"
+            ]
+          },
+          {
+            "label": "Development cost under 505(b)(2)",
+            "cells": [
+              "$90–135M"
+            ]
+          },
+          {
+            "label": "Cost of goods",
+            "cells": [
+              "$60–150 per patient a year"
+            ]
+          },
+          {
+            "label": "Break-even",
+            "cells": [
+              "About 20,000 patients treated"
+            ]
+          },
+          {
+            "label": "Expected earnings at 40–50% adoption and adherence",
+            "cells": [
+              "$1.04B–$1.60B"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "steps",
+        "title": "Distribution",
+        "items": [
+          {
+            "title": "Manufacturer",
+            "body": "Produces OCS-01 through a GMP sterile fill-finish process."
+          },
+          {
+            "title": "Specialty distributor",
+            "body": "The standard channel for DME: clinics already buy anti-VEGF biologics through specialty distributors."
+          },
+          {
+            "title": "Specialty pharmacy",
+            "body": "Refill support, adherence outreach and pharmacovigilance, which add the documentation a 505(b)(2) drug needs."
+          },
+          {
+            "title": "Patient",
+            "body": "Self-administers the drop at home."
+          }
+        ]
+      },
+      {
+        "type": "list",
+        "title": "Value proposition",
+        "items": [
+          "50–60% lower total annual cost than anti-VEGF injection pathways",
+          "Easier to use, which raises adherence over invasive treatment",
+          "The only option for early-stage patients who do not yet need injections, preventing long-term complications",
+          "First in class for its formulation, with a high projected market share"
+        ]
+      },
+      {
+        "type": "list",
+        "title": "After approval",
+        "items": [
+          "A Phase IV registry tracks raised eye pressure and cataract, real-world adherence and long-term vision",
+          "Targeted risk mitigation: patient education, prescriber training on monitoring eye pressure, counseling at pick-up",
+          "New indications: macular edema from retinal vein occlusion, and other inflammatory diseases at the back of the eye",
+          "New formulations: once-daily and sustained-release topical delivery",
+          "A topical anti-VEGF and dexamethasone combination using OptiReach, potentially the first fully non-invasive combination therapy for retinal disease"
+        ]
+      }
+    ]
+  }
+}

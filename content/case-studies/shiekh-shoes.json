@@ -1,0 +1,219 @@
+{
+  "slug": "shiekh-shoes",
+  "order": 8,
+  "title": "Shiekh Shoes",
+  "slugLine": "A break-even analysis of the Shiekh Shoes store at USC Village, with a campus-first plan to sell enough pairs sooner.",
+  "tags": [
+    "Break-even analysis",
+    "Retail strategy",
+    "Team of two"
+  ],
+  "hero": {
+    "image": null,
+    "figure": null
+  },
+  "role": {
+    "title": "",
+    "sprint": "",
+    "summary": "",
+    "moves": []
+  },
+  "demo": null,
+  "timeline": {
+    "research": "",
+    "goals": "",
+    "design": "",
+    "results": ""
+  },
+  "research": {
+    "problem": "The USC Village store needs to sell ==8,560 pairs of shoes a year== to cover its overheads and stock, **but sells an estimated 7,200**.",
+    "stakeholders": [
+      {
+        "kind": "Customer",
+        "name": "USC students",
+        "note": "A new class every year"
+      },
+      {
+        "kind": "Retailer",
+        "name": "Shiekh Shoes, LLC",
+        "note": "California footwear retailer founded in 1991, with 135 US stores and an online store"
+      },
+      {
+        "kind": "Partner",
+        "name": "Campus reps and micro-influencers",
+        "note": "USC students and campus athletes"
+      },
+      {
+        "kind": "Competitor",
+        "name": "Foot Locker, Finish Line, Champs",
+        "note": "And Nike direct to consumer"
+      }
+    ],
+    "painPoints": [
+      {
+        "label": "High fixed costs",
+        "detail": "Rent ($200,000), labor ($180,000), utilities ($24,000) and marketing ($24,000) add up to $428,000 a year."
+      },
+      {
+        "label": "Half of every sale goes to stock",
+        "detail": "A pair sells for about $100 and costs about $50 wholesale, so each pair leaves $50 toward overheads."
+      },
+      {
+        "label": "A sales gap",
+        "detail": "At an estimated 7,200 pairs a year, the store sells 1,360 fewer than it needs to break even."
+      }
+    ],
+    "headlines": []
+  },
+  "goals": {
+    "rows": [],
+    "insights": [
+      {
+        "insight": "The fastest-growing segments",
+        "evidence": "Athletic, streetwear and fashion-forward segments are growing the fastest."
+      },
+      {
+        "insight": "A college town brings its own customers",
+        "evidence": "Each new class of students creates an influx of new customers without any need for marketing."
+      },
+      {
+        "insight": "Own-brand products earn more",
+        "evidence": "Shiekh-branded shoes and merchandise carry higher margins and lower COGS."
+      }
+    ],
+    "report": {
+      "href": null
+    },
+    "roadmap": []
+  },
+  "design": {
+    "lead": "The strategy sells to the campus on the store’s doorstep: ads within three miles of USC, student reps and influencers, limited drops and in-store events, and referral codes that turn each customer into the reason a friend visits.",
+    "blocks": [
+      {
+        "type": "list",
+        "title": "Marketing and promotions",
+        "items": [
+          "Referral codes that give a customer and their friends a discount on the next visit, which brings two purchases and hands customer acquisition to the customers themselves",
+          "Local influencer partnerships with USC students, campus athletes and micro-influencers",
+          "Limited drops and streetwear collabs, such as a Shiekh-exclusive Banksy × Nike, launched social-first",
+          "In-store activations: sneaker culture nights, DJ sets and giveaways"
+        ]
+      },
+      {
+        "type": "list",
+        "title": "Digital and social",
+        "items": [
+          "Geo-targeted Instagram and TikTok ads within a 3-mile radius of USC",
+          "A campus reps program: ambassadors who post and drive traffic"
+        ]
+      },
+      {
+        "type": "list",
+        "title": "Merchandising",
+        "items": [
+          "Prioritize high-margin, high-turnover SKUs",
+          "Sync inventory with e-commerce to offer local store pickup",
+          "More Shiekh-branded shoes and merchandise"
+        ]
+      }
+    ]
+  },
+  "results": {
+    "lead": "Selling ==8,560 pairs a year== breaks the store even. At 10% growth a year it gets there in late 2026; at 5%, in mid-2028.",
+    "blocks": [
+      {
+        "type": "table",
+        "title": "Fixed costs",
+        "rowHeader": "Cost",
+        "numeric": true,
+        "columns": [
+          {
+            "label": "Per year"
+          }
+        ],
+        "rows": [
+          {
+            "label": "Rent",
+            "cells": [
+              "$200,000"
+            ]
+          },
+          {
+            "label": "Labor",
+            "cells": [
+              "$180,000"
+            ]
+          },
+          {
+            "label": "Utilities",
+            "cells": [
+              "$24,000"
+            ]
+          },
+          {
+            "label": "Marketing",
+            "cells": [
+              "$24,000"
+            ]
+          },
+          {
+            "label": "Total",
+            "cells": [
+              "$428,000"
+            ]
+          }
+        ],
+        "note": "Rent is the average for commercial space in South Central Los Angeles; utilities are the Los Angeles average for 4,000 sq ft; marketing is the average across Shiekh stores."
+      },
+      {
+        "type": "table",
+        "title": "Break-even",
+        "rowHeader": "Measure",
+        "numeric": true,
+        "columns": [
+          {
+            "label": "Value"
+          }
+        ],
+        "rows": [
+          {
+            "label": "Average selling price per pair",
+            "cells": [
+              "$100"
+            ]
+          },
+          {
+            "label": "Wholesale cost per pair (50%)",
+            "cells": [
+              "$50"
+            ]
+          },
+          {
+            "label": "Break-even volume ($428,000 ÷ $50)",
+            "cells": [
+              "8,560 pairs a year"
+            ]
+          },
+          {
+            "label": "Estimated sales today",
+            "cells": [
+              "7,200 pairs a year"
+            ]
+          },
+          {
+            "label": "Break-even at 10% growth a year",
+            "cells": [
+              "Late 2026"
+            ]
+          },
+          {
+            "label": "Break-even at 5% growth a year",
+            "cells": [
+              "Mid-2028"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
