@@ -471,6 +471,10 @@ const optionalLink = z
 export const CASE_CATEGORIES = ["project", "case-study"] as const;
 export type CaseCategory = (typeof CASE_CATEGORIES)[number];
 
+/** The live hero mockups that exist in code. A page names one in `hero.live`. */
+export const LIVE_MOCKUPS = ["tunity-journey"] as const;
+export type LiveMockup = (typeof LIVE_MOCKUPS)[number];
+
 export const CaseStudySchema = z.object({
   /** The URL segment, and the file name without ".json". */
   slug: slug("case study slug"),
@@ -501,6 +505,14 @@ export const CaseStudySchema = z.object({
     /** An optional cut-out set over the ground at the right, e.g. a device
      *  mockup with a transparent background. */
     figure: CaseImageSchema.nullable(),
+    /**
+     * A live mockup drawn in code that takes the figure's place on the page:
+     * a 3D device that leans toward the pointer and plays a short loop of the
+     * product in use. The figure still stands for the project elsewhere (its
+     * entry on the portfolio). Each id names a component in
+     * `components/case/mockups`.
+     */
+    live: z.enum(LIVE_MOCKUPS).optional(),
   }),
   /** The author's own part. All of it empty shows the labelled placeholder. */
   role: z.object({

@@ -18,6 +18,7 @@ import { CaseNav, type NavSection } from "./CaseNav";
 import { DrawOnView } from "./DrawOnView";
 import { ExhibitBlock, Sheet } from "./Exhibits";
 import { HeadlineRail } from "./HeadlineRail";
+import { LIVE_MOCKUPS } from "./mockups";
 import { PainPoints } from "./PainPoints";
 import { rich } from "./rich";
 
@@ -127,9 +128,10 @@ function Tag({
 }
 
 function Hero({ study }: { study: CaseStudy }) {
-  const { image, figure } = study.hero;
+  const { image, figure, live } = study.hero;
+  const Live = live ? LIVE_MOCKUPS[live] : null;
   // With no picture on the live site, the art column is rings alone.
-  const bare = !image && !figure && !SHOW_PLACEHOLDERS;
+  const bare = !image && !figure && !Live && !SHOW_PLACEHOLDERS;
   return (
     <header className={`cs-hero${image ? " cs-hero--image" : ""}`}>
       {image && (
@@ -150,7 +152,8 @@ function Hero({ study }: { study: CaseStudy }) {
               ))}
             </svg>
           )}
-          {figure && (
+          {Live && <Live />}
+          {figure && !Live && (
             <div className="cs-hero__figure">
               <Image
                 src={figure.src}
@@ -162,7 +165,7 @@ function Hero({ study }: { study: CaseStudy }) {
               />
             </div>
           )}
-          {!image && !figure && SHOW_PLACEHOLDERS && (
+          {!image && !figure && !Live && SHOW_PLACEHOLDERS && (
             <div
               className="cs-ph cs-hero__ph"
               role="img"

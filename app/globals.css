@@ -1394,6 +1394,926 @@
     animation: cs-rings 300ms var(--ease-out) both;
   }
 
+  /* Live hero mockup: the Tunity phone (components/case/mockups). ----------
+     A phone in the page's shallow 3D scene that plays the product's four
+     steps as a loop. Its screen depicts Tunity's own app, so it keeps that
+     app's violet and white in both themes: the --tj-* colours are the
+     depicted product's, scoped to .tj, and nothing outside it uses them.
+     Wrappers each own one transform: .tj-enter the entrance, .tj-tilt the
+     pointer lean, .tj-phone the resting pose and the hover lift.
+     Every size inside the phone is in cqw (of the phone's width) or em (of
+     the screen's cqw font size), so the whole device scales as one. */
+  .tj {
+    --tj-w: clamp(210px, 21vw, 280px);
+    --tj-violet: #5b3cf0;
+    --tj-violet-deep: #4527d6;
+    --tj-violet-soft: #eeeaff;
+    --tj-ink: #15131f;
+    --tj-muted: #5f5c73;
+    --tj-line: #e9e7f1;
+    --tj-fill: #f4f3f9;
+    --tj-green: #17713a;
+    --tj-green-soft: #e3f4e8;
+    --tj-frame: #1b1a20;
+    --tj-edge: #3b3a43;
+    position: absolute;
+    inset: 0;
+    margin: 0;
+  }
+  .tj-stage {
+    position: absolute;
+    top: -32px;
+    left: 50%;
+    width: calc(var(--tj-w) + 120px);
+    padding: 32px 80px 40px 40px;
+    translate: calc(-50% + 20px) 0;
+    container-type: inline-size;
+    perspective: var(--perspective);
+    /* Like the still it replaces, the device dissolves into the page at its foot. */
+    -webkit-mask-image: linear-gradient(to bottom, black 76%, transparent 97%);
+    mask-image: linear-gradient(to bottom, black 76%, transparent 97%);
+  }
+  .tj-enter,
+  .tj-tilt,
+  .tj-phone {
+    transform-style: preserve-3d;
+  }
+  .tj-enter {
+    animation: tj-enter 300ms var(--ease-out) 60ms both;
+  }
+  .tj-tilt {
+    transform: rotateY(calc(var(--tx, 0) * 14deg)) rotateX(calc(var(--ty, 0) * -10deg));
+    transition: transform 300ms var(--ease-out);
+  }
+  .tj-phone {
+    position: relative;
+    width: 100cqw;
+    aspect-ratio: 9 / 19.5;
+    transform: rotateY(-20deg) rotateX(9deg) rotateZ(5deg);
+    transform-origin: 50% 40%;
+    transition: transform 300ms var(--ease-out);
+  }
+  /* Under a mouse the phone turns toward the reader and comes forward. */
+  .tj-stage[data-hover] .tj-phone {
+    transform: rotateY(-8deg) rotateX(4deg) rotateZ(2deg) translateZ(40px);
+  }
+  .tj-shadow {
+    position: absolute;
+    inset: 4% 2% 3% 8%;
+    border-radius: 15cqw;
+    background: color-mix(in srgb, var(--color-espresso) 42%, transparent);
+    filter: blur(22px);
+    transform: translate3d(22px, 30px, -44px);
+  }
+  /* The body's thickness: the same outline stacked a few pixels deep, so the
+     side shows when the phone turns. */
+  .tj-edge {
+    position: absolute;
+    inset: 0;
+    border-radius: 15cqw;
+    background: linear-gradient(100deg, var(--tj-edge), var(--tj-frame));
+    transform: translateZ(calc(var(--i) * -1.5px));
+  }
+  .tj-frame {
+    position: absolute;
+    inset: 0;
+    padding: 3.6cqw;
+    border-radius: 15cqw;
+    background: var(--tj-frame);
+    box-shadow: inset 0 0 0 0.6cqw color-mix(in srgb, var(--color-white) 14%, transparent);
+  }
+  .tj-screen {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 11.5cqw;
+    background: var(--color-white);
+    color: var(--tj-ink);
+    font-size: 4.3cqw;
+    line-height: 1.25;
+    letter-spacing: 0;
+    text-align: left;
+  }
+  .tj-screen svg {
+    display: block;
+    flex: none;
+  }
+  .tj-status {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 3.5em;
+    padding: 0.35em 1.9em 0;
+    font-weight: 600;
+  }
+  .tj-island {
+    position: absolute;
+    top: 0.8em;
+    left: 50%;
+    width: 7.4em;
+    height: 2.1em;
+    translate: -50% 0;
+    border-radius: 99px;
+    background: var(--tj-frame);
+  }
+  .tj-status__icons {
+    display: flex;
+    align-items: center;
+    gap: 0.35em;
+  }
+  .tj-status__icons svg:first-child {
+    width: 1.25em;
+    height: 0.85em;
+  }
+  .tj-status__icons svg:last-child {
+    width: 1.75em;
+    height: 0.85em;
+  }
+  .tj-home-bar {
+    position: absolute;
+    bottom: 0.55em;
+    left: 50%;
+    z-index: 2;
+    width: 8.5em;
+    height: 0.32em;
+    translate: -50% 0;
+    border-radius: 99px;
+    background: var(--tj-ink);
+  }
+
+  /* Scenes slide like app navigation: forward to the right, back to the left. */
+  .tj-scene {
+    position: absolute;
+    inset: 3.5em 0 0;
+    padding: 0 1.3em;
+    transition:
+      transform 280ms var(--ease-out),
+      opacity 220ms ease;
+  }
+  .tj-scene[data-state="before"] {
+    opacity: 0;
+    transform: translateX(-30%);
+  }
+  .tj-scene[data-state="after"] {
+    opacity: 0;
+    transform: translateX(30%);
+  }
+  .tj-scene[data-state="off"] {
+    opacity: 0;
+  }
+
+  /* Shared pieces. */
+  .tj-row__text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15em;
+  }
+  .tj-row__title {
+    font-weight: 600;
+    font-size: 0.98em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .tj-muted {
+    color: var(--tj-muted);
+    font-size: 0.8em;
+  }
+  .tj-bar {
+    display: flex;
+    align-items: center;
+    height: 2.6em;
+    font-weight: 600;
+  }
+  .tj-bar svg {
+    width: 1.4em;
+    height: 1.4em;
+    color: var(--tj-violet);
+  }
+  .tj-bar span {
+    flex: 1;
+    margin-right: 1.4em;
+    text-align: center;
+  }
+  .tj-step {
+    display: block;
+    margin-top: 0.7em;
+    font-size: 0.78em;
+    font-weight: 600;
+    color: var(--tj-muted);
+  }
+  .tj-h2 {
+    display: block;
+    margin: 0.1em 0 0.5em;
+    font-size: 1.55em;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+  }
+  .tj-card {
+    display: flex;
+    align-items: center;
+    gap: 0.7em;
+    margin-top: 0.6em;
+    padding: 0.8em;
+    border: 1px solid var(--tj-line);
+    border-radius: 1em;
+    background: var(--color-white);
+  }
+  .tj-icon {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 2.5em;
+    height: 2.5em;
+    border-radius: 0.75em;
+    background: var(--tj-violet-soft);
+    color: var(--tj-violet);
+  }
+  .tj-icon svg {
+    width: 1.3em;
+    height: 1.3em;
+  }
+  .tj-icon--green {
+    background: var(--tj-green-soft);
+    color: var(--tj-green);
+  }
+  .tj-cta {
+    position: absolute;
+    left: 1.3em;
+    right: 1.3em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4em;
+    height: 3.1em;
+    overflow: hidden;
+    border-radius: 1em;
+    background: var(--tj-violet);
+    color: var(--color-white);
+    font-weight: 600;
+    transition: background-color 200ms ease;
+  }
+  .tj-cta svg {
+    width: 1.2em;
+    height: 1.2em;
+  }
+  /* A touch: a soft dot where the finger lands, and the target gives. */
+  .tj-tap {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 2.6em;
+    height: 2.6em;
+    margin: -1.3em 0 0 -1.3em;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--tj-ink) 24%, transparent);
+    box-shadow: 0 0 0 0.2em color-mix(in srgb, var(--color-white) 60%, transparent);
+    opacity: 0;
+    pointer-events: none;
+  }
+  [data-tap="true"] > .tj-tap {
+    animation: tj-tap 520ms var(--ease-out) both;
+  }
+  .tj-cta[data-tap="true"],
+  .tj-option[data-tap="true"] {
+    animation: tj-press 260ms var(--ease-out);
+  }
+
+  /* 1. The portfolio. */
+  .tj-head {
+    display: flex;
+    align-items: center;
+    gap: 0.6em;
+    margin-top: 0.4em;
+  }
+  .tj-h1 {
+    flex: 1;
+    font-size: 2em;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  .tj-avatar {
+    width: 2.5em;
+    height: 2.5em;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 50% 40%, #f1c6a8 0 24%, transparent 25%),
+      radial-gradient(ellipse 50% 40% at 50% 100%, #6c4a43 0 98%, transparent 100%),
+      linear-gradient(160deg, #c9b8ff, #6a4fd8);
+    box-shadow:
+      0 0 0 0.15em var(--color-white),
+      0 0 0 0.25em var(--tj-line);
+  }
+  .tj-bell {
+    position: relative;
+    width: 1.6em;
+    height: 1.6em;
+  }
+  .tj-bell svg {
+    width: 100%;
+    height: 100%;
+  }
+  .tj-bell::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0.45em;
+    height: 0.45em;
+    border-radius: 50%;
+    background: var(--tj-violet);
+  }
+  .tj-chips {
+    display: flex;
+    gap: 0.25em;
+    margin-top: 0.9em;
+    padding: 0.25em;
+    border-radius: 99px;
+    background: var(--tj-fill);
+  }
+  .tj-chips span {
+    flex: 1;
+    padding: 0.45em 0;
+    border-radius: 99px;
+    color: var(--tj-muted);
+    font-size: 0.88em;
+    font-weight: 500;
+    text-align: center;
+  }
+  .tj-chips .is-on {
+    background: var(--tj-violet);
+    color: var(--color-white);
+  }
+  .tj-summary {
+    display: flex;
+    align-items: center;
+    gap: 0.8em;
+    margin-top: 0.85em;
+    padding: 0.85em 0.9em;
+    border-radius: 1.1em;
+    background: linear-gradient(120deg, var(--tj-violet-soft), color-mix(in srgb, var(--tj-violet-soft) 40%, var(--color-white)));
+  }
+  .tj-summary > span:nth-child(2) {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15em;
+  }
+  .tj-summary__count {
+    font-size: 1.2em;
+    font-weight: 700;
+  }
+  .tj-chev {
+    width: 1.2em;
+    height: 1.2em;
+    color: var(--tj-muted);
+  }
+  .tj-layers {
+    position: relative;
+    flex: none;
+    width: 2.6em;
+    height: 2.6em;
+  }
+  .tj-layers i {
+    position: absolute;
+    left: 0.35em;
+    width: 1.9em;
+    height: 1.9em;
+    border-radius: 0.35em;
+    background: linear-gradient(135deg, color-mix(in srgb, var(--tj-violet) 45%, var(--color-white)), var(--tj-violet));
+    transform: scaleY(0.55) rotate(45deg);
+  }
+  .tj-layers i:nth-child(1) {
+    top: -0.15em;
+    opacity: 0.5;
+  }
+  .tj-layers i:nth-child(2) {
+    top: 0.35em;
+    opacity: 0.75;
+  }
+  .tj-layers i:nth-child(3) {
+    top: 0.85em;
+  }
+  /* The count turns over from 12 to 13. */
+  .tj-roll {
+    display: inline-grid;
+    height: 1.25em;
+    overflow: hidden;
+    vertical-align: bottom;
+  }
+  .tj-roll span {
+    grid-area: 1 / 1;
+    transition:
+      transform 280ms var(--ease-out),
+      opacity 200ms ease;
+  }
+  .tj-roll span:last-child,
+  .tj-roll[data-on="true"] span:first-child {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  .tj-roll[data-on="true"] span:first-child {
+    transform: translateY(-100%);
+  }
+  .tj-roll[data-on="true"] span:last-child {
+    opacity: 1;
+    transform: none;
+  }
+  .tj-list {
+    margin-top: 0.5em;
+  }
+  .tj-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75em;
+    padding: 0.6em 0;
+    border-bottom: 1px solid var(--tj-line);
+  }
+  .tj-art {
+    flex: none;
+    width: 3.2em;
+    height: 3.2em;
+    border-radius: 0.7em;
+  }
+  .tj-art--quiet {
+    background:
+      radial-gradient(circle at 58% 42%, #f6c9a6 0 17%, transparent 18%),
+      linear-gradient(135deg, #a993ff, #f0a7c2 55%, #f3d48a);
+  }
+  .tj-art--road {
+    background:
+      radial-gradient(circle at 70% 46%, #ffd28a 0 9%, transparent 10%),
+      linear-gradient(to bottom, #f2a65a, #c96f52 48%, #2a2d48 49%, #1a1b2e);
+  }
+  .tj-art--alpine {
+    background:
+      conic-gradient(from 150deg at 50% 22%, #ebe7f8 0 60deg, transparent 60deg),
+      linear-gradient(to bottom, #f4b5c6, #8a7fd4 58%, #2f5a5a 59%, #1d3b3d);
+  }
+  .tj-art--echoes {
+    background:
+      radial-gradient(circle at 50% 64%, #e9a2ff 0 30%, transparent 31%),
+      linear-gradient(to bottom, #3b1f6e, #18142e);
+  }
+  .tj-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25em;
+    color: var(--tj-green);
+    font-size: 0.75em;
+    font-weight: 600;
+  }
+  .tj-badge svg {
+    width: 1.3em;
+    height: 1.3em;
+  }
+  .tj-badge--licensed {
+    padding: 0.3em 0.6em;
+    border-radius: 99px;
+    background: var(--tj-violet);
+    color: var(--color-white);
+  }
+  /* The new work opens a row at the top of the list. */
+  .tj-row-wrap {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 300ms var(--ease-out);
+  }
+  .tj-row-wrap > .tj-row {
+    min-height: 0;
+    overflow: hidden;
+    margin-inline: -0.6em;
+    padding: 0 0.6em;
+    border-bottom-width: 0;
+    border-radius: 0.8em;
+    background: linear-gradient(90deg, var(--tj-violet-soft), transparent);
+    opacity: 0;
+    transition:
+      opacity 300ms ease,
+      padding 300ms var(--ease-out);
+  }
+  .tj-row-wrap[data-on="true"] {
+    grid-template-rows: 1fr;
+  }
+  .tj-row-wrap[data-on="true"] > .tj-row {
+    padding-block: 0.6em;
+    opacity: 1;
+  }
+  .tj-cta--home {
+    bottom: 5.4em;
+  }
+  .tj-tabs {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    padding: 0.55em 0.4em 1.6em;
+    border-top: 1px solid var(--tj-line);
+    background: var(--color-white);
+  }
+  .tj-tabs span {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25em;
+    color: var(--tj-muted);
+    font-size: 0.72em;
+  }
+  .tj-tabs svg {
+    width: 2em;
+    height: 2em;
+  }
+  .tj-tabs .is-on {
+    color: var(--tj-violet);
+    font-weight: 600;
+  }
+
+  /* 2. Register: each proof arrives in turn. */
+  .tj-register .tj-card,
+  .tj-verified {
+    opacity: 0;
+    transform: translateY(0.6em);
+    transition:
+      opacity 260ms ease,
+      transform 300ms var(--ease-out);
+  }
+  .tj-register [data-on="true"] {
+    opacity: 1;
+    transform: none;
+  }
+  .tj-file {
+    flex-wrap: wrap;
+  }
+  .tj-progress {
+    flex-basis: 100%;
+    height: 0.32em;
+    overflow: hidden;
+    border-radius: 99px;
+    background: var(--tj-line);
+  }
+  .tj-progress i {
+    display: block;
+    height: 100%;
+    background: var(--tj-violet);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 850ms cubic-bezier(0.4, 0, 0.2, 1) 120ms;
+  }
+  .tj-file[data-on="true"] .tj-progress i {
+    transform: none;
+  }
+  .tj-wave {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.6em;
+    border-color: transparent;
+    background: var(--tj-fill);
+  }
+  .tj-label {
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+    color: var(--tj-violet-deep);
+    font-size: 0.82em;
+    font-weight: 600;
+  }
+  .tj-label svg {
+    width: 1.3em;
+    height: 1.3em;
+  }
+  .tj-wave__bars {
+    position: relative;
+    height: 3.2em;
+  }
+  .tj-wave__base,
+  .tj-wave__fill {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .tj-wave i {
+    width: 0.28em;
+    height: calc(var(--h) * 100%);
+    border-radius: 99px;
+    background: color-mix(in srgb, var(--tj-muted) 32%, transparent);
+  }
+  .tj-wave__fill i {
+    background: var(--tj-violet);
+  }
+  /* The scan line reads the waveform left to right, colouring what it has read. */
+  .tj-wave__fill {
+    clip-path: inset(0 100% 0 0);
+  }
+  .tj-wave[data-scan="true"] .tj-wave__fill {
+    animation: tj-scan-clip 1500ms linear forwards;
+  }
+  .tj-wave[data-done="true"] .tj-wave__fill {
+    clip-path: inset(0);
+  }
+  .tj-wave__scan {
+    position: absolute;
+    top: -0.3em;
+    bottom: -0.3em;
+    left: 0;
+    width: 0.18em;
+    border-radius: 99px;
+    background: var(--tj-violet);
+    box-shadow: 0 0 0.8em 0.2em color-mix(in srgb, var(--tj-violet) 45%, transparent);
+    opacity: 0;
+  }
+  .tj-wave[data-scan="true"] .tj-wave__scan {
+    animation: tj-scan 1500ms linear forwards;
+  }
+  .tj-mono {
+    color: var(--tj-muted);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.78em;
+  }
+  .tj-blocks {
+    display: flex;
+    gap: 0.25em;
+  }
+  .tj-blocks i {
+    width: 0.75em;
+    height: 0.75em;
+    border-radius: 0.2em;
+    background: var(--tj-line);
+  }
+  .tj-chain[data-on="true"] .tj-blocks i {
+    animation: tj-block 200ms ease forwards;
+  }
+  .tj-chain[data-on="true"] .tj-blocks i:nth-child(2) {
+    animation-delay: 350ms;
+  }
+  .tj-chain[data-on="true"] .tj-blocks i:nth-child(3) {
+    animation-delay: 700ms;
+  }
+  .tj-verified {
+    display: flex;
+    align-items: center;
+    gap: 0.7em;
+    margin-top: 0.6em;
+    padding: 0.8em;
+    border-radius: 1em;
+    background: var(--tj-green-soft);
+    color: var(--tj-green);
+  }
+  .tj-verified > svg {
+    width: 2em;
+    height: 2em;
+  }
+  .tj-verified .tj-row__text > span:last-child {
+    font-size: 0.8em;
+  }
+
+  /* 3. Set terms. */
+  .tj-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+  }
+  .tj-option {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.7em;
+    overflow: hidden;
+    padding: 0.7em 0.8em;
+    border: 0.12em solid var(--tj-line);
+    border-radius: 1em;
+    transition:
+      border-color 200ms ease,
+      background-color 200ms ease;
+  }
+  .tj-option[data-selected="true"] {
+    border-color: var(--tj-violet);
+    background: var(--tj-violet-soft);
+  }
+  .tj-radio {
+    flex: none;
+    width: 1.25em;
+    height: 1.25em;
+    border: 0.12em solid color-mix(in srgb, var(--tj-muted) 60%, transparent);
+    border-radius: 50%;
+    transition:
+      border-color 200ms ease,
+      box-shadow 200ms ease;
+  }
+  .tj-option[data-selected="true"] .tj-radio {
+    border-color: var(--tj-violet);
+    box-shadow:
+      inset 0 0 0 0.2em var(--color-white),
+      inset 0 0 0 1em var(--tj-violet);
+  }
+  .tj-terms .tj-step:nth-of-type(2) {
+    margin-top: 0.9em;
+  }
+  .tj-stems {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35em;
+    margin-top: 0.45em;
+  }
+  .tj-stems span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25em;
+    padding: 0.35em 0.6em;
+    border-radius: 99px;
+    background: var(--tj-fill);
+    font-size: 0.78em;
+    font-weight: 500;
+  }
+  .tj-stems svg {
+    width: 1.1em;
+    height: 1.1em;
+    color: var(--tj-violet);
+  }
+  .tj-cta--terms {
+    bottom: 2.4em;
+  }
+  .tj-cta--terms[data-ready="false"] {
+    background: color-mix(in srgb, var(--tj-violet) 38%, var(--color-white));
+  }
+
+  /* 4. Licensed and paid. */
+  .tj-royalty {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1em;
+    margin-top: 0.6em;
+    padding: 0.95em 1.1em;
+    border-radius: 1.1em;
+    background:
+      radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--color-white) 22%, transparent), transparent 55%),
+      linear-gradient(135deg, var(--tj-violet), var(--tj-violet-deep));
+    color: var(--color-white);
+  }
+  .tj-royalty__label {
+    font-size: 0.8em;
+    font-weight: 600;
+  }
+  .tj-royalty__share {
+    font-size: 2.6em;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+  }
+  .tj-royalty__note {
+    font-size: 0.82em;
+  }
+  .tj-royalty__settled {
+    display: inline-flex;
+    align-self: flex-start;
+    align-items: center;
+    gap: 0.3em;
+    margin-top: 0.6em;
+    padding: 0.3em 0.6em;
+    border-radius: 99px;
+    background: color-mix(in srgb, var(--color-white) 18%, transparent);
+    font-size: 0.75em;
+    font-weight: 600;
+    opacity: 0;
+    transform: translateY(0.4em);
+    transition:
+      opacity 250ms ease,
+      transform 300ms var(--ease-out);
+  }
+  .tj-royalty[data-on="true"] .tj-royalty__settled {
+    opacity: 1;
+    transform: none;
+  }
+  .tj-royalty__settled svg {
+    width: 1.2em;
+    height: 1.2em;
+  }
+  .tj-uses {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.7em;
+  }
+  .tj-uses__bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.45em;
+    height: 4em;
+  }
+  .tj-uses__bars i {
+    flex: 1;
+    height: calc(var(--h) * 100%);
+    border-radius: 0.3em 0.3em 0.1em 0.1em;
+    background: color-mix(in srgb, var(--tj-violet) 28%, var(--color-white));
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition:
+      transform 300ms var(--ease-out) calc(var(--i) * 40ms),
+      background-color 250ms ease;
+  }
+  .tj-uses[data-on="true"] .tj-uses__bars i {
+    transform: none;
+  }
+  .tj-uses[data-paid="true"] .tj-uses__bars i:last-child {
+    background: var(--tj-violet);
+  }
+
+  /* The notification rides on its own layer, off the glass. */
+  .tj-float {
+    position: absolute;
+    top: 3.6cqw;
+    right: 3.6cqw;
+    left: 3.6cqw;
+    padding: 0 2.6cqw;
+    font-size: 4.3cqw;
+    line-height: 1.25;
+    color: var(--tj-ink);
+    text-align: left;
+    opacity: 0;
+    transform: translate3d(0, -1.5em, 0);
+    transition:
+      opacity 220ms ease,
+      transform 300ms var(--ease-out);
+    pointer-events: none;
+  }
+  .tj-float[data-on="true"] {
+    opacity: 1;
+    transform: translate3d(0, 3em, 30px);
+  }
+  .tj-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7em;
+    padding: 0.8em 0.9em;
+    border-radius: 1.2em;
+    background: var(--color-white);
+    box-shadow:
+      0 0.8em 2em color-mix(in srgb, var(--tj-ink) 24%, transparent),
+      0 0 0 1px var(--tj-line);
+    font-size: 0.85em;
+  }
+  .tj-note__app {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 2.2em;
+    height: 2.2em;
+    border-radius: 0.6em;
+    background: var(--tj-violet);
+    color: var(--color-white);
+    font-weight: 700;
+  }
+  .tj-note__head {
+    display: flex;
+    justify-content: space-between;
+  }
+  .tj-note__head span {
+    color: var(--tj-muted);
+  }
+
+  /* Light on the glass, which follows the pointer. */
+  .tj-glare {
+    position: absolute;
+    inset: 3.6cqw;
+    border-radius: 11.5cqw;
+    background:
+      radial-gradient(
+        circle at calc(30% + var(--tx, 0) * 45%) calc(18% + var(--ty, 0) * 40%),
+        color-mix(in srgb, var(--color-white) 34%, transparent),
+        transparent 46%
+      ),
+      linear-gradient(118deg, color-mix(in srgb, var(--color-white) 14%, transparent) 0 30%, transparent 30.5%);
+    opacity: 0.5;
+    transform: translateZ(1px);
+    transition: opacity 300ms ease;
+    pointer-events: none;
+  }
+  .tj-stage[data-hover] .tj-glare {
+    opacity: 1;
+  }
+
+  /* Paused, the screen holds its frame. The entrance is left alone. */
+  .tj[data-paused="true"] .tj-screen *,
+  .tj[data-paused="true"] .tj-float {
+    animation-play-state: paused !important;
+  }
+  /* A quiet button with a fill of the page, so the phone never shows through it. */
+  .tj-control {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    z-index: 3;
+    padding: 8px 14px;
+    background: var(--color-surface);
+    font-size: 15px;
+  }
+
   /* Layout: the main column, and a rail that holds the demo link and the
      navigation pane. The rail sits between the role and the timeline in the
      document, which is also where it lands once the columns stack. */
@@ -3004,6 +3924,16 @@
     .cs-hero__figure {
       width: calc(54% + 104px);
     }
+    /* The column is short here, so the phone dissolves sooner: it is gone
+       before the heading under the hero, which would otherwise sit on it. */
+    .tj {
+      --tj-w: 50%;
+    }
+    .tj-stage {
+      translate: calc(-50% + 4px) 0;
+      -webkit-mask-image: linear-gradient(to bottom, black 48%, transparent 78%);
+      mask-image: linear-gradient(to bottom, black 48%, transparent 78%);
+    }
     .cs-hero__rings {
       width: 150%;
     }
@@ -3209,6 +4139,66 @@
     opacity: 1;
     transform: none;
     filter: blur(0);
+  }
+}
+/* The Tunity phone: its entrance, its touches and its proofs. */
+@keyframes tj-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(36px, 96px, -240px) rotateY(-18deg) rotateX(11deg) rotateZ(5deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes tj-tap {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.6);
+  }
+}
+@keyframes tj-press {
+  0%,
+  100% {
+    transform: none;
+  }
+  40% {
+    transform: scale(0.97);
+  }
+}
+@keyframes tj-scan {
+  0% {
+    left: 0;
+    opacity: 1;
+  }
+  92% {
+    opacity: 1;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+@keyframes tj-scan-clip {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0);
+  }
+}
+@keyframes tj-block {
+  to {
+    background: var(--tj-violet);
   }
 }
 @keyframes cs-glide {
