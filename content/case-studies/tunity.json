@@ -1,7 +1,7 @@
 {
   "slug": "tunity",
   "category": "project",
-  "order": 1,
+  "order": 6,
   "title": "Tunity",
   "slugLine": "A blockchain-backed music rights and AI-licensing platform that pays artists every time AI uses their music.",
   "tags": [
