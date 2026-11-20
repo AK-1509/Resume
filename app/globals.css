@@ -3108,6 +3108,11 @@
       font-family: var(--font-note);
       color: var(--soft);
     }
+    /* A goal with no target or no KPI: as a block, an empty cell would leave
+       its label standing alone, so it drops out. */
+    .cs-table--goals td:empty {
+      display: none;
+    }
     .cs-road {
       grid-auto-flow: row;
       gap: 0;
