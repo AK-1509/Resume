@@ -3,14 +3,14 @@
   "category": "case-study",
   "order": 13,
   "keyFigure": {
-    "value": "2 months",
-    "label": "of Instagram, March 1 to April 30"
+    "value": "250K",
+    "label": "likes target across the season’s 26 posts"
   },
   "title": "Aerie",
   "slugLine": "REAL Spring: an Instagram plan for March and April to make aerieREAL the loudest human story in fashion this spring.",
   "tags": [
     "Social media strategy",
-    "Instagram",
+    "Grid analysis",
     "Solo project"
   ],
   "hero": {
@@ -31,44 +31,289 @@
     "results": ""
   },
   "research": {
-    "problem": "",
+    "problem": "aerie stopped retouching its models in 2014. This spring it takes aerieREAL a step further: no AI-generated models either. The plan has to make “no AI” ==the most human thing in fashion this spring==, and still sell the spring and beachwear collections.",
     "stakeholders": [
       {
         "kind": "Brand",
-        "name": "Aerie",
-        "note": "The aerieREAL campaign"
+        "name": "aerie",
+        "note": "aerieREAL: no retouching since 2014, and now no AI"
       },
       {
-        "kind": "Channel",
-        "name": "Instagram",
-        "note": "The season ahead, March to April"
+        "kind": "Collaborator",
+        "name": "Pamela Anderson",
+        "note": "The headline act of the no-AI campaign"
+      },
+      {
+        "kind": "Collaborators",
+        "name": "aerieREAL models and creators",
+        "note": "Shoot their own days in aerie: aerie briefs the fit, they keep the caption"
+      },
+      {
+        "kind": "Community",
+        "name": "aerieREALmakers",
+        "note": "Twelve get spring product early and send back three clips each"
+      },
+      {
+        "kind": "Audience",
+        "name": "The anti-AI crowd",
+        "note": "Drawn to a brand that shows real people"
       }
     ],
     "painPoints": [],
-    "headlines": []
+    "headlines": [
+      {
+        "figure": "95.1K",
+        "headline": "Likes on a creator’s beach day in aerie beachwear, the season’s most-liked post.",
+        "source": "aerie on Instagram",
+        "url": "https://www.instagram.com/p/DWT8uJvFFN1/"
+      },
+      {
+        "figure": "75.6K",
+        "headline": "Likes on one unretouched Polaroid of Pamela Anderson, the season’s second most-liked post.",
+        "source": "aerie on Instagram",
+        "url": "https://www.instagram.com/p/DWZQ624FEQA/"
+      },
+      {
+        "figure": "17.8K",
+        "headline": "Likes on the spring break giveaway, the third most-liked post.",
+        "source": "aerie on Instagram",
+        "url": "https://www.instagram.com/p/DWROZMnDhVI/"
+      },
+      {
+        "figure": "1.0K",
+        "headline": "Likes on a white-on-black “No AI” statement reel: a statement about real people drew far less than real people in frame.",
+        "source": "aerie on Instagram",
+        "url": "https://www.instagram.com/reel/DWMwyJvDuJg/"
+      }
+    ]
   },
   "goals": {
-    "rows": [],
-    "insights": [],
+    "rows": [
+      {
+        "goal": "Brand awareness for aerieREAL as the anti-AI brand",
+        "target": "“Never AI generated” on most posts and in the bio; five Pamela × no-AI posts",
+        "kpi": "70K+ likes on Pamela, on Polaroid"
+      },
+      {
+        "goal": "Traffic from creators’ fanbases",
+        "target": "Nine aerieREAL creator collaborations",
+        "kpi": "90K+ likes on the creator beach day"
+      },
+      {
+        "goal": "Sell the spring and beachwear collections",
+        "target": "Eight collection posts, always on an aerieREAL model or in a natural place",
+        "kpi": ""
+      },
+      {
+        "goal": "Turn lurkers into followers and find new aerieREAL models",
+        "target": "Four community posts: the spring break giveaway and two REALmaker open calls",
+        "kpi": "15K+ likes on the giveaway"
+      }
+    ],
+    "insights": [
+      {
+        "insight": "Faces sell.",
+        "evidence": "Posts with a face attached, like Pamela Anderson or an aerieREAL creator, drew far more likes, and the creator collaborations had the highest average engagement of the season."
+      },
+      {
+        "insight": "The best collaboration doesn’t read as an ad.",
+        "evidence": "The top creator posts looked like the creators’ own days; the aerie branding only showed in the caption."
+      },
+      {
+        "insight": "Carousels carry the collections.",
+        "evidence": "Carousels were the main and most popular format: one post shows several styles, outfits and models to a broad audience."
+      },
+      {
+        "insight": "An analog look backs up the no-AI claim.",
+        "evidence": "The Unprompted series’ vintage set, with flowers, warm colours and Polaroid cameras, was a consistent hook, and Polaroid runs a similar campaign of its own."
+      }
+    ],
     "report": null,
     "roadmap": []
   },
   "design": {
-    "lead": "Here’s what the plan does across March and April to make aerieREAL the loudest human story in fashion this spring.",
+    "lead": "Twenty-six posts across March and April, built around three big swings, four content pillars and five recurring series, under one rule: ==a face in frame beats a statement about faces==.",
     "blocks": [
       {
-        "type": "list",
-        "title": "The season ahead",
+        "type": "statement",
+        "title": "The three big swings",
+        "clauses": [
+          {
+            "label": "The creator beach day, 90K+ likes",
+            "text": "her beach, her caption, aerie’s beachwear. The brief covers the fit, never the frame."
+          },
+          {
+            "label": "Pamela, on Polaroid, 70K+ likes",
+            "text": "one instant photo, unretouched: the cheapest frame of the season and the one that travels furthest."
+          },
+          {
+            "label": "The spring break giveaway, 15K+ likes",
+            "text": "one sweepstakes and one loud week of comments, the fastest way to turn lurkers into followers."
+          }
+        ],
+        "note": "Everything else in the plan exists to set these three up."
+      },
+      {
+        "type": "bars",
+        "title": "Content pillars",
+        "lead": "Share of the season’s 26 posts.",
         "items": [
-          "Runs March 1 to April 30",
-          "A beachwear shoot",
-          "Shot on film, never on AI"
-        ]
+          {
+            "label": "aerieREAL collaborations",
+            "value": "9 posts",
+            "share": 35
+          },
+          {
+            "label": "The spring collection",
+            "value": "8 posts",
+            "share": 30
+          },
+          {
+            "label": "REAL, Not Rendered: Pamela × no AI",
+            "value": "5 posts",
+            "share": 20
+          },
+          {
+            "label": "REAL Community: giveaway and open calls",
+            "value": "4 posts",
+            "share": 15
+          }
+        ],
+        "note": "Creators and REAL models are shown inside their own days: a walk through New York, a matcha, a hike, the beach. The collection is shown as clothes people live in and then fall asleep in, never as a product shot. No post is behind-the-scenes or type alone: the behind-the-scenes texture runs through the other pillars."
+      },
+      {
+        "type": "statement",
+        "title": "Recurring series",
+        "clauses": [
+          {
+            "label": "Pamela Anderson × aerieREAL, 8 posts",
+            "text": "the headline act: sourdough, flowers, Polaroid cameras, and a straight-faced read of AI ad copy."
+          },
+          {
+            "label": "aerieREAL collabs, 6 posts",
+            "text": "creators and REAL models in their own days, each one bringing their own fanbase."
+          },
+          {
+            "label": "No AI × aerieREAL, 5 posts",
+            "text": "the position stated plainly: one bold statement card, then collages of real people to back it up."
+          },
+          {
+            "label": "Comfy spring fits, 5 posts",
+            "text": "lace shorties, graphic tees and the Alumni set: the whole outfit on a closet wall, then the same outfit on a real body."
+          },
+          {
+            "label": "Vacay vibes and open calls, 4 posts",
+            "text": "the team in Palm Springs, the giveaway, then the REALmaker open calls."
+          }
+        ],
+        "note": "Each series recurs, so the feed reads as chapters, not one-offs. The tag worth trademarking is “Unprompted”: it reads as spontaneity and as a jab at prompt-written advertising at once."
+      },
+      {
+        "type": "bars",
+        "title": "Format mix",
+        "items": [
+          {
+            "label": "Carousels",
+            "value": "14 posts",
+            "share": 54
+          },
+          {
+            "label": "Reels",
+            "value": "10 posts",
+            "share": 38
+          },
+          {
+            "label": "Single images",
+            "value": "2 posts",
+            "share": 8
+          }
+        ],
+        "note": "Every collection post is a carousel, for several outfits, angles and a story in one post. Reels carry the Pamela shoot, the behind-the-scenes montages and the Unprompted series, and a reel always has a person in it. Single images are rationed: one frame has to earn the whole slot."
+      },
+      {
+        "type": "statement",
+        "title": "Production",
+        "clauses": [
+          {
+            "label": "Creator shoot days, 2",
+            "text": "four aerieREAL collaborators, in their own cities and on the beach. They shoot most of it themselves."
+          },
+          {
+            "label": "Pamela days, 2",
+            "text": "the whole collaboration in one window: the flowers, the sourdough, the field, the AI-copy read. Film cameras on set."
+          },
+          {
+            "label": "Palm Springs trip, 1",
+            "text": "the team trip doubles as the Vacay Vibes shoot."
+          },
+          {
+            "label": "UGC clips, 36",
+            "text": "twelve REALmakers get spring product early and send three clips each. Saturdays and stories run on these."
+          },
+          {
+            "label": "Statement cards, 2",
+            "text": "hand-set type: “we stopped retouching in 2014” and “we don’t use AI”."
+          }
+        ],
+        "note": "Non-negotiable in every brief and every contract: zero generative AI, zero retouching."
       }
     ]
   },
   "results": {
-    "lead": "",
-    "blocks": []
+    "lead": "The season in numbers, and what has to be signed off before it opens.",
+    "blocks": [
+      {
+        "type": "table",
+        "title": "The season in numbers",
+        "rowHeader": "Measure",
+        "columns": [
+          {
+            "label": "Plan"
+          }
+        ],
+        "rows": [
+          {
+            "label": "Posts",
+            "cells": [
+              "26"
+            ]
+          },
+          {
+            "label": "Recurring series",
+            "cells": [
+              "5"
+            ]
+          },
+          {
+            "label": "Shoot days",
+            "cells": [
+              "5"
+            ]
+          },
+          {
+            "label": "Likes target",
+            "cells": [
+              "250K"
+            ]
+          },
+          {
+            "label": "Pixels of AI",
+            "cells": [
+              "0"
+            ]
+          }
+        ],
+        "numeric": true
+      },
+      {
+        "type": "list",
+        "title": "To sign off",
+        "items": [
+          "The five shoot days",
+          "The Pamela Anderson contract window",
+          "Spring samples for twelve REALmakers"
+        ]
+      }
+    ]
   }
 }

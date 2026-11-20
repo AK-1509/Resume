@@ -323,11 +323,12 @@ function Goals({ study, number }: { study: CaseStudy; number: number }) {
                         <th role="rowheader" scope="row">
                           {row.goal}
                         </th>
+                        {/* A blank cell renders truly empty, so a phone can drop it. */}
                         <td role="cell" data-label="Target">
-                          {row.target}
+                          {row.target.trim() ? row.target : null}
                         </td>
                         <td role="cell" data-label="KPI">
-                          {row.kpi}
+                          {row.kpi.trim() ? row.kpi : null}
                         </td>
                       </tr>
                     ))}
