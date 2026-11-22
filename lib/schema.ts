@@ -280,6 +280,31 @@ export const PortfolioSchema = z.object({
 export type Portfolio = z.infer<typeof PortfolioSchema>;
 
 /* ---------------------------------------------------------------------------
+ * The translation layer: `content/i18n/<locale>.json`.
+ *
+ * One catalog per language the portfolio page can be read in (see LOCALES in
+ * lib/i18n.ts). It maps each English string on the page, exactly as it is
+ * written in the content and the components, to its translation. A string
+ * missing from the catalog reads in English.
+ *
+ * Catalogs are written by `scripts/i18n/translate.ts`, which sends the missing
+ * strings to DeepL through DeepL's MCP server, and then reviewed with the
+ * `language-checker` skill, which may rewrite a translation so it reads like a
+ * person talking. Every rewrite is recorded in `revised`, so the catalog says
+ * which words are DeepL's and which were changed after.
+ * ------------------------------------------------------------------------- */
+export const CatalogSchema = z.object({
+  locale: z.string().min(2),
+  /** Where the translations came from, e.g. "DeepL (deepl-mcp-server 1.3.16)". */
+  translator: z.string().optional(),
+  /** English source → translation. */
+  strings: z.record(z.string(), z.string()),
+  /** English source → why the language check rewrote DeepL's translation. */
+  revised: z.record(z.string(), z.string()).optional(),
+});
+export type Catalog = z.infer<typeof CatalogSchema>;
+
+/* ---------------------------------------------------------------------------
  * The case-study layer: `content/case-studies/<slug>.json`.
  *
  * One file per project page at /projects/<slug>. The page is a fixed template

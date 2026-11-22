@@ -55,9 +55,12 @@
   /* Type families, wired to next/font variables in app/layout.tsx. Frutiger is
      the system's heading face, but its licence does not cover a public repo,
      so headings run on the system's own fallback, Schibsted Grotesk. */
-  --font-heading: var(--font-schibsted), system-ui, sans-serif;
-  --font-sans: var(--font-schibsted), system-ui, sans-serif;
-  --font-note: var(--font-dekko), "Comic Sans MS", cursive;
+  /* Each Latin face is followed by its Devanagari partner, which only ever
+     draws Devanagari: its @font-face is limited to that script's range, so
+     an English page never downloads it. */
+  --font-heading: var(--font-schibsted), var(--font-devanagari), system-ui, sans-serif;
+  --font-sans: var(--font-schibsted), var(--font-devanagari), system-ui, sans-serif;
+  --font-note: var(--font-dekko), var(--font-dekko-devanagari), "Comic Sans MS", cursive;
 
   /* Type scale for the dialog and specimen. Page headings use the clamps in
      the component layer below. */
@@ -1008,8 +1011,11 @@
     min-height: 44px;
   }
 
-  /* Languages: each name lights up and lifts toward the reader on hover,
-     while its neighbours settle back a little. */
+  /* Languages: the names the person speaks. A language the page can be read
+     in is a link, underlined, with its own name under it in the note hand;
+     on a fine pointer it lights up and lifts toward the reader while its
+     neighbours settle back a little. The language being read carries the
+     glint bullet. */
   .pf-langs {
     width: min(100%, 304px);
     margin-inline-start: auto;
@@ -1031,24 +1037,80 @@
     font-weight: 700;
     line-height: 1.2;
     color: var(--color-gold-light);
+  }
+  .pf-langs li + li {
+    margin-top: 14px;
+  }
+  .druid-root .pf-langs .pf-langs__link {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+    min-height: 44px;
+    border-radius: 6px;
     transform-origin: 100% 50%;
     transition:
       transform 240ms var(--ease-druid),
       color 200ms ease,
       text-shadow 200ms ease;
   }
-  .pf-langs li + li {
-    margin-top: 14px;
+  .pf-langs__link .pf-langs__name {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 6px;
+    text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
   }
-  .pf-langs li:hover {
+  .pf-langs__endonym {
+    font-family: var(--font-note);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.4;
     color: var(--color-gold-glint);
-    text-shadow:
-      0 0 14px color-mix(in srgb, var(--color-gold-glint) 65%, transparent),
-      0 0 2px var(--color-gold-glint);
-    transform: translateZ(36px) rotateX(10deg) rotateY(-12deg);
   }
-  .pf-langs ul:hover li:not(:hover) {
-    transform: translateZ(-10px);
+  .pf-langs__current::before {
+    content: "•";
+    display: inline-block;
+    margin-inline-end: 10px;
+    color: var(--color-gold-glint);
+  }
+  .druid-root .pf-langs .pf-langs__link:active {
+    transform: scale(0.97);
+    transition-duration: 120ms;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .druid-root .pf-langs .pf-langs__link:hover {
+      color: var(--color-gold-glint);
+      text-shadow:
+        0 0 14px color-mix(in srgb, var(--color-gold-glint) 65%, transparent),
+        0 0 2px var(--color-gold-glint);
+      transform: translateZ(36px) rotateX(10deg) rotateY(-12deg);
+    }
+    .pf-langs ul:has(.pf-langs__link:hover) li:not(:has(:hover)) {
+      transform: translateZ(-10px);
+      transition: transform 240ms var(--ease-druid);
+    }
+  }
+
+  /* The page turning into another language: old words out, new words in,
+     a quick crossfade with a small settle, never a slide. */
+  ::view-transition-old(.pf-lang-swap) {
+    animation: pf-lang-out 140ms var(--ease-druid) both;
+  }
+  ::view-transition-new(.pf-lang-swap) {
+    animation: pf-lang-in 240ms var(--ease-druid) 60ms both;
+  }
+  @keyframes pf-lang-out {
+    to {
+      opacity: 0;
+      filter: blur(2px);
+    }
+  }
+  @keyframes pf-lang-in {
+    from {
+      opacity: 0;
+      filter: blur(2px);
+      transform: translateY(6px);
+    }
   }
 
   /* Drifting colour masses, behind the canvas glass. */
@@ -1202,10 +1264,14 @@
     .pf-liquid i {
       animation: none !important;
     }
-    .pf-langs li,
-    .pf-langs li:hover,
-    .pf-langs ul:hover li:not(:hover) {
+    .druid-root .pf-langs__link,
+    .druid-root .pf-langs__link:hover,
+    .pf-langs ul:has(.pf-langs__link:hover) li:not(:has(:hover)) {
       transform: none;
+    }
+    ::view-transition-old(.pf-lang-swap),
+    ::view-transition-new(.pf-lang-swap) {
+      animation: none;
     }
   }
 

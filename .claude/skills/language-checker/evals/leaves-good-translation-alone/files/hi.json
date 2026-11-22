@@ -1,0 +1,15 @@
+{
+  "locale": "hi",
+  "translator": "DeepL (test fixture)",
+  "strings": {
+    "See the projects": "प्रोजेक्ट देखें",
+    "Get in touch": "बात करें",
+    "Projects": "प्रोजेक्ट",
+    "Case studies": "केस स्टडी",
+    "Product strategy": "प्रोडक्ट स्ट्रैटेजी",
+    "Back to the top": "ऊपर जाएँ",
+    "Languages": "भाषाएँ",
+    "Team of four": "चार लोगों की टीम",
+    "A browser extension that shields artists’ images from AI training scrapers, wherever they post.": "एक ब्राउज़र एक्सटेंशन जो कलाकारों की तस्वीरों को AI ट्रेनिंग के लिए डेटा जुटाने वाले स्क्रैपर्स से बचाता है, वे जहाँ भी पोस्ट करें।"
+  }
+}

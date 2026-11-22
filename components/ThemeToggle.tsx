@@ -33,7 +33,7 @@ function getServerSnapshot(): Theme {
   return "light";
 }
 
-export function ThemeToggle() {
+export function ThemeToggle({ labels }: { labels: { darkMode: string; dark: string; light: string } }) {
   const theme = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   const dark = theme === "dark";
 
@@ -56,14 +56,14 @@ export function ThemeToggle() {
       type="button"
       role="switch"
       aria-checked={dark}
-      aria-label="Dark mode"
+      aria-label={labels.darkMode}
       onClick={toggle}
       className="druid-button druid-button--quiet shrink-0 px-3.5"
     >
       {dark ? <MoonIcon /> : <SunIcon />}
       {/* The word yields below 640px; the icon still shows the mode. */}
       <span aria-hidden="true" className="max-sm:hidden">
-        {dark ? "Dark" : "Light"}
+        {dark ? labels.dark : labels.light}
       </span>
     </button>
   );

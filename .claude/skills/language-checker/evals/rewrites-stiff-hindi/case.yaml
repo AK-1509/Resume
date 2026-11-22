@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: rewrites-stiff-hindi
+expected_outcome: |
+  Stiff or literal strings (उत्पाद रणनीति, वित्तीय प्रतिरूपण, परियोजनाओं का अवलोकन करें, गहरा/हल्का for the theme switch, निर्यात for export) are rewritten into natural spoken Hindi; already-natural strings are left as they were; every rewrite has an English reason in `revised`; no key is changed; names and numbers are intact; the reply includes a table of what changed.
+context:
+  scaffold_script: place-files.sh

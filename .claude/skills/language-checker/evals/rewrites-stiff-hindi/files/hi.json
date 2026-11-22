@@ -1,0 +1,17 @@
+{
+  "locale": "hi",
+  "translator": "DeepL (test fixture)",
+  "strings": {
+    "See the projects": "परियोजनाओं का अवलोकन करें",
+    "Get in touch": "संपर्क स्थापित करें",
+    "Product strategy": "उत्पाद रणनीति",
+    "Financial modeling": "वित्तीय प्रतिरूपण",
+    "Dark": "गहरा",
+    "Light": "हल्का",
+    "Export resume": "बायोडाटा निर्यात करें",
+    "Languages": "भाषाएँ",
+    "Contact": "संपर्क",
+    "Team of three": "तीन लोगों की टीम",
+    "A blockchain-backed music rights and AI-licensing platform that pays artists every time AI uses their music.": "एक ब्लॉकचेन-समर्थित संगीत अधिकार और AI-लाइसेंसिंग प्लेटफ़ॉर्म जो कलाकारों को हर बार भुगतान करता है जब AI उनके संगीत का उपयोग करता है।"
+  }
+}

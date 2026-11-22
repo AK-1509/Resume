@@ -48,10 +48,13 @@ function grouped(items: IndexItem[]): { group?: string; items: IndexItem[] }[] {
 export function IndexDock({
   items,
   label,
+  tab,
   home,
 }: {
   items: IndexItem[];
   label: string;
+  /** The tab's word, in the page's language. */
+  tab: string;
   /** A closing link under the list, back to the portfolio. */
   home?: { href: string; label: string };
 }) {
@@ -120,7 +123,7 @@ export function IndexDock({
         <span aria-hidden="true" className="pf-dock__dot">
           •
         </span>
-        Index
+        {tab}
       </button>
       <nav id={panelId} className="druid-index pf-dock__panel" aria-label={label}>
         <p className="druid-caption">{label}</p>

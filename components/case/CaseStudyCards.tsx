@@ -15,7 +15,7 @@ const RINGS = [70, 120, 170, 220, 270, 298];
  * The whole entry is one link, named by its title, so it is one target with
  * one focus ring round it. On hover the picture rises and the arrow moves on.
  */
-function Entry({ study }: { study: CaseStudyCardData }) {
+function Entry({ study, labels }: { study: CaseStudyCardData; labels: CaseStudyCardLabels }) {
   const { figure, image } = study.hero;
   const meta = [study.role.title.trim(), study.role.sprint.trim()].filter(Boolean).join(" · ");
   const titleId = `${study.slug}-entry-title`;
@@ -24,7 +24,7 @@ function Entry({ study }: { study: CaseStudyCardData }) {
       <Link className="cs-entry" href={`/projects/${study.slug}`} aria-labelledby={titleId}>
         <div className="cs-entry__text">
           {study.tags.length > 0 && (
-            <ul className="pf-skills" aria-label="About this project">
+            <ul className="pf-skills" aria-label={labels.about}>
               {study.tags.map((tag) => (
                 <li key={tag} className="druid-tag">
                   {tag}
@@ -38,7 +38,7 @@ function Entry({ study }: { study: CaseStudyCardData }) {
           <p className="cs-entry__slug">{study.slugLine}</p>
           {meta && <p className="druid-caption cs-entry__meta">{meta}</p>}
           <span className="cs-entry__cta" aria-hidden="true">
-            See the project
+            {labels.cta}
             <svg
               viewBox="0 0 20 20"
               fill="none"
@@ -80,23 +80,26 @@ function Entry({ study }: { study: CaseStudyCardData }) {
   );
 }
 
+/** The section's own words, in the page's language (see `homeCopy` in lib/copy.ts). */
+export type CaseStudyCardLabels = { title: string; back: string; cta: string; about: string };
+
 /** The projects: the work built, one large entry per project page. */
-export function CaseStudyCards({ studies }: { studies: CaseStudyCardData[] }) {
+export function CaseStudyCards({ studies, labels }: { studies: CaseStudyCardData[]; labels: CaseStudyCardLabels }) {
   if (studies.length === 0) return null;
   return (
     <section id="projects" className="druid-section pf-block cs-studies" aria-labelledby="projects-title">
       <div className="druid-container">
         <div className="pf-block__head">
           <h2 id="projects-title" className="pf-block__title">
-            Projects
+            {labels.title}
           </h2>
           <a className="pf-back" href="#top">
-            Back to the top
+            {labels.back}
           </a>
         </div>
         <ul className="cs-cards">
           {studies.map((study) => (
-            <Entry key={study.slug} study={study} />
+            <Entry key={study.slug} study={study} labels={labels} />
           ))}
         </ul>
       </div>

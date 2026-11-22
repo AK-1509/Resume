@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Dekko, Schibsted_Grotesk } from "next/font/google";
+import { Dekko, Noto_Sans_Devanagari, Schibsted_Grotesk } from "next/font/google";
 import "./globals.css";
 import resume from "@/content/resume.json";
 
@@ -18,6 +18,27 @@ const dekko = Dekko({
   display: "swap",
 });
 
+/**
+ * Devanagari for the Hindi page. Schibsted has no Devanagari, so its partner
+ * is Noto Sans Devanagari, a plain humanist sans on the same 400–900 weight
+ * axis. Dekko was drawn for both scripts, so the note hand keeps its own
+ * Devanagari. Neither is preloaded: their faces cover Devanagari only, and the
+ * browser fetches them only on a page that has some.
+ */
+const devanagari = Noto_Sans_Devanagari({
+  variable: "--font-devanagari",
+  subsets: ["devanagari"],
+  display: "swap",
+  preload: false,
+});
+const dekkoDevanagari = Dekko({
+  variable: "--font-dekko-devanagari",
+  subsets: ["devanagari"],
+  weight: "400",
+  display: "swap",
+  preload: false,
+});
+
 export const metadata: Metadata = {
   title: `${resume.profile.name} — Portfolio`,
   description: resume.profile.headline,
@@ -34,7 +55,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${schibsted.variable} ${dekko.variable} h-full`}
+      className={`${schibsted.variable} ${dekko.variable} ${devanagari.variable} ${dekkoDevanagari.variable} h-full`}
       suppressHydrationWarning
     >
       <head>

@@ -49,6 +49,17 @@ The applied theme lives on `<html data-theme>`, set by an inline script in `app/
 
 `content/resume.json` no longer renders on the portfolio page itself. It feeds the profile (name, email, links, location), the Languages card and the PDF export.
 
+## Languages
+
+The portfolio page can be read in more than one language: `/` is English, the source, and `/hi` is Hindi. A language in `resume.languages` whose English name matches a locale in `LOCALES` (`lib/i18n.ts`) becomes a link in the Languages card; choosing it is a client navigation tagged `language`, so the page crossfades into the new words in place and keeps its scroll position. The language being read is marked with `aria-current` and a glint bullet; a link also carries the language's own name (from `Intl.DisplayNames`) in the note hand. Languages without a translation stay plain text.
+
+- Every word on the portfolio page comes from `homeCopy()` / `chromeLabels()` in `lib/copy.ts`, through a translator. Components take their words as props; a string written inline in a component is a string that never gets translated. Names, emails, link labels, titles and key-figure values are left alone.
+- A translation is a catalog, `content/i18n/<locale>.json`: English source string → translation, checked by `CatalogSchema` and in `npm run validate`. A missing string reads in English. `revised` records each string the language check rewrote after DeepL, and why.
+- `npm run i18n` lists what each catalog is missing; it runs `homeCopy()` with a recording translator, so the list follows the content. `npm run i18n:translate -- <locale>` fills the gaps through DeepL's MCP server (`deepl-mcp-server`, pinned, run on stdio), with `DEEPL_API_KEY` set (in a cloud session whose proxy injects the key, a placeholder: `proxy-injected:fx` for a Free key). The hosted server at mcp.deepl.com takes only its OAuth login, not an API key.
+- After every translation run, use the `language-checker` skill: it reads the catalog as a fluent person would, rewrites what sounds machine-made without changing the meaning, and records each rewrite in `revised`.
+- To add a language: add it to `LOCALES`, run the translate script and the language check, then look at `/<locale>` in both themes and at phone width. Devanagari is drawn by Noto Sans Devanagari and Dekko's own Devanagari, as non-preloaded partners in the font stacks; a new script needs its partner the same way.
+- Project pages, the export dialog and the PDF are English only for now.
+
 ## Projects and case studies
 
 The site has two kinds of page: **Projects** (the work built: Tunity, ChiMed, Everplate, ...) and **Case studies** (analysis and strategy for real companies: OcuDrop, GoodRx, ...). The code and the content folder call both case studies. `content/case-studies/<slug>.json` is one page at `/projects/<slug>`, an entry on the portfolio, and a line in the Index. Its `category` (`project`, the default, or `case-study`) says which section it joins; `order` sorts within each. It is presentation content, edited directly, and checked by `CaseStudySchema` and `caseStudyIssues()` in `lib/schema.ts` at build and in `npm run validate`.

@@ -8,11 +8,16 @@ export function Hero({
   role,
   sub,
   credentials,
+  seeProjects,
+  getInTouch,
 }: {
   name: string;
   role: string;
   sub: string;
   credentials: string[];
+  /** The two actions' words, in the page's language. */
+  seeProjects: string;
+  getInTouch: string;
 }) {
   return (
     <section id="top" className="druid-section pf-front" aria-labelledby="hero-title">
@@ -33,7 +38,7 @@ export function Hero({
           )}
           <div className="pf-hero__actions">
             <a className="druid-button" href="#projects">
-              See the projects
+              {seeProjects}
               <svg
                 viewBox="0 0 20 20"
                 fill="none"
@@ -47,7 +52,7 @@ export function Hero({
               </svg>
             </a>
             <a className="druid-button druid-button--quiet" href="#contact">
-              Get in touch
+              {getInTouch}
             </a>
           </div>
         </div>

@@ -14,6 +14,7 @@
 import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
 import { join, resolve } from "node:path";
 import {
+  CatalogSchema,
   CaseStudySchema,
   PortfolioSchema,
   ResumeSchema,
@@ -26,6 +27,7 @@ const ROOT = resolve(import.meta.dirname, "..");
 const CONTENT = join(ROOT, "content", "resume.json");
 const PORTFOLIO = join(ROOT, "content", "portfolio.json");
 const CASE_STUDIES = join(ROOT, "content", "case-studies");
+const I18N = join(ROOT, "content", "i18n");
 const GALLERY_ROOT = join(ROOT, "public", "gallery");
 
 type Problem = { where: string; what: string };
@@ -192,6 +194,53 @@ const caseStudyCount = (() => {
   }
   return files.filter((f) => !f.startsWith("_")).length;
 })();
+
+// --- Layer 5: content/i18n/*.json -----------------------------------------
+// Translation catalogs. A broken file fails; a string the catalog has not
+// caught up with is only a note, because the page shows it in English. Run
+// `npm run i18n` for the full list.
+if (existsSync(I18N)) {
+  for (const file of readdirSync(I18N).filter((f) => f.endsWith(".json"))) {
+    const where = `i18n/${file}`;
+    let json: unknown;
+    try {
+      json = JSON.parse(readFileSync(join(I18N, file), "utf8"));
+    } catch (err) {
+      fail(where, `is not valid JSON. ${err instanceof Error ? err.message : String(err)}`);
+      continue;
+    }
+    const parsed = CatalogSchema.safeParse(json);
+    if (!parsed.success) {
+      for (const issue of parsed.error.issues) fail(`${where} ${issue.path.join(".") || "(root)"}`, issue.message);
+      continue;
+    }
+    const locale = file.replace(/\.json$/, "");
+    if (parsed.data.locale !== locale) {
+      fail(`${where} locale`, `is "${parsed.data.locale}" but the file is ${file}. Make them match.`);
+    }
+    for (const source of Object.keys(parsed.data.revised ?? {})) {
+      if (!(source in parsed.data.strings)) {
+        fail(`${where} revised`, `notes a rewrite of "${source}", which is not in strings. Remove the note or restore the string.`);
+      }
+    }
+  }
+  // Loaded only here: it parses resume.json at import, and a broken file has
+  // already been reported above with a better message than the import's.
+  if (!problems.length) try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { coverage } = require("./i18n/strings") as typeof import("./i18n/strings");
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { TRANSLATED_LOCALES } = require("../lib/i18n") as typeof import("../lib/i18n");
+    for (const locale of TRANSLATED_LOCALES) {
+      const { missing, total } = coverage(locale);
+      if (missing.length) {
+        notes.push(`${locale}: ${missing.length} of ${total} page strings have no translation yet and read in English. Run npm run i18n -- ${locale}.`);
+      }
+    }
+  } catch (err) {
+    fail("i18n coverage", err instanceof Error ? err.message : String(err));
+  }
+}
 
 // --- Report ----------------------------------------------------------------
 if (problems.length) report();

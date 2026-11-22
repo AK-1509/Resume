@@ -5,6 +5,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { IndexDock } from "@/components/IndexDock";
 import { LiquidBackground } from "@/components/LiquidBackground";
 import { CATEGORY_LABELS } from "@/lib/anchors";
+import { ENGLISH_CHROME } from "@/lib/copy";
 import { SHOW_PLACEHOLDERS } from "@/lib/placeholders";
 import {
   CASE_PHASES,
@@ -490,9 +491,10 @@ export function CaseStudyPage({
         <LiquidBackground />
       </div>
 
-      <SiteHeader name={name} variant="case" />
+      <SiteHeader name={name} variant="case" labels={ENGLISH_CHROME} />
       <IndexDock
-        label="Browse the work"
+        label={ENGLISH_CHROME.browse}
+        tab={ENGLISH_CHROME.index}
         items={[...all.filter((s) => s.category === "project"), ...all.filter((s) => s.category === "case-study")].map(
           (s) => ({
             id: s.slug,

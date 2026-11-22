@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
 import { ThemeToggle } from "./ThemeToggle";
 import { ExportButton } from "./ExportButton";
+import type { ChromeLabels } from "@/lib/copy";
 
 /**
  * The glass header. It sits on a zero-height sticky rail, so the hero runs
@@ -23,8 +24,11 @@ export function SiteHeader({
   variant = "home",
   projects = true,
   caseStudies = true,
+  labels,
 }: {
   name: string;
+  /** Every word the header shows, in the page's language (`chromeLabels` in lib/copy.ts). */
+  labels: ChromeLabels;
   variant?: "home" | "case";
   /** Whether the portfolio has a projects section to link to. */
   projects?: boolean;
@@ -49,7 +53,7 @@ export function SiteHeader({
   return (
     <>
       <a className="druid-skip druid-button" href={home ? (projects ? "#projects" : "#contact") : "#case"}>
-        {home ? (projects ? "Skip to the projects" : "Skip to contact") : "Skip to the project"}
+        {home ? (projects ? labels.skipProjects : labels.skipContact) : labels.skipProject}
       </a>
       <div className="pf-header-wrap">
         <header className="pf-header">
@@ -76,7 +80,7 @@ export function SiteHeader({
               <nav
                 id={navId}
                 className="pf-nav"
-                aria-label="Site"
+                aria-label={labels.site}
                 data-open={open}
                 onClick={(ev) => {
                   if ((ev.target as HTMLElement).closest("a")) setOpen(false);
@@ -84,28 +88,33 @@ export function SiteHeader({
               >
                 {home ? (
                   <>
-                    {projects && <a href="#projects">Projects</a>}
-                    {caseStudies && <a href="#case-studies">Case studies</a>}
-                    <a href="#contact">Contact</a>
+                    {projects && <a href="#projects">{labels.projects}</a>}
+                    {caseStudies && <a href="#case-studies">{labels.caseStudies}</a>}
+                    <a href="#contact">{labels.contact}</a>
                   </>
                 ) : (
                   <>
-                    <Link href="/#projects">Projects</Link>
-                    <Link href="/#case-studies">Case studies</Link>
-                    <Link href="/#contact">Contact</Link>
+                    <Link href="/#projects">{labels.projects}</Link>
+                    <Link href="/#case-studies">{labels.caseStudies}</Link>
+                    <Link href="/#contact">{labels.contact}</Link>
                   </>
                 )}
               </nav>
               <div className="pf-actions">
-                <ThemeToggle />
-                {home && <ExportButton className="druid-button shrink-0 max-sm:px-3.5" compact />}
+                <ThemeToggle labels={labels} />
+                {home && <ExportButton
+                    className="druid-button shrink-0 max-sm:px-3.5"
+                    compact
+                    label={labels.exportResume}
+                    shortLabel={labels.exportShort}
+                  />}
                 <button
                   ref={buttonRef}
                   type="button"
                   className="druid-button druid-button--quiet pf-menu-btn"
                   aria-expanded={open}
                   aria-controls={navId}
-                  aria-label="Menu"
+                  aria-label={labels.menu}
                   onClick={() => setOpen((o) => !o)}
                 >
                   <svg

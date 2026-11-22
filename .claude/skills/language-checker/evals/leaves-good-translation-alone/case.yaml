@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: leaves-good-translation-alone
+expected_outcome: |
+  The catalog is already natural. The check rewrites nothing (or at most one string, with a clear reason), says plainly that it reads well, and lists the term choices it saw.
+context:
+  scaffold_script: place-files.sh

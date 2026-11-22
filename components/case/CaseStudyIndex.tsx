@@ -4,9 +4,6 @@ import type { CaseStudy } from "@/lib/schema";
 
 export type CaseStudyRowData = Pick<CaseStudy, "slug" | "title" | "slugLine" | "tags" | "keyFigure">;
 
-/** "Team of five" and "Solo project" say who did it, not what kind of work it was. */
-const isTeamTag = (tag: string) => /^(team of|solo)/i.test(tag);
-
 /**
  * The case studies: analysis and strategy done for real companies. Where the
  * projects are big entries with pictures, these are a ledger on a brown band,
@@ -17,7 +14,14 @@ const isTeamTag = (tag: string) => /^(team of|solo)/i.test(tag);
  * focus ring. On a fine pointer the row warms, the name underlines and the
  * arrow moves on; on press it gives a little.
  */
-export function CaseStudyIndex({ studies }: { studies: CaseStudyRowData[] }) {
+export function CaseStudyIndex({
+  studies,
+  labels,
+}: {
+  studies: CaseStudyRowData[];
+  /** The section's own words, in the page's language (see `homeCopy` in lib/copy.ts). */
+  labels: { title: string; lead: string; back: string };
+}) {
   if (studies.length === 0) return null;
   return (
     <section
@@ -29,21 +33,21 @@ export function CaseStudyIndex({ studies }: { studies: CaseStudyRowData[] }) {
         <div className="pf-block__head">
           <div className="cs-index__intro">
             <h2 id="case-studies-title" className="pf-block__title">
-              Case studies
+              {labels.title}
             </h2>
-            <p className="cs-index__lead">
-              Analysis and strategy for real companies, from pricing and valuation to launch plans and social media.
-            </p>
+            {labels.lead && <p className="cs-index__lead">{labels.lead}</p>}
           </div>
           <a className="pf-back" href="#top">
-            Back to the top
+            {labels.back}
           </a>
         </div>
 
         <ul className="cs-index__list">
           {studies.map((study) => {
             const titleId = `${study.slug}-row-title`;
-            const kind = study.tags.filter((t) => !isTeamTag(t));
+            // The tags arrive without the team tag (see `homeCopy`), so they say
+            // what kind of work it was, not who did it.
+            const kind = study.tags;
             return (
               <li key={study.slug} id={entryAnchor("case-study", study.slug)} className="cs-index__item">
                 <Link className="cs-row" href={`/projects/${study.slug}`} aria-labelledby={titleId}>

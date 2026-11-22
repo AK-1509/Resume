@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: catches-fidelity-errors
+expected_outcome: |
+  The check finds and fixes translations that are fluent but unfaithful: a dropped figure (54%), an added claim (सफल / successful), and a transliterated brand name (गुडआरएक्स instead of GoodRx). Each fix is recorded in `revised`. The degree name is left alone or flagged, not improved.
+context:
+  scaffold_script: place-files.sh
